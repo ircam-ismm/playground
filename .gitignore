@@ -2,7 +2,7 @@
 /node_modules
 /public/js
 /public/css
-/public/sounds
+/public/sounds/*
 /dist
 
 # ignore all config except default
