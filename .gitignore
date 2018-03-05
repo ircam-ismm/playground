@@ -1,0 +1,20 @@
+# transpiled files and dependencies
+/node_modules
+/public/js
+/public/css
+/public/sounds
+/dist
+
+# ignore all config except default
+/src/server/config/*
+!/src/server/config/default.js
+!/src/server/config/prod.js
+
+# application instance specific
+/logs
+/db
+
+# ignore junk files
+npm-debug.log
+.DS_Store
+Thumbs.db

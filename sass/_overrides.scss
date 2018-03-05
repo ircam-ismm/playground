@@ -1,0 +1,70 @@
+.align-center {
+  text-align: center;
+}
+
+#controller {
+  padding: 20px;
+  box-sizing: border-box;
+
+  h6 {
+    font-size: 20px;
+  }
+
+  #file-chooser {
+    padding: 0;
+    list-style-type: none;
+
+    li {
+      margin-bottom: 12px;
+      height: 24px;
+      vertical-align: top;
+    }
+
+    .color {
+      width: 24px;
+      height: 24px;
+      display: inline-block;
+      text-align: center;
+      line-height: 24px;
+    }
+
+    select {
+      height: 24px;
+      line-height: 24px;
+      padding: 0;
+      display: inline-block;
+      border-radius: 2px;
+    }
+
+    .file-loaded {
+      display: inline-block;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background-color: red;
+      margin-left: 8px;
+      position: relative;
+      top: -6px;
+
+      &.done {
+        background-color: green;
+      }
+    }
+  }
+
+  #trigger {
+    padding: 0;
+    list-style-type: none;
+
+    li {
+      width: 80px;
+      height: 80px;
+      display: inline-block;
+      font-size: 20px;
+      text-align: center;
+      line-height: 80px;
+      font-weight: bold;
+    }
+  }
+
+}
