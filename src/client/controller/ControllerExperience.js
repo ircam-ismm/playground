@@ -65,7 +65,9 @@ class ControllerExperience extends Experience {
 
         this.send('update-player-file', uuid, file);
       },
-      'mousedown .trigger': e => {
+      'touchstart .trigger': e => {
+        e.preventDefault();
+
         const $el = e.target;
         const uuid = $el.dataset.target;
 
