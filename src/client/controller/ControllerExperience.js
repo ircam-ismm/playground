@@ -4,6 +4,8 @@ const template = `
 <% if (store) { %>
 
   <h6>Select File</h6>
+
+  <button id="allocate-randomly" class="btn">Allocate Randomly</button>
   <ul id="file-chooser">
   <% store.players.forEach(function(player) { %>
 
@@ -72,6 +74,11 @@ class ControllerExperience extends Experience {
         const uuid = $el.dataset.target;
 
         this.send('trigger', uuid);
+      },
+      'click #allocate-randomly': e => {
+        e.preventDefault();
+
+        this.send('allocate-randomly');
       },
     }, {
       id: 'controller',
