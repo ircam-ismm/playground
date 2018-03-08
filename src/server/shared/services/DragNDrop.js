@@ -45,6 +45,9 @@ class DragNDrop extends Service {
     fs.watch(soundFilesPath, { encoding: 'buffer' }, (eventType, filename) => {
       filename = filename.toString();
 
+      if (!regexp.test(filename))
+        return;
+
       if (eventType === 'rename') {
         const fullPath = path.join(soundFilesPath, filename);
 
