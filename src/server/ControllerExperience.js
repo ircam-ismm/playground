@@ -40,9 +40,11 @@ class ControllerExperience extends Experience {
 
     this.receive(client, 'trigger', uuid => {
       const player = this.store.getPlayerByUuid(uuid);
-      const client = player.client;
 
-      this.send(client, 'trigger');
+      if (player) {
+        const client = player.client;
+        this.send(client, 'trigger');
+      }
     });
   }
 

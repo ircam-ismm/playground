@@ -40,16 +40,28 @@ const template = `
   </ul>
 
   <h6>Triggers</h6>
-  <ul id="trigger">
-    <% store.players.forEach(function(player) { %>
-      <li class="trigger" data-target="<%= player.uuid %>" style="background-color: <%= player.color %>">
-        <%= player.index %>
-      </li>
-    <% }); %>
-  </ul>
+  <% store.fileList.forEach((file, index) => { %>
+    <% var rgb = 255 - Math.ceil(index / store.fileList.length * 255); %>
+    <ul class="triggers">
+      <% store.players.forEach(function(player) { %>
+        <% if (file === player.currentFile) { %>
+        <li class="trigger" data-target="<%= player.uuid %>" style="background-color: <%= player.color %>">
+          <div class="soundfile-color" style="background-color: rgb(<%= rgb +','+ rgb +','+ rgb %>)"></div>
+          <%= player.index %>
+        </li>
+        <% } %>
+      <% }); %>
+    </ul>
+  <% }); %>
 
 <% } %>
 `;
+
+class ControllerView extends View {
+  onResize(width, height, orientation) {
+    // console.log(width, height, orientation);
+  }
+}
 
 class ControllerExperience extends Experience {
   constructor() {
@@ -59,7 +71,7 @@ class ControllerExperience extends Experience {
   start() {
     super.start();
 
-    this.view = new View(template, { store: null }, {
+    this.view = new ControllerView(template, { store: null }, {
       'change .sound-file': e => {
         const $select = e.target;
         const file = $select.value || null;

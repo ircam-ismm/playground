@@ -57,7 +57,7 @@
     }
   }
 
-  #trigger {
+  .triggers {
     padding: 0;
     list-style-type: none;
 
@@ -69,6 +69,19 @@
       text-align: center;
       line-height: 80px;
       font-weight: bold;
+      position: relative;
+
+      .soundfile-color {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 30%;
+        height: 30%;
+      }
+
+      &:active {
+        opacity: 0.6;
+      }
     }
   }
 
