@@ -10,7 +10,7 @@ const template = `
     <div class="section-center">
       <% if (player) { %>
       <p class="big align-center"><%= player.index %></p>
-      <p class="align-center"><%= player.currentFile ? player.currentFile : '' %></p>
+      <p class="align-center"><%= player.currentFile ? player.currentFile.filename : '' %></p>
       <% } %>
     </div>
     <div class="section-bottom flex-middle"></div>
@@ -27,7 +27,7 @@ class PlayerExperience extends soundworks.Experience {
       assetsDomain: assetsDomain,
     });
 
-    this.currentBuffer = null;
+    this.currentFile = null;
   }
 
   start() {
@@ -48,31 +48,39 @@ class PlayerExperience extends soundworks.Experience {
       const audioFile = player.currentFile;
 
       if (audioFile !== null) {
-        if (this.audioBufferManager.data[audioFile]) {
-          const buffer = this.audioBufferManager.data[audioFile];
-          this.currentBuffer = buffer;
-          this.send('file-loaded', client.uuid);
-          this.view.model.player = player;
-          this.view.render();
-        } else  {
-          this.audioBufferManager
-            .load({ [audioFile]: audioFile })
-            .then(data => {
-              this.currentBuffer = data[audioFile];
-              this.send('file-loaded', client.uuid);
-              this.view.model.player = player;
-              this.view.render();
-            });
-        }
+        this.audioBufferManager
+          .load({ [audioFile.filename]: audioFile })
+          .then(data => {
+            console.log(data);
+            this.currentFile = data[audioFile.filename];
+            this.send('file-loaded', client.uuid);
+            this.view.model.player = player;
+            this.view.render();
+          });
       }
     });
 
     this.receive('trigger', () => {
-      if (this.currentBuffer !== null) {
+      if (this.currentFile === null)
+        return;
+
+      const now = audioContext.currentTime;
+      const buffer = this.currentFile.filename;
+      const repeat = this.currentFile.repeat;
+      const period = this.currentFile.period === 0 ? buffer.duration : this.currentFile.period;
+      const jitter = this.currentFile.jitter;
+
+      for (let i = 0; i < repeat + 1; i++) {
         const src = audioContext.createBufferSource();
         src.connect(audioContext.destination);
-        src.buffer = this.currentBuffer;
-        src.start();
+        src.buffer = buffer;
+
+        let startTime = now;
+
+        if (i > 0)
+          startTime = now + (i * period) + ((Math.random() * 2 - 1)  * jitter);
+
+        src.start(startTime);
       }
     });
 

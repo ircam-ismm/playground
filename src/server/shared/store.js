@@ -1,10 +1,11 @@
 import PlayerModel from './PlayerModel';
+import AudioFileModel from './AudioFileModel';
 
 const store = {
   init() {
     this.listeners = new Map();
 
-    this.fileList = [];
+    this.fileCollection = [];
     this.players = new Set();
   },
 
@@ -14,6 +15,10 @@ const store = {
 
   getPlayerByUuid(uuid) {
     return Array.from(this.players).find(player => player.uuid === uuid);
+  },
+
+  getPlayersByFilename(filename) {
+    return Array.from(this.players).filter(player => player.currentFile && player.currentFile.filename === filename);
   },
 
   addListener(channel, callback) {
@@ -55,14 +60,47 @@ const store = {
     this.emit('update', this.toJSON());
   },
 
-  setFileList(fileList) {
-    this.fileList = fileList;
+  setFileList(filenames) {
+    // filenames = ['public/a', 'public/b'];
+
+    // add files
+    filenames.forEach(filename => {
+      const fileModel = this.fileCollection.find(model => model.filename === filename);
+
+      if (!fileModel) {
+        const model = new AudioFileModel(filename);
+        this.fileCollection.push(model);
+      }
+    });
+
+    // remove files
+    for (let i = this.fileCollection.length - 1; i >= 0; i--) {
+      if (filenames.indexOf(this.fileCollection[i].filename) === -1)
+        this.fileCollection.splice(i, 1);
+    }
+
     this.emit('update', this.toJSON());
+  },
+
+  updateFileAttribute(filename, attr, value) {
+    const fileModel = this.fileCollection.find(model => model.filename === filename);
+
+    if (fileModel) {
+      fileModel[attr] = value;
+
+      this.emit('update', this.toJSON());
+
+      const players = this.getPlayersByFilename(filename);
+      console.log(players);
+      players.forEach(player => {
+        this.emit('update-player-file', player);
+      });
+    }
   },
 
   randomlySetPlayerFilePairs() {
     this.players.forEach(player => {
-      const file = this.fileList[Math.floor(Math.random() * this.fileList.length)];
+      const file = this.fileCollection[Math.floor(Math.random() * this.fileCollection.length)];
       player.currentFile = file;
       player.fileLoaded = false;
 
@@ -72,9 +110,9 @@ const store = {
     this.emit('update', this.toJSON());
   },
 
-  setPlayerFilePair(uuid, file) {
+  setPlayerFilePair(uuid, filename) {
     const player = this.getPlayerByUuid(uuid);
-    player.currentFile = file;
+    player.currentFile = this.fileCollection.find(model => model.filename === filename);
     player.fileLoaded = false;
 
     this.emit('update', this.toJSON());
@@ -90,7 +128,7 @@ const store = {
 
   toJSON() {
     return {
-      fileList: this.fileList,
+      fileCollection: this.fileCollection.map(fileModel => fileModel.toJSON()),
       players: Array.from(this.players).map(player => player.toJSON()),
     };
   },

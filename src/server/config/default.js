@@ -10,7 +10,7 @@ const cwd = process.cwd();
 export default {
   // name of the application, used in the `.ejs` template and by default in
   // the `platform` service to populate its view
-  appName: 'Template',
+  appName: 'Playground',
 
   // name of the environnement ('production' enable cache in express application)
   env: 'development',
