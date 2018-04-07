@@ -9,6 +9,7 @@ class PlayerExperience extends Experience {
     this.comm = comm;
 
     this.checkin = this.require('checkin');
+    this.locator = this.require('locator');
     this.audioBufferManager = this.require('audio-buffer-manager');
   }
 

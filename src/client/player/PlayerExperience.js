@@ -21,8 +21,9 @@ class PlayerExperience extends soundworks.Experience {
   constructor(assetsDomain) {
     super();
 
-    this.platform = this.require('platform', { features: ['web-audio'] });
+    this.platform = this.require('platform', { features: ['web-audio', 'wake-lock'] });
     this.checkin = this.require('checkin', { showDialog: false });
+    this.locator = this.require('locator');
     this.audioBufferManager = this.require('audio-buffer-manager', {
       assetsDomain: assetsDomain,
     });
