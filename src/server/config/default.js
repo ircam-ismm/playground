@@ -15,7 +15,6 @@ export default {
   // name of the environnement ('production' enable cache in express application)
   env: 'development',
 
-  someArray: [0, 1, 2],
   // version of application, can be used to force reload css and js files
   // from server (cf. `html/default.ejs`)
   version: '0.0.1',
@@ -31,7 +30,6 @@ export default {
 
   // port used to open the http server, in production this value is typically 80
   port: 8000,
-
 
   // define if the server should use gzip compression for static files
   enableGZipCompression: true,

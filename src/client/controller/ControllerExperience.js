@@ -10,7 +10,7 @@ const template = `
   <div id="soundfile-attributes">
     <button class="close btn">open / close</button>
 
-    <ul id="files-controls">
+    <ul id="files-controls" data-model-attr="soundFileOpened"<%= soundFileOpened === false ? ' class="hidden"' : '' %>>
     <% store.fileCollection.forEach(function(file) { %>
       <li>
         <p><%= file.filename %></p>
@@ -25,7 +25,7 @@ const template = `
   <div id="client-list">
     <button class="close btn">open / close</button>
 
-    <ul id="file-chooser">
+    <ul id="file-chooser" data-model-attr="clientListOpened"<%= clientListOpened === false ? ' class="hidden"' : '' %>>
     <% store.players.forEach(function(player) { %>
       <li>
         <div class="color" style="background-color: <%= player.color %>">
@@ -103,7 +103,8 @@ class ControllerExperience extends Experience {
     this.view = new ControllerView(template, {
       store: null,
       triggerSize: 80,
-
+      soundFileOpened: true,
+      clientListOpened: true,
     }, {
       'change .sound-file': e => {
         const $select = e.target;
@@ -129,11 +130,14 @@ class ControllerExperience extends Experience {
         e.preventDefault();
 
         const $target = e.target.nextElementSibling;
+        const modelAttr = $target.dataset.modelAttr;
+        this.view.model[modelAttr] = !this.view.model[modelAttr];
 
-        if ($target.classList.contains('hidden'))
+        if (this.view.model[modelAttr] === true) {
           $target.classList.remove('hidden');
-        else
+        } else {
           $target.classList.add('hidden');
+        }
       },
       'input #trigger-size': e => {
         const value = parseInt(e.target.value);
