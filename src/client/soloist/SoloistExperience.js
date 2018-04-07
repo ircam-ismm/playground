@@ -134,14 +134,10 @@ class SoloistExperience extends Experience {
 
     this.show();
 
-    // Setup listeners for player connections / disconnections
     this.receive('player:list', this.onPlayerList);
     this.receive('player:add', this.onPlayerAdd);
     this.receive('player:remove', this.onPlayerRemove);
 
-    // Add a `TouchSurface` to the area svg. The `TouchSurface` is a helper
-    // which send normalized coordinates on touch events according to the given
-    // `DOMElement`
     const surface = new TouchSurface(this.interactionsSpace.$svg);
     // setup listeners to the `TouchSurface` events
     surface.addListener('touchstart', this.onTouchStart);
