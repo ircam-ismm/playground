@@ -83,9 +83,7 @@ input[type=range]:focus::-ms-fill-upper {
   background: #717171;
 }
 
-#container {
-  width: 90%;
-}
+
 
 .align-center {
   text-align: center;
@@ -102,6 +100,7 @@ h6 {
 #controller {
   padding: 20px;
   box-sizing: border-box;
+  width: 90%;
 
   h6 {
     font-size: 20px;
@@ -237,3 +236,47 @@ h6 {
   }
 
 }
+
+
+#soloist {
+  .background svg .point {
+    fill: #ffffff;
+  }
+
+  .foreground {
+    opacity: 0.5;
+
+    svg {
+      background-color: transparent;
+    }
+
+    .point {
+      fill: $midnight-blue;
+    }
+
+    #radius {
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      width: 15%;
+      z-index: 2;
+    }
+  }
+}
+
+// &.player {
+//   transition: background-color 400ms;
+
+//   &.active {
+//     background-color: rgba(255, 255, 255, 0.9);
+//   }
+// }
+
+
+
+
+
+
+
+
+

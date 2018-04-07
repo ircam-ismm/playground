@@ -10,6 +10,7 @@ class PlayerExperience extends Experience {
 
     this.checkin = this.require('checkin');
     this.locator = this.require('locator');
+    this.sync = this.require('sync');
     this.audioBufferManager = this.require('audio-buffer-manager');
   }
 
@@ -28,12 +29,17 @@ class PlayerExperience extends Experience {
     this.receive(client, 'file-loaded', uuid => {
       this.store.setFileLoaded(uuid);
     });
+
+    // notify soloist
+    this.comm.emit('player:enter', client);
   }
 
   exit(client) {
     super.exit(client);
 
     this.store.deletePlayer(client);
+    // notify soloist
+    this.comm.emit('player:exit', client);
   }
 }
 

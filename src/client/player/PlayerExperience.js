@@ -17,6 +17,38 @@ const template = `
   </div>
 `;
 
+class FadeSyncSynth {
+  constructor(startTime, buffer) {
+    const now = audioContext.currentTime;
+
+    this.env = audioContext.createGain();
+    this.env.connect(audioContext.destination);
+    this.env.gain.value = 0;
+    this.env.gain.setValueAtTime(0, now);
+
+    this.src = audioContext.createBufferSource();
+    this.src.connect(this.env);
+    this.src.buffer = buffer;
+    this.src.loop = true;
+
+    const offset = Math.max(0, (now - startTime) % buffer.duration);
+
+    this.src.start(now, offset);
+  }
+
+  set gain(value) {
+    const now = audioContext.currentTime;
+    this.env.gain.linearRampToValueAtTime(value, now + 0.005);
+  }
+
+  release() {
+    const releaseDuration = 1; // 1 sec
+    const now = audioContext.currentTime;
+    this.env.gain.exponentialRampToValueAtTime(0.0001, now + releaseDuration);
+    this.src.stop(now + releaseDuration);
+  }
+}
+
 class PlayerExperience extends soundworks.Experience {
   constructor(assetsDomain) {
     super();
@@ -28,7 +60,10 @@ class PlayerExperience extends soundworks.Experience {
       assetsDomain: assetsDomain,
     });
 
+    this.sync = this.require('sync');
+
     this.currentFile = null;
+    this.soloistSynth = null;
   }
 
   start() {
@@ -52,7 +87,6 @@ class PlayerExperience extends soundworks.Experience {
         this.audioBufferManager
           .load({ [audioFile.filename]: audioFile })
           .then(data => {
-            console.log(data);
             this.currentFile = data[audioFile.filename];
             this.send('file-loaded', client.uuid);
             this.view.model.player = player;
@@ -85,7 +119,32 @@ class PlayerExperience extends soundworks.Experience {
       }
     });
 
-    // as show can be async, we make sure that the view is actually rendered
+    // play from soloist
+    this.receive('soloist:start', (syncTime) => {
+      if (this.currentFile === null)
+        return;
+
+      const startTime = this.sync.getAudioTime(syncTime);
+      const buffer = this.currentFile.filename;
+      this.soloistSynth = new FadeSyncSynth(startTime, buffer);
+    });
+
+    this.receive('soloist:distance', normDistance => {
+      if (!this.soloistSynth)
+        return;
+
+      const gain = Math.cos(normDistance * Math.PI / 2);
+      this.soloistSynth.gain = gain;
+    });
+
+    this.receive('soloist:release', () => {
+      if (!this.soloistSynth)
+        return;
+
+      this.soloistSynth.release();
+      this.soloistSynth = null;
+    });
+
     this.show();
   }
 }
