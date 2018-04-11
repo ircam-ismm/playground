@@ -19,6 +19,9 @@ class SoloistExperience extends Experience {
     this.sharedConfig.share('setup', 'soloist');
     this.sync = this.require('sync');
 
+    this.sharedParams = this.require('shared-params');
+    this.sharedParams.addNumber('fadeOutDuration', 'fadeOutDuration', 0, 5, 0.01, 1);
+
     this.onPlayerEnter = this.onPlayerEnter.bind(this);
     this.onPlayerExit = this.onPlayerExit.bind(this);
   }
@@ -125,7 +128,7 @@ class SoloistExperience extends Experience {
 
         // not anymore in radius - make sure to shut down and remove from active list
         if (isActive && !inRadius) {
-          this.send(player, 'soloist:distance', 1);
+          this.send(player, 'soloist:distance', 1, true);
           activePlayers.delete(player);
         }
 
@@ -135,7 +138,7 @@ class SoloistExperience extends Experience {
         }
 
         if (inRadius)
-          this.send(player, 'soloist:distance', normDistance);
+          this.send(player, 'soloist:distance', normDistance, false);
       });
     }
 

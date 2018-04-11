@@ -254,12 +254,13 @@ h6 {
       fill: $midnight-blue;
     }
 
-    #radius {
+    #controllers {
       position: absolute;
       top: 4px;
-      right: 4px;
+      left: 4px;
       width: 15%;
       z-index: 2;
+      width: 700px;
     }
   }
 }

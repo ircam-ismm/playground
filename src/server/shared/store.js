@@ -91,7 +91,7 @@ const store = {
       this.emit('update', this.toJSON());
 
       const players = this.getPlayersByFilename(filename);
-      console.log(players);
+
       players.forEach(player => {
         this.emit('update-player-file', player);
       });

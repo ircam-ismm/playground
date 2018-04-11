@@ -1,5 +1,6 @@
 // Import Soundworks modules (client side)
 import { SpaceView, View, viewport, TouchSurface, Experience } from 'soundworks/client';
+import * as controllers from '@ircam/basic-controllers';
 
 // define the template of the view used by the experience
 // the template uses some of the helper classes defined in `sass/_02-commons.scss`
@@ -10,7 +11,7 @@ class SoloistView extends View {
     this.template = `
       <div class="background fit-container"></div>
       <div class="foreground fit-container">
-        <input type="range" id="radius" min="0" max="1" step="0.01" value="0.15" />
+        <div id="controllers"></div>
       </div>
     `;
 
@@ -59,6 +60,8 @@ class SoloistExperience extends Experience {
     // - the `shared-config` assure the experience has access to certain
     //   server configuration options when it starts
     this.sharedConfig = this.require('shared-config');
+
+    this.sharedParams = this.require('shared-params');
 
     /**
      * Area of the scenario.
@@ -124,25 +127,42 @@ class SoloistExperience extends Experience {
     this.interactionsSpace = new SpaceView();
     this.interactionsSpace.setArea(this.area);
 
-    this.view = new SoloistView(this.playersSpace, this.interactionsSpace, {
-      'input #radius': e => {
-        const $slider = e.target;
-        const value = parseFloat($slider.value);
-        this.radius = value;
-      }
-    });
-
-    this.show();
+    this.view = new SoloistView(this.playersSpace, this.interactionsSpace, {});
 
     this.receive('player:list', this.onPlayerList);
     this.receive('player:add', this.onPlayerAdd);
     this.receive('player:remove', this.onPlayerRemove);
 
-    const surface = new TouchSurface(this.interactionsSpace.$svg);
-    // setup listeners to the `TouchSurface` events
-    surface.addListener('touchstart', this.onTouchStart);
-    surface.addListener('touchmove', this.onTouchMove);
-    surface.addListener('touchend', this.onTouchEnd);
+    this.show().then(() => {
+      const surface = new TouchSurface(this.interactionsSpace.$svg);
+      // setup listeners to the `TouchSurface` events
+      surface.addListener('touchstart', this.onTouchStart);
+      surface.addListener('touchmove', this.onTouchMove);
+      surface.addListener('touchend', this.onTouchEnd);
+
+      const $controllers = this.view.$el.querySelector('#controllers');
+
+      const $fadeOut = new controllers.Slider({
+        container: $controllers,
+        min: 0,
+        max: 3,
+        default: 1,
+        label: 'fade-out duration',
+        size: 'large',
+        callback: value => this.sharedParams.update('fadeOutDuration', value),
+      });
+
+      const $radius = new controllers.Slider({
+        container: $controllers,
+        min: 0,
+        max: 1,
+        step: 0.01,
+        default: 0.15,
+        label: 'radius',
+        size: 'large',
+        callback: value => this.radius = value,
+      });
+    });
   }
 
   /**

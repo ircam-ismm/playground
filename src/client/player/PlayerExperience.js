@@ -19,6 +19,8 @@ const template = `
 
 class FadeSyncSynth {
   constructor(startTime, buffer) {
+    this.fadeOutDuration = 1;
+
     const now = audioContext.currentTime;
 
     this.env = audioContext.createGain();
@@ -38,14 +40,25 @@ class FadeSyncSynth {
 
   set gain(value) {
     const now = audioContext.currentTime;
+
+    this.env.gain.cancelScheduledValues(now);
+    this.env.gain.setValueAtTime(this.env.gain.value, now);
     this.env.gain.linearRampToValueAtTime(value, now + 0.005);
   }
 
-  release() {
-    const releaseDuration = 1; // 1 sec
+  fadeOut() {
     const now = audioContext.currentTime;
-    this.env.gain.exponentialRampToValueAtTime(0.0001, now + releaseDuration);
-    this.src.stop(now + releaseDuration);
+
+    this.env.gain.cancelScheduledValues(now);
+    this.env.gain.setValueAtTime(this.env.gain.value, now);
+    this.env.gain.exponentialRampToValueAtTime(0.0001, now + this.fadeOutDuration);
+  }
+
+  release() {
+    this.fadeOut();
+
+    const now = audioContext.currentTime;
+    this.src.stop(now + this.fadeOutDuration);
   }
 }
 
@@ -61,6 +74,7 @@ class PlayerExperience extends soundworks.Experience {
     });
 
     this.sync = this.require('sync');
+    this.sharedParams = this.require('shared-params');
 
     this.currentFile = null;
     this.soloistSynth = null;
@@ -127,22 +141,31 @@ class PlayerExperience extends soundworks.Experience {
       const startTime = this.sync.getAudioTime(syncTime);
       const buffer = this.currentFile.filename;
       this.soloistSynth = new FadeSyncSynth(startTime, buffer);
+      this.soloistSynth.fadeOutDuration = this.sharedParams.getValue('fadeOutDuration');
+      console.log(this.soloistSynth.fadeOutDuration);
     });
 
-    this.receive('soloist:distance', normDistance => {
-      if (!this.soloistSynth)
-        return;
-
-      const gain = Math.cos(normDistance * Math.PI / 2);
-      this.soloistSynth.gain = gain;
+    this.receive('soloist:distance', (normDistance, triggerFadeOut) => {
+      if (this.soloistSynth) {
+        if (!triggerFadeOut) {
+          const gain = Math.cos(normDistance * Math.PI / 2);
+          this.soloistSynth.gain = gain;
+        } else {
+          this.soloistSynth.fadeOut();
+        }
+      }
     });
 
     this.receive('soloist:release', () => {
-      if (!this.soloistSynth)
-        return;
+      if (this.soloistSynth) {
+        this.soloistSynth.release();
+        this.soloistSynth = null;
+      }
+    });
 
-      this.soloistSynth.release();
-      this.soloistSynth = null;
+    this.sharedParams.addParamListener('fadeOutDuration', value => {
+      if (this.soloistSynth)
+        this.soloistSynth.fadeOutDuration = value;
     });
 
     this.show();
