@@ -142,7 +142,6 @@ class PlayerExperience extends soundworks.Experience {
       const buffer = this.currentFile.filename;
       this.soloistSynth = new FadeSyncSynth(startTime, buffer);
       this.soloistSynth.fadeOutDuration = this.sharedParams.getValue('fadeOutDuration');
-      console.log(this.soloistSynth.fadeOutDuration);
     });
 
     this.receive('soloist:distance', (normDistance, triggerFadeOut) => {
