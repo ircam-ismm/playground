@@ -5,7 +5,15 @@ const template = `
 
   <h6>Select File</h6>
 
-  <button id="allocate-randomly" class="btn">Allocate<br />Randomly</button>
+  <div class="allocate-randomly-container">
+    <button class="allocate-randomly btn" data-target="all">Allocate all</button>
+
+    <% var presets = store.fileCollection.reduce(function(a, file) { return a.add(file.preset); }, new Set()); %>
+    <% presets.forEach(function(preset) { %>
+      <button class="allocate-randomly btn" data-target="<%= preset %>">Allocate <%= preset %></button>
+    <% }); %>
+
+  </div>
 
   <div id="soundfile-attributes">
     <button class="close btn">open / close</button>
@@ -121,10 +129,12 @@ class ControllerExperience extends Experience {
 
         this.send('trigger', uuid);
       },
-      'click #allocate-randomly': e => {
+      'click .allocate-randomly': e => {
         e.preventDefault();
 
-        this.send('allocate-randomly');
+        const $el = e.target;
+        const preset = $el.dataset.target;
+        this.send('allocate-randomly', preset);
       },
       'click .close': e => {
         e.preventDefault();

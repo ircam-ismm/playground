@@ -1,3 +1,4 @@
+import path from 'path';
 
 class AudioFileModel {
   constructor(filename) {
@@ -5,6 +6,8 @@ class AudioFileModel {
     this.repeat = 0;
     this.period = 0;
     this.jitter = 0;
+
+    this.preset = path.dirname(filename);
   }
 
   toJSON() {
@@ -13,6 +16,7 @@ class AudioFileModel {
       repeat: this.repeat,
       period: this.period,
       jitter: this.jitter,
+      preset: this.preset,
     };
   }
 }

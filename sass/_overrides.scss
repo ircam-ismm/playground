@@ -110,10 +110,15 @@ h6 {
     display: none;
   }
 
-  #allocate-randomly {
+  .allocate-randomly-container {
     position: fixed;
     top: 20px;
     right: 20px;
+
+    .btn {
+      margin-bottom: 4px;
+      width: 200px;
+    }
   }
 
   .file-loaded {

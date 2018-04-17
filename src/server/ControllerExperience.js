@@ -7,14 +7,14 @@ class ControllerExperience extends Experience {
     this.store = store;
     this.comm = comm;
 
-    this.dragNDrop = this.require('drag-n-drop');
+    this.directoryWatcher = this.require('directory-watcher');
   }
 
   start() {
-    this.store.setFileList(this.dragNDrop.getList());
+    this.store.setFileList(this.directoryWatcher.getList());
 
     // bind drag n drop to store
-    this.dragNDrop.addListener('update', files => {
+    this.directoryWatcher.addListener('update', files => {
       this.store.setFileList(files);
     });
 
@@ -38,8 +38,8 @@ class ControllerExperience extends Experience {
       this.store.updateFileAttribute(file, attr, value);
     });
 
-    this.receive(client, 'allocate-randomly', () => {
-      this.store.randomlySetPlayerFilePairs();
+    this.receive(client, 'allocate-randomly', (preset) => {
+      this.store.randomlySetPlayerFilePairs(preset);
     });
 
     this.receive(client, 'trigger', uuid => {

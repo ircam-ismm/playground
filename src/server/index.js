@@ -3,7 +3,7 @@ import path from 'path';
 import * as soundworks from 'soundworks/server';
 
 // @todo - rename to WatchFolder
-import DragNDrop from './shared/services/DragNDrop';
+import DirectoryWatcher from './shared/services/DirectoryWatcher';
 
 import PlayerExperience from './PlayerExperience';
 import ControllerExperience from './ControllerExperience';

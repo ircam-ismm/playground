@@ -61,8 +61,6 @@ const store = {
   },
 
   setFileList(filenames) {
-    // filenames = ['public/a', 'public/b'];
-
     // add files
     filenames.forEach(filename => {
       const fileModel = this.fileCollection.find(model => model.filename === filename);
@@ -98,9 +96,14 @@ const store = {
     }
   },
 
-  randomlySetPlayerFilePairs() {
+  randomlySetPlayerFilePairs(preset) {
+    let collection = this.fileCollection;
+
+    if (preset !== 'all')
+      collection = this.fileCollection.filter(file => file.preset === preset);
+
     this.players.forEach(player => {
-      const file = this.fileCollection[Math.floor(Math.random() * this.fileCollection.length)];
+      const file = collection[Math.floor(Math.random() * collection.length)];
       player.currentFile = file;
       player.fileLoaded = false;
 
