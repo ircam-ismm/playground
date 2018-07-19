@@ -12,7 +12,8 @@
 
 # application instance specific
 /logs
-/db
+.soundworks
+/bin/.browserify-cache.json
 
 # ignore junk files
 npm-debug.log
