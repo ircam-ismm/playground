@@ -3,8 +3,6 @@ import { Experience, View, client} from 'soundworks/client';
 const template = `
 <% if (store) { %>
 
-  <h6>Select File</h6>
-
   <div class="allocate-randomly-container">
     <button class="allocate-randomly btn" data-target="all">Allocate all</button>
 
@@ -15,70 +13,46 @@ const template = `
 
   </div>
 
-  <div id="soundfile-attributes">
-    <button class="close btn">open / close</button>
+  <div class="main">
+    <div id="soundfile-attributes">
+      <button class="close btn">Trigger config - open / close</button>
 
-    <ul id="files-controls" data-model-attr="soundFileOpened"<%= soundFileOpened === false ? ' class="hidden"' : '' %>>
-    <% store.fileCollection.forEach(function(file) { %>
-      <li>
-        <p><%= file.filename %></p>
-        <label>Repeat: <input class="file-attr" data-attr="repeat" data-target="<%= file.filename %>" type="number" value="<%= file.repeat %>" /></label>
-        <label>Period: <input class="file-attr" data-attr="period" data-target="<%= file.filename %>" type="number" value="<%= file.period %>" /></label>
-        <label>Jitter: <input class="file-attr" data-attr="jitter" data-target="<%= file.filename %>" type="number" value="<%= file.jitter %>" /></label>
-      </li>
-    <% }); %>
-    </ul>
-  </div>
+      <ul id="files-controls" data-model-attr="soundFileOpened"<%= soundFileOpened === false ? ' class="hidden"' : '' %>>
+      <% store.fileCollection.forEach(function(file) { %>
+        <li>
+          <p><%= file.filename %></p>
+          <label>Repeat: <input class="file-attr" data-attr="repeat" data-target="<%= file.filename %>" type="number" value="<%= file.repeat %>" /></label>
+          <label>Period: <input class="file-attr" data-attr="period" data-target="<%= file.filename %>" type="number" value="<%= file.period %>" /></label>
+          <label>Jitter: <input class="file-attr" data-attr="jitter" data-target="<%= file.filename %>" type="number" value="<%= file.jitter %>" /></label>
+        </li>
+      <% }); %>
+      </ul>
+    </div>
 
-  <div id="client-list">
-    <button class="close btn">open / close</button>
+    <div id="client-list">
+      <button class="close btn">Client Select File - open / close</button>
 
-    <ul id="file-chooser" data-model-attr="clientListOpened"<%= clientListOpened === false ? ' class="hidden"' : '' %>>
-    <% store.players.forEach(function(player) { %>
-      <li>
-        <div class="color" style="background-color: <%= player.color %>">
-          <%= player.index %>
-        </div>
-
-        <select class="sound-file" data-target="<%= player.uuid %>">
-          <option value="">Select audio file</option>
-
-          <% store.fileCollection.forEach(function(file) { %>
-            <% if (player.currentFile && file.filename === player.currentFile.filename) { %>
-            <option value="<%= file.filename %>" selected>
-            <% } else { %>
-            <option value="<%= file.filename %>">
-            <% } %>
-              <%= file.filename %>
-            </option>
-          <% }); %>
-
-        </select>
-
-        <% if (player.fileLoaded) { %>
-          <div class="file-loaded done">&nbsp;</div>
-        <% } else { %>
-          <div class="file-loaded">&nbsp;</div>
-        <% } %>
-      </li>
-
-    <% }); %>
-    </ul>
-  </div>
-
-  <input id="trigger-size" type="range" min="20" max="80" value="<%= triggerSize %>" />
-
-  <h6>Triggers</h6>
-
-  <% store.fileCollection.forEach((file, index) => { %>
-    <p class="filename"><%= file.filename %></p>
-    <% var rgb = 255 - Math.ceil(index / store.fileCollection.length * 255); %>
-
-    <ul class="triggers">
+      <ul id="file-chooser" data-model-attr="clientListOpened"<%= clientListOpened === false ? ' class="hidden"' : '' %>>
       <% store.players.forEach(function(player) { %>
-        <% if (player.currentFile && file.filename === player.currentFile.filename) { %>
-        <li class="trigger" data-target="<%= player.uuid %>"style="background-color: <%= player.color %>; width: <%= triggerSize %>px; height: <%= triggerSize %>px; line-height: <%= triggerSize %>px">
-          <%= player.index %>
+        <li>
+          <div class="color" style="background-color: <%= player.color %>">
+            <%= player.index %>
+          </div>
+
+          <select class="sound-file" data-target="<%= player.uuid %>">
+            <option value="">Select audio file</option>
+
+            <% store.fileCollection.forEach(function(file) { %>
+              <% if (player.currentFile && file.filename === player.currentFile.filename) { %>
+              <option value="<%= file.filename %>" selected>
+              <% } else { %>
+              <option value="<%= file.filename %>">
+              <% } %>
+                <%= file.filename %>
+              </option>
+            <% }); %>
+
+          </select>
 
           <% if (player.fileLoaded) { %>
             <div class="file-loaded done">&nbsp;</div>
@@ -86,10 +60,39 @@ const template = `
             <div class="file-loaded">&nbsp;</div>
           <% } %>
         </li>
-        <% } %>
+
       <% }); %>
-    </ul>
-  <% }); %>
+      </ul>
+    </div>
+
+    <label>
+      PAD SIZE:
+      <input id="trigger-size" type="range" min="20" max="80" value="<%= triggerSize %>" />
+    </label>
+
+    <h6>Triggers</h6>
+
+    <% store.fileCollection.forEach((file, index) => { %>
+      <p class="filename"><%= file.filename %></p>
+      <% var rgb = 255 - Math.ceil(index / store.fileCollection.length * 255); %>
+
+      <ul class="triggers">
+        <% store.players.forEach(function(player) { %>
+          <% if (player.currentFile && file.filename === player.currentFile.filename) { %>
+          <li class="trigger-file" data-target="<%= player.uuid %>"style="background-color: <%= player.color %>; width: <%= triggerSize %>px; height: <%= triggerSize %>px; line-height: <%= triggerSize %>px">
+            <%= player.index %>
+
+            <% if (player.fileLoaded) { %>
+              <div class="file-loaded done">&nbsp;</div>
+            <% } else { %>
+              <div class="file-loaded">&nbsp;</div>
+            <% } %>
+          </li>
+          <% } %>
+        <% }); %>
+      </ul>
+    <% }); %>
+  </div> <!-- end .main -->
 
 <% } %>
 `;
@@ -111,8 +114,8 @@ class ControllerExperience extends Experience {
     this.view = new ControllerView(template, {
       store: null,
       triggerSize: 80,
-      soundFileOpened: true,
-      clientListOpened: true,
+      soundFileOpened: false,
+      clientListOpened: false,
     }, {
       'change .sound-file': e => {
         const $select = e.target;
@@ -121,13 +124,13 @@ class ControllerExperience extends Experience {
 
         this.send('update-player-file', uuid, filename);
       },
-      'touchstart .trigger': e => {
+      'touchstart .trigger-file': e => {
         e.preventDefault();
 
         const $el = e.target;
         const uuid = $el.dataset.target;
 
-        this.send('trigger', uuid);
+        this.send('trigger-file', uuid);
       },
       'click .allocate-randomly': e => {
         e.preventDefault();
@@ -151,7 +154,7 @@ class ControllerExperience extends Experience {
       },
       'input #trigger-size': e => {
         const value = parseInt(e.target.value);
-        const $triggers = document.querySelectorAll('.trigger');
+        const $triggers = document.querySelectorAll('.trigger-file');
         $triggers.forEach($trigger => {
           $trigger.style.width = `${value}px`;
           $trigger.style.height = `${value}px`;

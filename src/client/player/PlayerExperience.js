@@ -1,4 +1,6 @@
 import * as soundworks from 'soundworks/client';
+import FadeSyncSynth from './FadeSyncSynth';
+import TriggerSynth from './TriggerSynth';
 // import { centToLinear } from 'soundworks/utils/math';
 
 const audioContext = soundworks.audioContext;
@@ -17,51 +19,6 @@ const template = `
   </div>
 `;
 
-class FadeSyncSynth {
-  constructor(startTime, buffer) {
-    this.fadeOutDuration = 1;
-
-    const now = audioContext.currentTime;
-
-    this.env = audioContext.createGain();
-    this.env.connect(audioContext.destination);
-    this.env.gain.value = 0;
-    this.env.gain.setValueAtTime(0, now);
-
-    this.src = audioContext.createBufferSource();
-    this.src.connect(this.env);
-    this.src.buffer = buffer;
-    this.src.loop = true;
-
-    const offset = Math.max(0, (now - startTime) % buffer.duration);
-
-    this.src.start(now, offset);
-  }
-
-  set gain(value) {
-    const now = audioContext.currentTime;
-
-    this.env.gain.cancelScheduledValues(now);
-    this.env.gain.setValueAtTime(this.env.gain.value, now);
-    this.env.gain.linearRampToValueAtTime(value, now + 0.005);
-  }
-
-  fadeOut() {
-    const now = audioContext.currentTime;
-
-    this.env.gain.cancelScheduledValues(now);
-    this.env.gain.setValueAtTime(this.env.gain.value, now);
-    this.env.gain.exponentialRampToValueAtTime(0.0001, now + this.fadeOutDuration);
-  }
-
-  release() {
-    this.fadeOut();
-
-    const now = audioContext.currentTime;
-    this.src.stop(now + this.fadeOutDuration);
-  }
-}
-
 class PlayerExperience extends soundworks.Experience {
   constructor(assetsDomain) {
     super();
@@ -78,6 +35,14 @@ class PlayerExperience extends soundworks.Experience {
 
     this.currentFile = null;
     this.soloistSynth = null;
+
+    this._updateFile = this._updateFile.bind(this);
+    this._triggerFile = this._triggerFile.bind(this);
+
+    // control from soloist
+    this._soloistStart = this._soloistStart.bind(this);
+    this._updateSoloistDistance = this._updateSoloistDistance.bind(this);
+    this._soloistRelease = this._soloistRelease.bind(this);
   }
 
   start() {
@@ -94,10 +59,33 @@ class PlayerExperience extends soundworks.Experience {
       this.view.render();
     });
 
-    this.receive('update-file', player => {
-      const audioFile = player.currentFile;
+    this.receive('update-file', this._updateFile);
+    this.receive('trigger', this._triggerFile);
 
-      if (audioFile !== null) {
+    // play from soloist
+    this.receive('soloist:start', this._soloistStart);
+    this.receive('soloist:distance', this._updateSoloistDistance);
+    this.receive('soloist:release', this._soloistRelease);
+
+    this.sharedParams.addParamListener('fadeOutDuration', value => {
+      if (this.soloistSynth) {
+        this.soloistSynth.fadeOutDuration = value;
+      }
+    });
+
+    this.show();
+  }
+
+  _updateFile(player) {
+    const audioFile = player.currentFile;
+
+    if (audioFile !== null) {
+      if (this.audioBufferManager.data[audioFile.filename]) {
+        this.currentFile = this.audioBufferManager.data[audioFile.filename];
+        this.send('file-loaded', client.uuid);
+        this.view.model.player = player;
+        this.view.render();
+      } else {
         this.audioBufferManager
           .load({ [audioFile.filename]: audioFile })
           .then(data => {
@@ -107,67 +95,42 @@ class PlayerExperience extends soundworks.Experience {
             this.view.render();
           });
       }
-    });
+    }
+  }
 
-    this.receive('trigger', () => {
-      if (this.currentFile === null)
-        return;
+  _triggerFile() {
+    if (this.currentFile !== null) {
+      const synth = new TriggerSynth(this.currentFile);
+      synth.trigger();
+    }
+  }
 
-      const now = audioContext.currentTime;
-      const buffer = this.currentFile.filename;
-      const repeat = this.currentFile.repeat;
-      const period = this.currentFile.period === 0 ? buffer.duration : this.currentFile.period;
-      const jitter = this.currentFile.jitter;
-
-      for (let i = 0; i < repeat + 1; i++) {
-        const src = audioContext.createBufferSource();
-        src.connect(audioContext.destination);
-        src.buffer = buffer;
-
-        let startTime = now;
-
-        if (i > 0)
-          startTime = now + (i * period) + ((Math.random() * 2 - 1)  * jitter);
-
-        src.start(startTime);
-      }
-    });
-
-    // play from soloist
-    this.receive('soloist:start', (syncTime) => {
-      if (this.currentFile === null)
-        return;
-
+  // control from soloist
+  _soloistStart(syncTime) {
+    if (this.currentFile !== null) {
       const startTime = this.sync.getAudioTime(syncTime);
       const buffer = this.currentFile.filename;
       this.soloistSynth = new FadeSyncSynth(startTime, buffer);
       this.soloistSynth.fadeOutDuration = this.sharedParams.getValue('fadeOutDuration');
-    });
+    }
+  }
 
-    this.receive('soloist:distance', (normDistance, triggerFadeOut) => {
-      if (this.soloistSynth) {
-        if (!triggerFadeOut) {
-          const gain = Math.cos(normDistance * Math.PI / 2);
-          this.soloistSynth.gain = gain;
-        } else {
-          this.soloistSynth.fadeOut();
-        }
+  _updateSoloistDistance(normDistance, triggerFadeOut) {
+    if (this.soloistSynth) {
+      if (!triggerFadeOut) {
+        const gain = Math.cos(normDistance * Math.PI / 2);
+        this.soloistSynth.gain = gain;
+      } else {
+        this.soloistSynth.fadeOut();
       }
-    });
+    }
+  }
 
-    this.receive('soloist:release', () => {
-      if (this.soloistSynth) {
-        this.soloistSynth.release();
-        this.soloistSynth = null;
-      }
-    });
-
-    this.sharedParams.addParamListener('fadeOutDuration', value => {
-      if (this.soloistSynth)
-        this.soloistSynth.fadeOutDuration = value;
-    });
-
-    this.show();
+  _soloistRelease() {
+    if (this.soloistSynth) {
+      this.soloistSynth.release();
+      this.soloistSynth = null;
+    }
   }
 }
 

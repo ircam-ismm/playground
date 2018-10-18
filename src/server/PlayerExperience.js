@@ -20,12 +20,22 @@ class PlayerExperience extends Experience {
     this.store.addListener('update-player-file', player => {
       this.send(player.client, 'update-file', player.toJSON());
     });
+
+    this.comm.addListener('trigger-file', uuid => {
+      const player = this.store.getPlayerByUuid(uuid);
+
+      if (player) {
+        const client = player.client;
+        this.send(client, 'trigger-file');
+      }
+    });
   }
 
   enter(client) {
     super.enter(client);
 
     const player = this.store.createPlayer(client);
+
     this.send(client, 'setup', player.toJSON());
 
     this.receive(client, 'file-loaded', uuid => {

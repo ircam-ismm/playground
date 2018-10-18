@@ -1,4 +1,4 @@
-  input[type=range] {
+input[type=range] {
   -webkit-appearance: none;
   width: 310px;
   margin: 0px 0;
@@ -98,12 +98,14 @@ h6 {
 }
 
 #controller {
-  padding: 20px;
   box-sizing: border-box;
-  width: 90%;
 
   h6 {
     font-size: 20px;
+  }
+
+  .btn {
+    font-size: 12px;
   }
 
   .hidden {
@@ -112,13 +114,25 @@ h6 {
 
   .allocate-randomly-container {
     position: fixed;
-    top: 20px;
-    right: 20px;
+    top: 0px;
+    right: 0px;
+    width: 22%;
+    min-width: 220px;
+    box-sizing: border-box;
+    padding: 10px;
+    background-color: rgba(255, 255, 255, 0.1);
 
     .btn {
       margin-bottom: 4px;
-      width: 200px;
+      width: 100%;
+      min-width: 200px;
     }
+  }
+
+  .main {
+    width: 78%;
+    padding: 10px;
+    box-sizing: border-box;
   }
 
   .file-loaded {
@@ -207,7 +221,7 @@ h6 {
     padding: 0;
     list-style-type: none;
 
-    .trigger {
+    .trigger-file {
       width: 80px;
       height: 80px;
       display: inline-block;

@@ -42,13 +42,8 @@ class ControllerExperience extends Experience {
       this.store.randomlySetPlayerFilePairs(preset);
     });
 
-    this.receive(client, 'trigger', uuid => {
-      const player = this.store.getPlayerByUuid(uuid);
-
-      if (player) {
-        const client = player.client;
-        this.send(client, 'trigger');
-      }
+    this.receive(client, 'trigger-file', uuid => {
+      this.comm.emit('trigger-file', uuid);
     });
   }
 
