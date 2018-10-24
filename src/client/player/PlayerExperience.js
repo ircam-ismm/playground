@@ -79,17 +79,21 @@ class PlayerExperience extends soundworks.Experience {
   _updateFile(player) {
     const audioFile = player.currentFile;
 
-    if (audioFile !== null) {
+    if (audioFile) {
+      // if already loaded
       if (this.audioBufferManager.data[audioFile.filename]) {
-        this.currentFile = this.audioBufferManager.data[audioFile.filename];
+        this.currentFile = audioFile;
+        // replace filename with buffer
+        this.currentFile.buffer = this.audioBufferManager.data[audioFile.filename];
         this.send('file-loaded', client.uuid);
         this.view.model.player = player;
         this.view.render();
       } else {
         this.audioBufferManager
-          .load({ [audioFile.filename]: audioFile })
+          .load({ [audioFile.filename]: audioFile.filename })
           .then(data => {
-            this.currentFile = data[audioFile.filename];
+            this.currentFile = audioFile;
+            this.currentFile.buffer = this.audioBufferManager.data[audioFile.filename];
             this.send('file-loaded', client.uuid);
             this.view.model.player = player;
             this.view.render();
@@ -109,7 +113,7 @@ class PlayerExperience extends soundworks.Experience {
   _soloistStart(syncTime) {
     if (this.currentFile !== null) {
       const startTime = this.sync.getAudioTime(syncTime);
-      const buffer = this.currentFile.filename;
+      const buffer = this.currentFile.buffer;
       this.soloistSynth = new FadeSyncSynth(startTime, buffer);
       this.soloistSynth.fadeOutDuration = this.sharedParams.getValue('fadeOutDuration');
     }

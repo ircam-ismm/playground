@@ -1,24 +1,19 @@
 import PlayerModel from './PlayerModel';
+import PlayerCollection from './PlayerCollection';
 import AudioFileModel from './AudioFileModel';
+import AudioFileCollection from './AudioFileCollection';
 
 const store = {
   init() {
     this.listeners = new Map();
 
-    this.fileCollection = [];
-    this.players = new Set();
-  },
+    this.fileCollection = new AudioFileCollection();
+    this.playerCollection = new PlayerCollection();
 
-  getPlayerByClient(client) {
-    return Array.from(this.players).find(player => player.client === client);
-  },
-
-  getPlayerByUuid(uuid) {
-    return Array.from(this.players).find(player => player.uuid === uuid);
-  },
-
-  getPlayersByFilename(filename) {
-    return Array.from(this.players).filter(player => player.currentFile && player.currentFile.filename === filename);
+    this.globals = {
+      currentPreset: null,
+      currentPresetFileCollection: null,
+    };
   },
 
   addListener(channel, callback) {
@@ -46,16 +41,24 @@ const store = {
 
   createPlayer(client) {
     const player = new PlayerModel(client);
-    this.players.add(player);
+    this.playerCollection.add(player);
 
     this.emit('update', this.toJSON());
+
+    if (this.globals.currentPresetFileCollection !== null) {
+      const collection = this.globals.currentPresetFileCollection;
+      const file = collection[Math.floor(Math.random() * collection.length)];
+      player.setCurrentFile(file);
+
+      this.emit('update-player-file', player);
+    }
 
     return player;
   },
 
   deletePlayer(client) {
-    const player = this.getPlayerByClient(client);
-    this.players.delete(player);
+    const player = this.playerCollection.getByClient(client);
+    this.playerCollection.delete(player);
 
     this.emit('update', this.toJSON());
   },
@@ -63,67 +66,76 @@ const store = {
   setFileList(filenames) {
     // add files
     filenames.forEach(filename => {
-      const fileModel = this.fileCollection.find(model => model.filename === filename);
+      const fileModel = this.fileCollection.getByName(filename);
 
-      if (!fileModel) {
+      if (fileModel === undefined) {
         const model = new AudioFileModel(filename);
-        this.fileCollection.push(model);
+        this.fileCollection.add(model);
       }
     });
 
-    // remove files
-    for (let i = this.fileCollection.length - 1; i >= 0; i--) {
-      if (filenames.indexOf(this.fileCollection[i].filename) === -1)
-        this.fileCollection.splice(i, 1);
-    }
+    // remove unsued files
+    this.fileCollection.forEach(file => {
+      if (filenames.indexOf(file.filename) === -1) {
+        this.fileCollection.delete(file);
+      }
+    });
 
     this.emit('update', this.toJSON());
   },
 
-  updateFileAttribute(filename, attr, value) {
-    const fileModel = this.fileCollection.find(model => model.filename === filename);
+  // change `updateFileAttribute` for that
+  updateFileAttributes(filename, defs) {
+    const fileModel = this.fileCollection.getByName(filename);
 
     if (fileModel) {
-      fileModel[attr] = value;
+      for (let attr in defs) {
+        fileModel[attr] = defs[attr];
+      }
 
       this.emit('update', this.toJSON());
 
-      const players = this.getPlayersByFilename(filename);
+      const players = this.playerCollection.getListByFilename(filename);
 
-      players.forEach(player => {
-        this.emit('update-player-file', player);
-      });
+      if (Array.isArray(players)) {
+        players.forEach(player => this.emit('update-player-file', player));
+      }
     }
   },
 
   randomlySetPlayerFilePairs(preset) {
-    let collection = this.fileCollection;
+    let collection;
 
-    if (preset !== 'all')
-      collection = this.fileCollection.filter(file => file.preset === preset);
+    if (preset === 'all') {
+      collection = this.fileCollection.getAll();
+    } else {
+      collection = this.fileCollection.getPresetList(preset);
+    }
 
-    this.players.forEach(player => {
+    this.playerCollection.forEach(player => {
       const file = collection[Math.floor(Math.random() * collection.length)];
-      player.currentFile = file;
-      player.fileLoaded = false;
+      player.setCurrentFile(file);
 
       this.emit('update-player-file', player);
     });
+
+    this.globals.currentPreset = preset;
+    this.globals.currentPresetFileCollection = collection;
 
     this.emit('update', this.toJSON());
   },
 
   setPlayerFilePair(uuid, filename) {
-    const player = this.getPlayerByUuid(uuid);
-    player.currentFile = this.fileCollection.find(model => model.filename === filename);
-    player.fileLoaded = false;
+    const player = this.playerCollection.getByUuid(uuid);
+    const file = this.fileCollection.getByName(filename);
+    player.setCurrentFile(file);
 
     this.emit('update', this.toJSON());
     this.emit('update-player-file', player);
   },
 
   setFileLoaded(uuid) {
-    const player = this.getPlayerByUuid(uuid);
+    const player = this.playerCollection.getByUuid(uuid);
     player.fileLoaded = true;
 
     this.emit('update', this.toJSON());
@@ -131,8 +143,9 @@ const store = {
 
   toJSON() {
     return {
-      fileCollection: this.fileCollection.map(fileModel => fileModel.toJSON()),
-      players: Array.from(this.players).map(player => player.toJSON()),
+      globals: this.globals,
+      fileCollection: this.fileCollection.toJSON(),
+      players: this.playerCollection.toJSON(),
     };
   },
 };

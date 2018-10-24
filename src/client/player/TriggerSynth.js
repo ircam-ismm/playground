@@ -2,7 +2,7 @@ import { audioContext } from 'soundworks/client';
 
 class TriggerSynth {
   constructor(file) {
-    this.buffer = file.filename;
+    this.buffer = file.buffer;
     this.repeat = file.repeat;
     this.period = file.period === 0 ? this.buffer.duration : file.period;
     this.jitter = file.jitter;
@@ -11,7 +11,7 @@ class TriggerSynth {
   trigger() {
     const now = audioContext.currentTime;
 
-    for (let i = 0; i < this.repeat + 1; i++) {
+    for (let i = 0; i < this.repeat; i++) {
       const src = audioContext.createBufferSource();
       src.connect(audioContext.destination);
       src.buffer = this.buffer;

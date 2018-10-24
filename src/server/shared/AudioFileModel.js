@@ -3,9 +3,10 @@ import path from 'path';
 class AudioFileModel {
   constructor(filename) {
     this.filename = filename;
-    this.repeat = 0;
+    this.repeat = 1;
     this.period = 0;
     this.jitter = 0;
+    this.releaseDuration = 0;
 
     this.preset = path.dirname(filename);
   }
@@ -17,6 +18,7 @@ class AudioFileModel {
       period: this.period,
       jitter: this.jitter,
       preset: this.preset,
+      releaseDuration: this.releaseDuration,
     };
   }
 }

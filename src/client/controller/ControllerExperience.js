@@ -4,11 +4,13 @@ const template = `
 <% if (store) { %>
 
   <div class="allocate-randomly-container">
-    <button class="allocate-randomly btn" data-target="all">Allocate all</button>
+    <% var activeClass = store.globals.currentPreset === 'all' ? ' active' : ''; %>
+    <button class="allocate-randomly btn<%= activeClass %>" data-target="all">Allocate all</button>
 
     <% var presets = store.fileCollection.reduce(function(a, file) { return a.add(file.preset); }, new Set()); %>
     <% presets.forEach(function(preset) { %>
-      <button class="allocate-randomly btn" data-target="<%= preset %>">Allocate <%= preset %></button>
+      <% var activeClass = store.globals.currentPreset === preset ? ' active' : ''; %>
+      <button class="allocate-randomly btn<%= activeClass %>" data-target="<%= preset %>">Allocate <%= preset %></button>
     <% }); %>
 
   </div>
@@ -18,12 +20,15 @@ const template = `
       <button class="close btn">Trigger config - open / close</button>
 
       <ul id="files-controls" data-model-attr="soundFileOpened"<%= soundFileOpened === false ? ' class="hidden"' : '' %>>
-      <% store.fileCollection.forEach(function(file) { %>
+
+      <% var fileCollection = store.globals.currentPresetFileCollection ? store.globals.currentPresetFileCollection : store.fileCollection; %>
+      <% fileCollection.forEach(function(file) { %>
         <li>
           <p><%= file.filename %></p>
           <label>Repeat: <input class="file-attr" data-attr="repeat" data-target="<%= file.filename %>" type="number" value="<%= file.repeat %>" /></label>
           <label>Period: <input class="file-attr" data-attr="period" data-target="<%= file.filename %>" type="number" value="<%= file.period %>" /></label>
           <label>Jitter: <input class="file-attr" data-attr="jitter" data-target="<%= file.filename %>" type="number" value="<%= file.jitter %>" /></label>
+          <label>Release duration: <input class="file-attr" data-attr="releaseDuration" data-target="<%= file.filename %>" type="number" value="<%= file.releaseDuration %>" /></label>
         </li>
       <% }); %>
       </ul>
@@ -65,14 +70,16 @@ const template = `
       </ul>
     </div>
 
+
+    <h6>Triggers</h6>
+
     <label>
       PAD SIZE:
       <input id="trigger-size" type="range" min="20" max="80" value="<%= triggerSize %>" />
     </label>
 
-    <h6>Triggers</h6>
-
-    <% store.fileCollection.forEach((file, index) => { %>
+    <% var fileCollection = store.globals.currentPresetFileCollection ? store.globals.currentPresetFileCollection : store.fileCollection; %>
+    <% fileCollection.forEach((file, index) => { %>
       <p class="filename"><%= file.filename %></p>
       <% var rgb = 255 - Math.ceil(index / store.fileCollection.length * 255); %>
 
@@ -170,7 +177,7 @@ class ControllerExperience extends Experience {
         const attr = $el.dataset.attr;
         const value = parseFloat($el.value);
 
-        this.send('update-file-attr', file, attr, value);
+        this.send('update-file-attributes', file, { [attr]: value });
       }
     }, {
       id: 'controller',

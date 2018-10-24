@@ -34,8 +34,8 @@ class ControllerExperience extends Experience {
       this.store.setPlayerFilePair(uuid, file);
     });
 
-    this.receive(client, 'update-file-attr', (file, attr, value) => {
-      this.store.updateFileAttribute(file, attr, value);
+    this.receive(client, 'update-file-attributes', (file, defs) => {
+      this.store.updateFileAttributes(file, defs);
     });
 
     this.receive(client, 'allocate-randomly', (preset) => {

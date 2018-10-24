@@ -22,7 +22,7 @@ class PlayerExperience extends Experience {
     });
 
     this.comm.addListener('trigger-file', uuid => {
-      const player = this.store.getPlayerByUuid(uuid);
+      const player = this.store.playerCollection.getByUuid(uuid);
 
       if (player) {
         const client = player.client;

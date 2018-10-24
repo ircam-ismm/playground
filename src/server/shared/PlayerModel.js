@@ -22,6 +22,11 @@ class PlayerModel {
     this.fileLoaded = false;
   }
 
+  setCurrentFile(file) {
+    this.currentFile = file;
+    this.fileLoaded = false;
+  }
+
   toJSON() {
     return {
       uuid: this.uuid,
