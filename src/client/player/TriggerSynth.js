@@ -4,7 +4,7 @@ class TriggerSynth {
   constructor(file) {
     this.buffer = file.filename;
     this.repeat = file.repeat;
-    this.period = file.period === 0 ? buffer.duration : file.period;
+    this.period = file.period === 0 ? this.buffer.duration : file.period;
     this.jitter = file.jitter;
   }
 

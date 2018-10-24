@@ -54,13 +54,8 @@ class SoloistExperience extends Experience {
   constructor() {
     super();
 
-    // the experience requires 2 service:
-    // - the `platform` service can create the home page of the application
-    this.platform = this.require('platform', { showDialog: true });
-    // - the `shared-config` assure the experience has access to certain
-    //   server configuration options when it starts
+    this.platform = this.require('platform', { features: ['wake-lock'] });
     this.sharedConfig = this.require('shared-config');
-
     this.sharedParams = this.require('shared-params');
 
     /**

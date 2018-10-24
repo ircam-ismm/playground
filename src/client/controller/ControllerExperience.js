@@ -98,14 +98,16 @@ const template = `
 `;
 
 class ControllerView extends View {
-  onResize(width, height, orientation) {
-    // console.log(width, height, orientation);
-  }
+  // onResize(width, height, orientation) {
+  //   // console.log(width, height, orientation);
+  // }
 }
 
 class ControllerExperience extends Experience {
   constructor() {
     super();
+
+    this.platform = this.require('platform', { features: ['wake-lock'] });
   }
 
   start() {

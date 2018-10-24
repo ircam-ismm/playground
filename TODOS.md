@@ -1,22 +1,32 @@
 # TODO
 
-## Documentation
+Future Perfect WebAudio developments - October
 
-- map of the network to show the relationship between the server and clients 
-- 
 
-## Bug Fixes
+- OSC (using  control of the functions we are building so some of them could be automated with the HOA score
+- To allow layered textures - could the loop number also be OSC controlled?
+- sounds triggered and loaded via OSC external to the HTML interface
+- hocketting - ie dispersed delays - flocking like speed of trigger (from start) or amplitude (continued play as now)
+- Granulation - interpolated random looping function - grain length variable
+- Record and playback spatialisation patters which would allow for rhythmic movements across the audience
+- DNS - Fu.tu.re
+- Tabs for each specified collection of sounds
+- Includes looping controls
+- Phones show in all tabs
+- Allocation of sounds in each tab
+- Each phone should receive one of the current sound sets automatically when logging in - and when re-logging in later
+- Controller window sometime goes to sleep
+- New version - can not trigger sound from phone button in Control window 
+- Set phone position using A) user input, B) seat number - could be set in variable
+- Make release time a user setable variable so I can vary it from piece to piece - default 8s
+- Want to be able to change spatial radius while holding a finger on surface spatializing 
 
-- loading problems - ok (hopefully)
+------
 
-## New Developments
+Perhaps they could be tabs associated with each folder of sounds so that the sounds are more manageable on the controller page.
 
-- creating groups of clients by creating arbitrary bounding boxes in soloist
-- sending a specific sample to a group
+Would like to have washers of delayed granulation across all phones using voice samples. Similar to stretched sounds in score. 
 
-- OSC messages
-  + controlling the center point of soloist
-  + sending a specific sample to a group  
-  + triggereing sound on a specific group
+Thinking that some of the phone triggered delay approaches in MU might be useful in future perfect.
 
-- we discussed implementing the granulation engine and there are a few other things I would like to discuss and some bugs and refinements I would like to discuss. Also I am interested in working on OSC control of the functions we are building so some of them could be automated with the HOA score.  This would open up the multi-layering of sounds on the phones as it is clear that each loaded sound has its own thread and so can remain looping while new sounds are loaded etc, so layering textures would become more available if some of the sounds could be triggered and loaded external to the HTML interface. I want to generate some vocal hocketting across the audience from  recorded vocal material so some long grains or event a kind of interpolated random looping function could be useful for that.  in this respect it would be great to record and later spatialisation patters which would allow for rhythmic movements across the audience - these too could be live in the soloist interface and also possibly driven by OSC. 
+Would like to be able to trigger all sounds of the same name simultaneously – i.e. drum samples

@@ -60,7 +60,7 @@ class PlayerExperience extends soundworks.Experience {
     });
 
     this.receive('update-file', this._updateFile);
-    this.receive('trigger', this._triggerFile);
+    this.receive('trigger-file', this._triggerFile);
 
     // play from soloist
     this.receive('soloist:start', this._soloistStart);
