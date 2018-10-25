@@ -24,7 +24,7 @@ const template = `
       <% var fileCollection = store.globals.currentPresetFileCollection ? store.globals.currentPresetFileCollection : store.fileCollection; %>
       <% fileCollection.forEach(function(file) { %>
         <li>
-          <p><%= file.filename %></p>
+          <p><%= file.displayName %></p>
           <label>Repeat: <input class="file-attr" data-attr="repeat" data-target="<%= file.filename %>" type="number" value="<%= file.repeat %>" /></label>
           <label>Period: <input class="file-attr" data-attr="period" data-target="<%= file.filename %>" type="number" value="<%= file.period %>" /></label>
           <label>Jitter: <input class="file-attr" data-attr="jitter" data-target="<%= file.filename %>" type="number" value="<%= file.jitter %>" /></label>
@@ -53,7 +53,7 @@ const template = `
               <% } else { %>
               <option value="<%= file.filename %>">
               <% } %>
-                <%= file.filename %>
+                <%= file.displayName %>
               </option>
             <% }); %>
 
@@ -80,7 +80,7 @@ const template = `
 
     <% var fileCollection = store.globals.currentPresetFileCollection ? store.globals.currentPresetFileCollection : store.fileCollection; %>
     <% fileCollection.forEach((file, index) => { %>
-      <p class="filename"><%= file.filename %></p>
+      <p class="filename"><%= file.displayName %></p>
       <% var rgb = 255 - Math.ceil(index / store.fileCollection.length * 255); %>
 
       <ul class="triggers">
