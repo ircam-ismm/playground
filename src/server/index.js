@@ -1,5 +1,6 @@
 import 'source-map-support/register'; // enable sourcemaps in node
 import path from 'path';
+import fs from 'fs';
 import * as soundworks from 'soundworks/server';
 
 // @todo - rename to WatchFolder
@@ -26,8 +27,9 @@ try {
 // configure express environment ('production' enables express cache for static files)
 process.env.NODE_ENV = config.env;
 // override config if port has been defined from the command line
-if (process.env.PORT)
+if (process.env.PORT) {
   config.port = process.env.PORT;
+}
 
 // initialize application with configuration options
 soundworks.server.init(config);
@@ -48,6 +50,23 @@ soundworks.server.setClientConfigDefinition((clientType, config, httpRequest) =>
 
 const comm = new EventEmitter();
 store.init();
+
+// apply user defined globals to the whole application
+const globals = JSON.parse(fs.readFileSync(path.join(process.cwd(), 'GLOBALS.json')));
+
+if (globals.areaBackground) {
+  config.setup.area.background = globals.areaBackground;
+}
+
+const sharedParams = soundworks.server.require('shared-params');
+const { min, max, step, defaultValue } = globals.soloist.fadeOutDuration;
+sharedParams.addNumber('fadeOutDuration', 'fadeOutDuration', min, max, step, defaultValue);
+
+const sharedConfig = soundworks.server.require('shared-config');
+config.globals = globals;
+sharedConfig.share('globals', 'player');
+sharedConfig.share('globals', 'soloist');
+sharedConfig.share('globals', 'controller');
 
 const playerExperience = new PlayerExperience('player', store, comm);
 const controllerExperience = new ControllerExperience('controller', store, comm);

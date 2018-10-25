@@ -18,9 +18,7 @@ class SoloistExperience extends Experience {
     this.sharedConfig = this.require('shared-config');
     this.sharedConfig.share('setup', 'soloist');
     this.sync = this.require('sync');
-
     this.sharedParams = this.require('shared-params');
-    this.sharedParams.addNumber('fadeOutDuration', 'fadeOutDuration', 0, 5, 0.01, 1);
 
     this.onPlayerEnter = this.onPlayerEnter.bind(this);
     this.onPlayerExit = this.onPlayerExit.bind(this);
@@ -96,7 +94,7 @@ class SoloistExperience extends Experience {
   }
 
 
-  onInputChange(radius, touches) {
+  onInputChange(touches) {
     const activePlayers = this.activePlayers;
     const players = this.players;
 
@@ -119,7 +117,8 @@ class SoloistExperience extends Experience {
         const isActive = activePlayers.has(player);
 
         for (let id in touches) {
-          const center = touches[id];
+          const center = [touches[id].x, touches[id].y];
+          const radius = touches[id].radius;
           const target = player.coordinates;
           normDistance = this.getNormalizedDistance(target, center, radius);
         }

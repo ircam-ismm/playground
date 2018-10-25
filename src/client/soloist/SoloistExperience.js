@@ -99,6 +99,8 @@ class SoloistExperience extends Experience {
     this.timeoutDelay = 6000;
 
     // bind methods to the instance to keep a safe `this` in callbacks
+    this.updateRadius = this.updateRadius.bind(this);
+
     this.onTouchStart = this.onTouchStart.bind(this);
     this.onTouchMove = this.onTouchMove.bind(this);
     this.onTouchEnd = this.onTouchEnd.bind(this);
@@ -137,25 +139,31 @@ class SoloistExperience extends Experience {
 
       const $controllers = this.view.$el.querySelector('#controllers');
 
+      const globals = this.sharedConfig.get('globals');
+      const fadeOutDurationParams = globals.soloist.fadeOutDuration;
+
       const $fadeOut = new controllers.Slider({
         container: $controllers,
-        min: 0,
-        max: 3,
-        default: 1,
+        min: fadeOutDurationParams.min,
+        max: fadeOutDurationParams.max,
+        step: fadeOutDurationParams.step,
+        default: fadeOutDurationParams.defaultValue,
         label: 'fade-out duration',
         size: 'large',
         callback: value => this.sharedParams.update('fadeOutDuration', value),
       });
 
+      const radiusParams = globals.soloist.radius;
+
       const $radius = new controllers.Slider({
         container: $controllers,
-        min: 0,
-        max: 1,
-        step: 0.01,
-        default: 0.15,
+        min: radiusParams.min,
+        max: radiusParams.max,
+        step: radiusParams.step,
+        default: radiusParams.defaultValue,
         label: 'radius',
         size: 'large',
-        callback: value => this.radius = value,
+        callback: this.updateRadius,
       });
     });
   }
@@ -184,6 +192,25 @@ class SoloistExperience extends Experience {
     this.playersSpace.deletePoint(playerInfos.id);
   }
 
+  updateRadius(value) {
+    this.radius = value;
+
+    // update touches sent to the server
+    for (let id in this.touches) {
+      this.touches[id].radius = value;
+    }
+
+    this.sendCoordinates();
+
+    const radiusPixels = (this.radius / this.area.width) * this.interactionsSpace.areaWidth;
+    // update rendering
+    for (let id in this.renderedTouches) {
+      const point = this.renderedTouches[id];
+      point.radius = radiusPixels;
+      this.interactionsSpace.updatePoint(point);
+    }
+  }
+
   /**
    * Callback for the `touchstart` event.
    * @param {Number} id - The id of the touch event as given by the browser.
@@ -199,7 +226,7 @@ class SoloistExperience extends Experience {
     y = y * area.height;
 
     // add the coordinates to the ones sended to the server
-    this.touches[id] = [x, y];
+    this.touches[id] = { x, y, radius: this.radius };
     this.sendCoordinates();
 
     // defines the radius of excitation in pixels according to the rendered area.
@@ -231,8 +258,8 @@ class SoloistExperience extends Experience {
 
     // update values sended to the server
     const touch = this.touches[id];
-    touch[0] = x;
-    touch[1] = y;
+    touch.x = x;
+    touch.y = y;
 
     this.sendCoordinates();
 
@@ -274,7 +301,7 @@ class SoloistExperience extends Experience {
    * Send the current state of the touche coordinates to the server.
    */
   sendCoordinates() {
-    this.send('input:change', this.radius, this.touches);
+    this.send('input:change', this.touches);
   }
 }
 
