@@ -117,6 +117,9 @@ class SoloistExperience extends Experience {
     super.start();
 
     this.area = this.sharedConfig.get('setup.area');
+    // we don't wnt the backgroud image on soloists
+    this.area.background = null;
+
     // create a background `SpaceView` to display players positions
     this.playersSpace = new SpaceView();
     this.playersSpace.setArea(this.area);
