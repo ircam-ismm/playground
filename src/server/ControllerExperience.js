@@ -30,15 +30,15 @@ class ControllerExperience extends Experience {
     const storeModel = this.store.toJSON();
     this.send(client, 'update-store', storeModel);
 
-    this.receive(client, 'update-player-file', (uuid, file) => {
-      this.store.setPlayerFilePair(uuid, file);
+    this.receive(client, 'update-player-file', (uuid) => {
+      this.store.randomlySetPlayerFilePair(uuid);
     });
 
     this.receive(client, 'update-file-attributes', (file, defs) => {
       this.store.updateFileAttributes(file, defs);
     });
 
-    this.receive(client, 'allocate-randomly', (preset) => {
+    this.receive(client, 'select-preset', (preset) => {
       this.store.randomlySetPlayerFilePairs(preset);
     });
 

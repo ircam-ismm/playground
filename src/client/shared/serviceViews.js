@@ -636,7 +636,7 @@ const serviceViews = {
         isCompatible: null,
         hasAuthorizations: null,
         checking: false,
-        intro: 'Welcome to',
+        intro: '',
         instructions: 'Touch the screen to join!',
         checkingMessage: 'Please wait while checking compatiblity',
         errorCompatibleMessage: 'Sorry,<br />Your device is not compatible with the application.',
