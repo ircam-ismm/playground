@@ -1,6 +1,7 @@
 import { audio, audioContext } from 'soundworks/client';
 
 const scheduler = audio.getScheduler();
+scheduler.period = 0.05;
 
 class GranularSynth {
   constructor(file) {
