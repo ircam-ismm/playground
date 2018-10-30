@@ -17,16 +17,19 @@ class PlayerExperience extends Experience {
   }
 
   start() {
-    this.store.addListener('update-player-file', player => {
-      this.send(player.client, 'update-file', player.toJSON());
+    this.store.addListener('update-file', (player, type) => {
+      this.send(player.client, 'update-file', player.toJSON(), type);
+    });
+
+    this.store.addListener('update-file-attributes', (player, type, filename, defs) => {
+      this.send(player.client, 'update-file-attributes', type, filename, defs);
     });
 
     this.comm.addListener('trigger-file', uuid => {
       const player = this.store.playerCollection.getByUuid(uuid);
 
       if (player) {
-        const client = player.client;
-        this.send(client, 'trigger-file');
+        this.send(player.client, 'trigger-file');
       }
     });
   }
@@ -38,8 +41,8 @@ class PlayerExperience extends Experience {
 
     this.send(client, 'setup', player.toJSON());
 
-    this.receive(client, 'file-loaded', uuid => {
-      this.store.setFileLoaded(uuid);
+    this.receive(client, 'file-loaded', (uuid, type) => {
+      this.store.setFileLoaded(uuid, type);
     });
 
     // notify soloist

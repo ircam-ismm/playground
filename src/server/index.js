@@ -1,16 +1,16 @@
 import 'source-map-support/register'; // enable sourcemaps in node
 import path from 'path';
 import fs from 'fs';
+import { EventEmitter } from 'events';
 import * as soundworks from 'soundworks/server';
-
-// @todo - rename to WatchFolder
+// shared
 import DirectoryWatcher from './shared/services/DirectoryWatcher';
-
+import store from './shared/store';
+// clients
 import PlayerExperience from './PlayerExperience';
 import ControllerExperience from './ControllerExperience';
 import SoloistExperience from './SoloistExperience';
-import store from './shared/store';
-import { EventEmitter } from 'events';
+import GranularControllerExperience from './GranularControllerExperience';
 
 const configName = process.env.ENV || 'default';
 const configPath = path.join(__dirname, 'config', configName);
@@ -68,9 +68,18 @@ sharedConfig.share('globals', 'player');
 sharedConfig.share('globals', 'soloist');
 sharedConfig.share('globals', 'controller');
 
+const directoryWatcher = soundworks.server.require('directory-watcher');
+
 const playerExperience = new PlayerExperience('player', store, comm);
 const controllerExperience = new ControllerExperience('controller', store, comm);
 const soloistExperience = new SoloistExperience('soloist', store, comm);
+const granularControllerExperience = new GranularControllerExperience('granular-controller', store, comm);
 
 // start application
-soundworks.server.start();
+soundworks.server
+  .start()
+  .then(() => {
+    store.setFileList(directoryWatcher.getList(), true);
+    // bind drag n drop to store
+    directoryWatcher.addListener('update', files => store.setFileList(files), false);
+  });

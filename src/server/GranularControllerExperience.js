@@ -1,17 +1,16 @@
 import { Experience } from 'soundworks/server';
 
-class ControllerExperience extends Experience {
+class GranularControllerExperience extends Experience {
   constructor(clientType, store, comm) {
-    super(clientType);
+    super(clientType)
 
     this.store = store;
     this.comm = comm;
   }
 
   start() {
-    // listen store changes
     this.store.addListener('update', storeModel => {
-      this.broadcast('controller', null, 'update-store', storeModel);
+      this.broadcast('granular-controller', null, 'update-store', storeModel);
     });
   }
 
@@ -21,23 +20,19 @@ class ControllerExperience extends Experience {
     this.send(client, 'update-store', this.store.toJSON());
 
     this.receive(client, 'errored-client', (uuid) => {
-      this.store.randomlySetPlayerFilePair(uuid, 'trigger');
+      this.store.randomlySetPlayerFilePair(uuid, 'granular');
     });
 
     this.receive(client, 'select-preset', (preset) => {
-      this.store.randomlySetPlayerFilePairs(preset, 'trigger');
+      this.store.randomlySetPlayerFilePairs(preset, 'granular');
     });
 
-    this.receive(client, 'update-file-attributes', (file, defs) => {
-      this.store.updateFileAttributes(file, defs, 'trigger');
+    this.receive(client, 'update-file-attributes', (file, defs, silent) => {
+      this.store.updateFileAttributes(file, defs, 'granular', silent);
     });
 
     this.receive(client, 'save-state', () => {
       this.store.saveState();
-    });
-
-    this.receive(client, 'trigger-file', uuid => {
-      this.comm.emit('trigger-file', uuid);
     });
   }
 
@@ -46,4 +41,4 @@ class ControllerExperience extends Experience {
   }
 }
 
-export default ControllerExperience;
+export default GranularControllerExperience;

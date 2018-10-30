@@ -1,6 +1,8 @@
+import merge from 'lodash.merge';
 import * as soundworks from 'soundworks/client';
 import FadeSyncSynth from './FadeSyncSynth';
 import TriggerSynth from './TriggerSynth';
+import GranularSynth from './GranularSynth';
 // import { centToLinear } from 'soundworks/utils/math';
 
 const audioContext = soundworks.audioContext;
@@ -33,10 +35,12 @@ class PlayerExperience extends soundworks.Experience {
     this.sync = this.require('sync');
     this.sharedParams = this.require('shared-params');
 
-    this.currentFile = null;
+    this.currentFile = {};
     this.soloistSynth = null;
+    this.granularSynth = null;
 
     this._updateFile = this._updateFile.bind(this);
+    this._updateFileAttributes = this._updateFileAttributes.bind(this);
     this._triggerFile = this._triggerFile.bind(this);
 
     // control from soloist
@@ -60,6 +64,7 @@ class PlayerExperience extends soundworks.Experience {
     });
 
     this.receive('update-file', this._updateFile);
+    this.receive('update-file-attributes', this._updateFileAttributes);
     this.receive('trigger-file', this._triggerFile);
 
     // play from soloist
@@ -76,25 +81,26 @@ class PlayerExperience extends soundworks.Experience {
     this.show();
   }
 
-  _updateFile(player) {
-    const audioFile = player.currentFile;
+  _updateFile(player, type) {
+    const audioFile = player.currentFile[type];
 
     if (audioFile) {
       // if already loaded
       if (this.audioBufferManager.data[audioFile.filename]) {
-        this.currentFile = audioFile;
-        // replace filename with buffer
-        this.currentFile.buffer = this.audioBufferManager.data[audioFile.filename];
-        this.send('file-loaded', client.uuid);
+        this.currentFile[type] = audioFile;
+        this.currentFile[type].buffer = this.audioBufferManager.data[audioFile.filename];
+
+        this.send('file-loaded', client.uuid, type);
         this.view.model.player = player;
         this.view.render();
       } else {
         this.audioBufferManager
           .load({ [audioFile.filename]: audioFile.filename })
           .then(data => {
-            this.currentFile = audioFile;
-            this.currentFile.buffer = this.audioBufferManager.data[audioFile.filename];
-            this.send('file-loaded', client.uuid);
+            this.currentFile[type] = audioFile;
+            this.currentFile[type].buffer = this.audioBufferManager.data[audioFile.filename];
+
+            this.send('file-loaded', client.uuid, type);
             this.view.model.player = player;
             this.view.render();
           });
@@ -102,18 +108,38 @@ class PlayerExperience extends soundworks.Experience {
     }
   }
 
+  _updateFileAttributes(type, filename, defs) {
+    if (this.currentFile[type] &&  this.currentFile[type].filename === filename) {
+      merge(this.currentFile[type], defs);
+
+      if (type === 'granular') {
+        const file = this.currentFile[type];
+
+        if (this.granularSynth === null && file.granularPlay) {
+          this.granularSynth = new GranularSynth(file);
+          this.granularSynth.start();
+        } else if (this.granularSynth && !file.granularPlay) {
+          this.granularSynth.stop();
+          this.granularSynth = null;
+        } else if (this.granularSynth && file.granularPlay) {
+          this.granularSynth.updateParams(defs);
+        }
+      }
+    }
+  }
+
   _triggerFile() {
-    if (this.currentFile !== null) {
-      const synth = new TriggerSynth(this.currentFile);
+    if (this.currentFile['trigger'] !== null) {
+      const synth = new TriggerSynth(this.currentFile['trigger']);
       synth.trigger();
     }
   }
 
   // control from soloist
   _soloistStart(syncTime) {
-    if (this.currentFile !== null) {
+    if (this.currentFile['trigger'] !== null) {
       const startTime = this.sync.getAudioTime(syncTime);
-      const buffer = this.currentFile.buffer;
+      const buffer = this.currentFile['trigger'].buffer;
       this.soloistSynth = new FadeSyncSynth(startTime, buffer);
       this.soloistSynth.fadeOutDuration = this.sharedParams.getValue('fadeOutDuration');
     }

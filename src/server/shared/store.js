@@ -1,3 +1,4 @@
+import db from './db';
 import PlayerModel from './PlayerModel';
 import PlayerCollection from './PlayerCollection';
 import AudioFileModel from './AudioFileModel';
@@ -11,8 +12,8 @@ const store = {
     this.playerCollection = new PlayerCollection();
 
     this.globals = {
-      currentPreset: null,
-      currentPresetFileCollection: null,
+      currentPreset: {},
+      currentPresetFileCollection: {},
     };
   },
 
@@ -43,15 +44,19 @@ const store = {
     const player = new PlayerModel(client);
     this.playerCollection.add(player);
 
+    // assign sound file(s) to new player of presets has already be chosen
+    ['trigger', 'granular'].forEach(type => {
+      if (this.globals.currentPresetFileCollection[type]) {
+        const collection = this.globals.currentPresetFileCollection[type];
+        const file = collection[Math.floor(Math.random() * collection.length)];
+
+        player.setCurrentFile(type, file);
+
+        this.emit('update-file', player, type);
+      }
+    });
+
     this.emit('update', this.toJSON());
-
-    if (this.globals.currentPresetFileCollection !== null) {
-      const collection = this.globals.currentPresetFileCollection;
-      const file = collection[Math.floor(Math.random() * collection.length)];
-      player.setCurrentFile(file);
-
-      this.emit('update-player-file', player);
-    }
 
     return player;
   },
@@ -63,13 +68,31 @@ const store = {
     this.emit('update', this.toJSON());
   },
 
-  setFileList(filenames) {
+  setFileList(filenames, updateFromDb = false) {
+    let filesConfig = [];
+
+    if (updateFromDb) {
+      filesConfig = db.retrieve();
+    }
+
     // add files
     filenames.forEach(filename => {
       const fileModel = this.fileCollection.getByName(filename);
 
       if (fileModel === undefined) {
-        const model = new AudioFileModel(filename);
+        let options = {};
+
+        // for now this only happens on initialization
+        if (updateFromDb) {
+          const storedOptions = filesConfig.find(conf => conf.filename === filename);
+
+          if (storedOptions) {
+            options = storedOptions;
+          }
+        }
+
+        const model = new AudioFileModel(filename, options);
+
         this.fileCollection.add(model);
       }
     });
@@ -85,7 +108,12 @@ const store = {
   },
 
   // change `updateFileAttribute` for that
-  updateFileAttributes(filename, defs) {
+  /**
+   * @param {Boolean} quiet - if true, doesn't send back the state to the
+   *  controllers, is particularly needed for sliders to work properly.
+   *  This could (should?) be fixed using a proper view system such as vue.js
+   */
+  updateFileAttributes(filename, defs, type, quiet = false) {
     const fileModel = this.fileCollection.getByName(filename);
 
     if (fileModel) {
@@ -93,17 +121,23 @@ const store = {
         fileModel[attr] = defs[attr];
       }
 
-      this.emit('update', this.toJSON());
+      if (!quiet) {
+        // propagate state back to the controllers
+        this.emit('update', this.toJSON());
+      }
 
-      const players = this.playerCollection.getListByFilename(filename);
+      const players = this.playerCollection.getListByFile(type, filename);
 
       if (Array.isArray(players)) {
-        players.forEach(player => this.emit('update-player-file', player));
+        players.forEach(player => this.emit('update-file-attributes', player, type, filename, defs));
       }
     }
   },
 
-  randomlySetPlayerFilePairs(preset) {
+  /**
+   * @param {String} type - refers to the type of synth (`trigger` or `granular`)
+   */
+  randomlySetPlayerFilePairs(preset, type) {
     let collection;
 
     if (preset === 'all') {
@@ -112,32 +146,45 @@ const store = {
       collection = this.fileCollection.getPresetList(preset);
     }
 
+    if (type === 'granular') {
+      if (this.globals.currentPresetFileCollection[type]) {
+        this.globals.currentPresetFileCollection[type].forEach(file => {
+          this.updateFileAttributes(file.filename, { granularPlay: false }, 'granular', true);
+        });
+      }
+    }
+
     this.playerCollection.forEach(player => {
       const file = collection[Math.floor(Math.random() * collection.length)];
-      player.setCurrentFile(file);
+      player.setCurrentFile(type, file);
 
-      this.emit('update-player-file', player);
+      this.emit(`update-file`, player, type);
     });
 
-    this.globals.currentPreset = preset;
-    this.globals.currentPresetFileCollection = collection;
+    this.globals.currentPreset[type] = preset;
+    this.globals.currentPresetFileCollection[type] = collection;
 
     this.emit('update', this.toJSON());
   },
 
-  randomlySetPlayerFilePair(uuid) {
-    const player = this.playerCollection.getByUuid(uuid);
-    const collection = this.globals.currentPresetFileCollection;
-    const file = collection[Math.floor(Math.random() * collection.length)];
-    player.setCurrentFile(file);
+  /**
+   * @param {String} type - refers to the type of synth (`trigger` or `granular`)
+   */
+  randomlySetPlayerFilePair(uuid, type) {
+    if (this.globals.currentPresetFileCollection[type]) {
+      const player = this.playerCollection.getByUuid(uuid);
+      const collection = this.globals.currentPresetFileCollection[type];
+      const file = collection[Math.floor(Math.random() * collection.length)];
+      player.setCurrentFile(type, file);
 
-    this.emit('update-player-file', player);
-    this.emit('update', this.toJSON());
+      this.emit(`update-file`, player, type);
+      this.emit('update', this.toJSON());
+    }
   },
 
-  setFileLoaded(uuid) {
+  setFileLoaded(uuid, type) {
     const player = this.playerCollection.getByUuid(uuid);
-    player.fileLoaded = true;
+    player.fileLoaded[type] = true;
 
     this.emit('update', this.toJSON());
   },
@@ -149,6 +196,11 @@ const store = {
       players: this.playerCollection.toJSON(),
     };
   },
+
+  saveState() {
+    const model = this.fileCollection.toJSON();
+    db.persist(model);
+  }
 };
 
 export default store;

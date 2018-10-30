@@ -28,8 +28,10 @@ class PlayerCollection {
     return this._players.find(player => player.uuid === uuid);
   }
 
-  getListByFilename(filename) {
-    return this._players.filter(player => player.currentFile && player.currentFile.filename === filename);
+  getListByFile(type, filename) {
+    return this._players.filter(player => {
+      return player.currentFile[type] && player.currentFile[type].filename === filename;
+    });
   }
 
   toJSON() {

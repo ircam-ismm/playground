@@ -18,13 +18,14 @@ class PlayerModel {
     this.uuid = client.uuid;
     this.index = client.index;
     this.color = colors[client.index % colors.length];
-    this.currentFile = null;
-    this.fileLoaded = false;
+    this.currentFile = {};
+    this.fileLoaded = {};
   }
 
-  setCurrentFile(file) {
-    this.currentFile = file;
-    this.fileLoaded = false;
+  setCurrentFile(type, file) {
+    this.currentFile[type] = file;
+    // @note - concurency here
+    this.fileLoaded[type] = false;
   }
 
   toJSON() {
