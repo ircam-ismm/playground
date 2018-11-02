@@ -123,19 +123,19 @@ const model = {
     periodAbs: {
       label: 'period',
       min: 0.001,
-      max: 0.500,
+      max: 0.300,
       step: 0.001,
     },
     durationAbs: {
       label: 'duration',
       min: 0.010,
-      max: 0.500,
+      max: 0.300,
       step: 0.001,
     },
     resampling: {
       label: 'resampling',
-      min: -2400,
-      max: 2400,
+      min: -1200,
+      max: 1200,
       step: 1,
     },
     resamplingVar: {
