@@ -39,6 +39,10 @@ class ControllerExperience extends Experience {
     this.receive(client, 'trigger-file', uuid => {
       this.comm.emit('trigger-file', uuid);
     });
+
+    this.receive(client, 'trigger-all', () => {
+      this.comm.emit('trigger-all');
+    });
   }
 
   exit(client) {

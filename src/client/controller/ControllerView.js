@@ -42,6 +42,8 @@ const template = `
 
     <h6>Triggers</h6>
 
+    <button class="btn trigger-all">Trigger All</button>
+
     <label class="pad-size">
       <span>PAD SIZE:</span>
       <input id="trigger-size" type="range" min="20" max="80" value="<%= triggerSize %>" />
@@ -146,6 +148,11 @@ class ControllerView extends View {
         const uuid = $el.dataset.target;
 
         this.experience.send('trigger-file', uuid);
+      },
+      'touchstart .trigger-all': e => {
+        e.preventDefault();
+
+        this.experience.send('trigger-all');
       },
       'input #trigger-size': e => {
         const value = parseInt(e.target.value);

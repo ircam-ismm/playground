@@ -149,11 +149,13 @@ h6 {
     border-bottom: 1px solid #606060;
 
     .btn.select-preset {
-      min-width: 10%;
+      min-width: 14.2%; // @garth (size of buttons)
       display: inline-block;
-      font-size: 15px;
-      height: 30px;
-      line-height: 18px;
+      font-size: 18px;
+      height: 36px;
+      line-height: 24px;
+      // font-weight: bold; // @garth
+      margin: 2;
 
       &.active {
         background-color: #dc3545;
@@ -317,6 +319,20 @@ h6 {
           padding: 2px 4px;
           box-sizing: border-box;
           width: 70px;
+        }
+
+        .file-play {
+          display: inline-block;
+          width: 383px;
+          height: 30px;
+          margin-bottom: 4px;
+          font-size: 14px;
+
+          &.active {
+            background-color: #dc3545;
+            border-color: #dc3545;
+            color: white;
+          }
         }
       }
     }

@@ -60,9 +60,15 @@ const template = `
           </p>
 
           <div class="granular-attr">
-            <span>play / stop</span>
-            <% var checked = file.granularPlay ? ' checked' : ''; %>
-            <input type="checkbox" class="file-play" data-target="<%= file.filename %>" data-attr="granularPlay"<%= checked %>></input>
+            <span>start / stop</span>
+
+            <% var className = file.granularPlay ? ' active' : ''; %>
+            <% var text = file.granularPlay ? 'stop' : 'start'; %>
+            <% var value = new Number(!file.granularPlay); %>
+
+            <button class="btn file-play<%= className %>" data-target="<%= file.filename %>" data-attr="granularPlay" data-value="<%= value %>">
+              <%= text %>
+            </button>
           </div>
 
           <% for (let attr in granularAttrs) { %>
@@ -187,10 +193,10 @@ class ControllerView extends View {
         this.experience.send('update-file-attributes', file, { [attr]: value }, false);
       },
 
-      'change .file-play': e => {
+      'touchstart .file-play': e => {
         const $el = e.target;
         const file = $el.dataset.target;
-        const value = $el.checked;
+        const value = !!parseInt($el.dataset.value);
 
         this.experience.send('update-file-attributes', file, { granularPlay: value }, false);
       },

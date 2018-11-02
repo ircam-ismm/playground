@@ -32,6 +32,12 @@ class PlayerExperience extends Experience {
         this.send(player.client, 'trigger-file');
       }
     });
+
+    this.comm.addListener('trigger-all', () => {
+      this.store.playerCollection.forEach(player => {
+        this.send(player.client, 'trigger-file');
+      });
+    });
   }
 
   enter(client) {

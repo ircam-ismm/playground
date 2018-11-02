@@ -47,7 +47,6 @@ soundworks.server.setClientConfigDefinition((clientType, config, httpRequest) =>
   };
 });
 
-
 const comm = new EventEmitter();
 store.init();
 
