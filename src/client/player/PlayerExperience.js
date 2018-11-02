@@ -12,10 +12,14 @@ const template = `
   <div class="foreground" style="background-color: <%= player ? player.color : '#000000' %>">
     <div class="section-top flex-middle"></div>
     <div class="section-center">
-      <% if (player) { %>
+    <% if (player) { %>
       <p class="big align-center"><%= player.index %></p>
-      <p class="align-center"><%= player.currentFile ? player.currentFile.filename : '' %></p>
+      <% for (let key in player.currentFile) { %>
+        <p class="soundfile-details">
+          <span><%= key %>:</span> <%= player.currentFile[key].filenameDisplay %>
+        </p>
       <% } %>
+    <% } %>
     </div>
     <div class="section-bottom flex-middle"></div>
   </div>
@@ -54,7 +58,7 @@ class PlayerExperience extends soundworks.Experience {
 
     // initialize the view
     this.view = new soundworks.SegmentedView(template, { player: null }, {}, {
-      id: this.id,
+      id: 'player',
       preservePixelRatio: true,
     });
 

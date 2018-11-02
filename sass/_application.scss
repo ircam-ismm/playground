@@ -102,6 +102,18 @@ h6 {
   fill-opacity: 0.7;
 }
 
+#player {
+  .soundfile-details {
+    font-size: 1.2rem;
+    margin: 10px;
+
+    span {
+      display: block;
+      font-style: italic;
+    }
+  }
+}
+
 #controller {
   box-sizing: border-box;
 
@@ -396,75 +408,6 @@ h6 {
       right: 10px;
     }
   }
-
-  // remove
-  // #soundfile-attributes {
-  //   border-bottom: 1px solid white;
-  //   margin: 12px 0;
-
-  //   ul#files-controls {
-  //     padding: 0;
-  //   }
-
-  //   li {
-  //     margin-bottom: 6px;
-
-  //     p {
-  //       font-size: 14px;
-  //       margin-bottom: 3px;
-  //     }
-
-  //     label {
-  //       font-size: 12px;
-  //     }
-
-  //     input[type=number] {
-  //       font-size: 14px;
-  //       padding: 3px 5px;
-  //       width: 70px;
-  //       margin-right: 12px;
-  //     }
-  //   }
-  // }
-
-  // #client-list {
-  //   border-bottom: 1px solid white;
-  //   margin: 12px 0;
-
-  //   .btn {
-  //     margin: 0;
-  //   }
-  // }
-
-  // #file-chooser {
-  //   padding: 0;
-  //   list-style-type: none;
-
-  //   li {
-  //     margin-bottom: 12px;
-  //     height: 24px;
-  //     vertical-align: top;
-  //   }
-
-  //   .color {
-  //     width: 24px;
-  //     height: 24px;
-  //     display: inline-block;
-  //     text-align: center;
-  //     line-height: 24px;
-  //   }
-
-  //   select {
-  //     height: 24px;
-  //     line-height: 24px;
-  //     padding: 0;
-  //     display: inline-block;
-  //     border-radius: 2px;
-  //   }
-  // }
-
-  // main details
-
 }
 
 
@@ -495,13 +438,6 @@ h6 {
   }
 }
 
-// &.player {
-//   transition: background-color 400ms;
-
-//   &.active {
-//     background-color: rgba(255, 255, 255, 0.9);
-//   }
-// }
 
 
 

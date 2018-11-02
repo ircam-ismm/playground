@@ -616,19 +616,21 @@ const serviceViews = {
         <% } else { %>
           <div class="section-top flex-middle"></div>
           <div class="section-center flex-center">
-              <p class="big">
-                <%= intro %>
-                <br />
-                <b><%= globals.appName %></b>
-              </p>
+            <p class="big">
+              <b><%= globals.appName %></b>
+              <br />
+              <br />
+              <% if (checking === true) { %>
+              <span class="small soft-blink"><%= checkingMessage %></span>
+              <% } else if (hasAuthorizations === true) { %>
+              <span class="small soft-blink"><%= instructions %></span>
+              <% } %>
+            </p>
           </div>
           <div class="section-bottom flex-middle">
-            <% if (checking === true) { %>
-            <p class="small soft-blink"><%= checkingMessage %></p>
-            <% } else if (hasAuthorizations === true) { %>
-            <p class="small soft-blink"><%= instructions %></p>
-            <% } %>
+
           </div>
+          <p id="credits">© STMS Ircam - CNRS - Sorbonne University</p>
         <% } %>
       `;
 
