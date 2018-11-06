@@ -147,6 +147,7 @@ const store = {
     }
 
     if (type === 'granular') {
+      // if granular, shutdown all existing engines
       if (this.globals.currentPresetFileCollection[type]) {
         this.globals.currentPresetFileCollection[type].forEach(file => {
           this.updateFileAttributes(file.filename, { granularPlay: false }, 'granular', true);

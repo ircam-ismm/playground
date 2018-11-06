@@ -82,6 +82,9 @@ class PlayerExperience extends soundworks.Experience {
       }
     });
 
+    this.audioFileStack = [];
+    this.audioFileStackMaxLength = 3;
+
     this.show();
   }
 
@@ -89,20 +92,30 @@ class PlayerExperience extends soundworks.Experience {
     const audioFile = player.currentFile[type];
 
     if (audioFile) {
+      const storedFile = this.audioFileStack.find(a => a.filename === audioFile.filename);
+
       // if already loaded
-      if (this.audioBufferManager.data[audioFile.filename]) {
-        this.currentFile[type] = audioFile;
-        this.currentFile[type].buffer = this.audioBufferManager.data[audioFile.filename];
+      if (storedFile !== undefined) {
+        this.currentFile[type] = storedFile;
 
         this.send('file-loaded', client.uuid, type);
         this.view.model.player = player;
         this.view.render();
       } else {
+        if (this.audioFileStack.length >= this.audioFileStackMaxLength) {
+          const deleted = this.audioFileStack.shift(); // remove oldest elements
+        }
+
         this.audioBufferManager
           .load({ [audioFile.filename]: audioFile.filename })
           .then(data => {
+            audioFile.buffer = this.audioBufferManager.data[audioFile.filename];
+            this.audioFileStack.push(audioFile);
+
+            // delete reference from audioBufferManager
+            delete this.audioBufferManager.data[audioFile.filename];
+
             this.currentFile[type] = audioFile;
-            this.currentFile[type].buffer = this.audioBufferManager.data[audioFile.filename];
 
             this.send('file-loaded', client.uuid, type);
             this.view.model.player = player;
