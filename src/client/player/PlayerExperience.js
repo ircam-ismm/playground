@@ -38,7 +38,9 @@ class PlayerExperience extends soundworks.Experience {
 
     this.sync = this.require('sync');
     this.sharedParams = this.require('shared-params');
+    this.sharedConfig = this.require('shared-config');
 
+    this.globals = null;
     this.currentFile = {};
     this.soloistSynth = null;
     this.granularSynth = null;
@@ -55,7 +57,8 @@ class PlayerExperience extends soundworks.Experience {
 
   start() {
     super.start(); // don't forget this
-
+    // from GLOBALS.json
+    this.globals = this.sharedConfig.get('globals');
     // initialize the view
     this.view = new soundworks.SegmentedView(template, { player: null }, {}, {
       id: 'player',
@@ -146,7 +149,7 @@ class PlayerExperience extends soundworks.Experience {
   }
 
   _triggerFile() {
-    if (this.currentFile['trigger'] !== null) {
+    if (this.currentFile['trigger']) {
       const synth = new TriggerSynth(this.currentFile['trigger']);
       synth.trigger();
     }
@@ -154,7 +157,7 @@ class PlayerExperience extends soundworks.Experience {
 
   // control from soloist
   _soloistStart(syncTime) {
-    if (this.currentFile['trigger'] !== null) {
+    if (this.currentFile['trigger']) {
       const startTime = this.sync.getAudioTime(syncTime);
       const buffer = this.currentFile['trigger'].buffer;
       this.soloistSynth = new FadeSyncSynth(startTime, buffer);
@@ -165,7 +168,8 @@ class PlayerExperience extends soundworks.Experience {
   _updateSoloistDistance(normDistance, triggerFadeOut) {
     if (this.soloistSynth) {
       if (!triggerFadeOut) {
-        const gain = Math.cos(normDistance * Math.PI / 2);
+        const decayExponent = this.globals.soloist.decayExponent;
+        const gain = Math.pow(1 - normDistance, decayExponent);
         this.soloistSynth.gain = gain;
       } else {
         this.soloistSynth.fadeOut();

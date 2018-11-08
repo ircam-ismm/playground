@@ -168,6 +168,8 @@ class SoloistExperience extends Experience {
         size: 'large',
         callback: this.updateRadius,
       });
+
+      this.radius = radiusParams.defaultValue;
     });
   }
 
