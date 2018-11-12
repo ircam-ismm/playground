@@ -316,6 +316,8 @@ h6 {
 
       .granular-attr-container {
         display: block;
+        position: absolute;
+        background-color: #121212;
 
         &.hidden {
           display: none;
