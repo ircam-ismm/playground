@@ -308,6 +308,22 @@ h6 {
       width: 50%;
       float: left;
 
+      .granular-attr-container-toggle {
+        padding: 4px 10px;
+        margin-bottom: 6px;
+        width: 50%;
+      }
+
+      .granular-attr-container {
+        display: block;
+        position: absolute;
+        background-color: #121212;
+
+        &.hidden {
+          display: none;
+        }
+      }
+
       .granular-attr {
         span {
           display: inline-block;
