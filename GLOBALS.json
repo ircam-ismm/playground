@@ -5,7 +5,7 @@
       "min": 0.05,
       "max": 0.5,
       "step": 0.001,
-      "defaultValue": 0.4
+      "defaultValue": 0.41
     },
     "fadeOutDuration": {
       "min": 0,
@@ -13,6 +13,6 @@
       "step": 0.001,
       "defaultValue": 8
     },
-    "decayExponent": 2
+    "decayExponent": 1.5
   }
 }
