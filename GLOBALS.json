@@ -13,6 +13,6 @@
       "step": 0.001,
       "defaultValue": 8
     },
-    "decayExponent": 2
+    "decayExponent": 1.5
   }
 }
