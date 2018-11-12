@@ -71,6 +71,9 @@ const template = `
             </button>
           </div>
 
+          <button class="granular-attr-container-toggle">open / close attributes</button>
+
+          <div class="granular-attr-container hidden">
           <% for (let attr in granularAttrs) { %>
             <% var attrs = granularAttrs[attr]; %>
             <div class="granular-attr">
@@ -79,6 +82,7 @@ const template = `
               <input class="file-attr" data-target="<%= file.filename %>" data-attr="<%= attr %>" type="number" value="<%= file[attr] %>" />
             </div>
           <% } %>
+          </div>
 
         </div>
         <% } %>
@@ -207,6 +211,14 @@ class ControllerView extends View {
 
         this.experience.send('save-state');
       },
+
+      // open close attributes
+      'click .granular-attr-container-toggle': e => {
+        e.preventDefault();
+
+        const $container = e.target.nextElementSibling;
+        $container.classList.toggle('hidden');
+      }
     });
   }
 
