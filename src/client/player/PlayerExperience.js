@@ -86,13 +86,14 @@ class PlayerExperience extends soundworks.Experience {
     });
 
     this.audioFileStack = [];
-    this.audioFileStackMaxLength = 3;
+    this.audioFileStackMaxLength = 2;
 
     this.show();
   }
 
   _updateFile(player, type) {
     const audioFile = player.currentFile[type];
+    console.log(audioFile);
 
     if (audioFile) {
       const storedFile = this.audioFileStack.find(a => a.filename === audioFile.filename);
@@ -104,6 +105,8 @@ class PlayerExperience extends soundworks.Experience {
         this.send('file-loaded', client.uuid, type);
         this.view.model.player = player;
         this.view.render();
+
+        this._updateFileAttributes(type, audioFile.filename, audioFile);
       } else {
         if (this.audioFileStack.length >= this.audioFileStackMaxLength) {
           const deleted = this.audioFileStack.shift(); // remove oldest elements
@@ -123,6 +126,8 @@ class PlayerExperience extends soundworks.Experience {
             this.send('file-loaded', client.uuid, type);
             this.view.model.player = player;
             this.view.render();
+
+            this._updateFileAttributes(type, audioFile.filename, audioFile);
           });
       }
     }
@@ -137,6 +142,7 @@ class PlayerExperience extends soundworks.Experience {
 
         if (this.granularSynth === null && file.granularPlay) {
           this.granularSynth = new GranularSynth(file);
+          this.granularSynth.updateParams(defs);
           this.granularSynth.start();
         } else if (this.granularSynth && !file.granularPlay) {
           this.granularSynth.stop();
