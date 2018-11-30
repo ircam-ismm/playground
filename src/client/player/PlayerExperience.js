@@ -14,7 +14,7 @@ const template = `
     <div class="section-center">
     <% if (player) { %>
       <p class="big align-center"><%= player.index %></p>
-      <% for (let key in player.currentFile) { %>
+      <% for (var key in player.currentFile) { %>
         <p class="soundfile-details">
           <span><%= key %>:</span> <%= player.currentFile[key].filenameDisplay %>
         </p>
@@ -93,7 +93,6 @@ class PlayerExperience extends soundworks.Experience {
 
   _updateFile(player, type) {
     const audioFile = player.currentFile[type];
-    console.log(audioFile);
 
     if (audioFile) {
       const storedFile = this.audioFileStack.find(a => a.filename === audioFile.filename);
@@ -122,8 +121,8 @@ class PlayerExperience extends soundworks.Experience {
             delete this.audioBufferManager.data[audioFile.filename];
 
             this.currentFile[type] = audioFile;
-
             this.send('file-loaded', client.uuid, type);
+
             this.view.model.player = player;
             this.view.render();
 

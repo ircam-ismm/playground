@@ -20,6 +20,14 @@ function bootstrap() {
   // create client side (player) experience and start the client
   const experience = new PlayerExperience(config.assetsDomain);
   soundworks.client.start();
+
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+      window.location.reload(true);
+    } else {
+      // console.log('visible');
+    }
+  }, false);
 }
 
 window.addEventListener('load', bootstrap);

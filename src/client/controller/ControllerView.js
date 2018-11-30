@@ -8,7 +8,7 @@ const template = `
     <button id="save-state" class="btn">Save Params</button>
 
     <h6>Allocate Presets Files</h6>
-    <% var activeClass = store.globals.currentPreset['trigger'] === 'all' ? ' active' : ''; %>
+    <% var activeClass = store.globals.currentPreset.trigger === 'all' ? ' active' : ''; %>
     <button class="select-preset btn<%= activeClass %>" data-target="all">all</button>
 
     <% var presets = store.fileCollection.reduce(function(a, file) {
@@ -17,7 +17,7 @@ const template = `
        }, {});
     %>
     <% for (let preset in presets) { %>
-      <% var activeClass = store.globals.currentPreset['trigger'] === preset ? ' active' : ''; %>
+      <% var activeClass = store.globals.currentPreset.trigger === preset ? ' active' : ''; %>
       <button class="select-preset btn<%= activeClass %>" data-target="<%= preset %>"><%= presets[preset] %></button>
     <% } %>
   </div>
@@ -26,8 +26,8 @@ const template = `
     <p># players: <%= store.players.length %></p>
     <ul>
       <% store.players.forEach(function(player) { %>
-        <!-- display only not loaded players -->
-         <% if (!player.fileLoaded.trigger) { %>
+        <!-- display only players that have not loaded their file -->
+        <% if (!player.fileLoaded.trigger) { %>
         <li class="errored-client" style="background-color: <%= player.color %>" data-target="<%= player.uuid %>">
           <%= player.index %>
           <div class="file-loaded">&nbsp;</div>
@@ -49,7 +49,7 @@ const template = `
       <input id="trigger-size" type="range" min="20" max="80" value="<%= triggerSize %>" />
     </label>
 
-    <% if (store.globals.currentPresetFileCollection['trigger']) { %>
+    <% if (store.globals.currentPresetFileCollection.trigger) { %>
       <% store.globals.currentPresetFileCollection['trigger'].forEach((file, index) => { %>
 
         <p class="filename">
@@ -59,15 +59,11 @@ const template = `
 
         <ul class="triggers">
           <% store.players.forEach(function(player) { %>
-            <% if (player.currentFile && player.currentFile['trigger'] && file.filename === player.currentFile['trigger'].filename) { %>
+            <% if (player.currentFile && player.currentFile.trigger && file.filename === player.currentFile['trigger'].filename && player.fileLoaded.trigger) { %>
             <li class="trigger-file" data-target="<%= player.uuid %>"style="background-color: <%= player.color %>; width: <%= triggerSize %>px; height: <%= triggerSize %>px; line-height: <%= triggerSize %>px">
               <%= player.index %>
 
-              <% if (player.fileLoaded.trigger) { %>
-                <div class="file-loaded done">&nbsp;</div>
-              <% } else { %>
-                <div class="file-loaded">&nbsp;</div>
-              <% } %>
+              <div class="file-loaded done">&nbsp;</div>
             </li>
             <% } %>
           <% }); %>
