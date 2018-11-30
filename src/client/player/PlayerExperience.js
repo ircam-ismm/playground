@@ -86,7 +86,7 @@ class PlayerExperience extends soundworks.Experience {
     });
 
     this.audioFileStack = [];
-    this.audioFileStackMaxLength = 2;
+    this.audioFileStackMaxLength = 1;
 
     this.show();
   }
