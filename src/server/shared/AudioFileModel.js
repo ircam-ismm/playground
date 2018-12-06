@@ -19,7 +19,7 @@ class AudioFileModel {
   } = {}) {
     // console.log(filename, options);
     this.filename = filename;
-    this.filenameDisplay = filename.replace(/^sounds\//, '');
+    this.filenameDisplay = path.basename(filename);
     this.preset = path.dirname(filename);
     this.presetDisplay = this.preset.replace(/^sounds\//, '');
 
