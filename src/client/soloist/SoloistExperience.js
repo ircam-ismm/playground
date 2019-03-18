@@ -1,6 +1,7 @@
 // Import Soundworks modules (client side)
-import { SpaceView, View, viewport, TouchSurface, Experience } from 'soundworks/client';
+import { View, viewport, TouchSurface, Experience } from 'soundworks/client';
 import * as controllers from '@ircam/basic-controllers';
+import SpaceView from './SpaceView';
 
 // define the template of the view used by the experience
 // the template uses some of the helper classes defined in `sass/_02-commons.scss`
@@ -186,6 +187,7 @@ class SoloistExperience extends Experience {
    * @param {Object} player Player.
    */
   onPlayerAdd(playerInfos) {
+    console.log(playerInfos);
     this.playersSpace.addPoint(playerInfos);
   }
 

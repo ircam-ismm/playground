@@ -24,10 +24,15 @@ function bootstrap() {
   document.addEventListener('visibilitychange', () => {
     if (document.hidden) {
       window.location.reload(true);
-    } else {
-      // console.log('visible');
     }
   }, false);
+
+  // reload client if server is down...
+  soundworks.client.socket.addStateListener(eventName => {
+    if (eventName === 'disconnect') {
+      setTimeout(() => window.location.reload(true), 2000);
+    }
+  });
 }
 
 window.addEventListener('load', bootstrap);

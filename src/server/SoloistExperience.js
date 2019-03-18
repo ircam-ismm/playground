@@ -1,5 +1,13 @@
 import { Experience } from 'soundworks/server';
 
+function getInfos(client) {
+  return {
+    id: client.uuid,
+    index: client.index,
+    x: client.coordinates[0],
+    y: client.coordinates[1],
+  };
+}
 
 /**
  * @warning - this is made to handle only one soloist properly
@@ -42,11 +50,8 @@ class SoloistExperience extends Experience {
     // send the list of connected players
     const playerInfos = [];
     this.players.forEach(player => {
-      playerInfos.push({
-        id: player.uuid,
-        x: player.coordinates[0],
-        y: player.coordinates[1],
-      })
+      const infos = getInfos(player);
+      playerInfos.push(infos);
     });
 
     this.send(client, 'player:list', playerInfos);
@@ -67,13 +72,8 @@ class SoloistExperience extends Experience {
    */
   onPlayerEnter(client) {
     this.players.add(client);
-
     // format infos from the player to be consmumed by the solist
-    const infos = {
-      id: client.uuid,
-      x: client.coordinates[0],
-      y: client.coordinates[1],
-    };
+    const infos = getInfos(client);
 
     this.broadcast('soloist', null, 'player:add', infos);
   }
@@ -83,12 +83,7 @@ class SoloistExperience extends Experience {
    */
   onPlayerExit(client) {
     this.players.delete(client);
-
-    const infos = {
-      id: client.uuid,
-      x: client.coordinates[0],
-      y: client.coordinates[1],
-    };
+    const infos = getInfos(client);
 
     this.broadcast('soloist', null, 'player:remove', infos);
   }

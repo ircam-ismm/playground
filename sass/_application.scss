@@ -430,8 +430,13 @@ h6 {
 
 
 #soloist {
-  .background svg .point {
+  .background svg .point circle {
     fill: #ffffff;
+  }
+
+  .background svg .point text {
+    stroke: #cdcdcd;
+    fill: #cdcdcd;
   }
 
   .foreground {
