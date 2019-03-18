@@ -111,6 +111,8 @@ class PlayerExperience extends soundworks.Experience {
           const deleted = this.audioFileStack.shift(); // remove oldest elements
         }
 
+        this.currentFile[type] = null;
+
         this.audioBufferManager
           .load({ [audioFile.filename]: audioFile.filename })
           .then(data => {
