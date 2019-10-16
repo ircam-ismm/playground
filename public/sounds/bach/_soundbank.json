@@ -1,0 +1,69 @@
+{
+  "name": "bach",
+  "url": "sounds/bach",
+  "path": "public/sounds/bach",
+  "version": "0.0.0",
+  "presets": {
+    "activated": {
+      "triggerSynth": true,
+      "soloistSynth": true,
+      "granularSynth": true
+    }
+  },
+  "files": {
+    "gould-bach-first-prelude-15sec-1.wav": {
+      "name": "gould-bach-first-prelude-15sec-1.wav",
+      "path": "public/sounds/bach/gould-bach-first-prelude-15sec-1.wav",
+      "url": "sounds/bach/gould-bach-first-prelude-15sec-1.wav",
+      "presets": {
+        "triggerSynth": {
+          "repeat": 1,
+          "period": 0.413,
+          "jitter": 0.009,
+          "releaseDuration": 1
+        },
+        "granularSynth": {
+          "volume": 1,
+          "releaseDuration": 3,
+          "speed": 1,
+          "positionVar": 0.003,
+          "periodAbs": 0.02,
+          "durationAbs": 0.1,
+          "resampling": 0,
+          "resamplingVar": 0
+        },
+        "soloistSynth": {
+          "fadeOutDuration": 8,
+          "decayExponent": 1.5
+        }
+      }
+    },
+    "gould-bach-first-prelude-15sec.wav": {
+      "name": "gould-bach-first-prelude-15sec.wav",
+      "path": "public/sounds/bach/gould-bach-first-prelude-15sec.wav",
+      "url": "sounds/bach/gould-bach-first-prelude-15sec.wav",
+      "presets": {
+        "triggerSynth": {
+          "repeat": 17,
+          "period": 0.136,
+          "jitter": 0.162,
+          "releaseDuration": 15.892
+        },
+        "granularSynth": {
+          "volume": 1,
+          "releaseDuration": 3,
+          "speed": 0.84,
+          "positionVar": 0.003,
+          "periodAbs": 0.02,
+          "durationAbs": 0.1,
+          "resampling": 0,
+          "resamplingVar": 0
+        },
+        "soloistSynth": {
+          "fadeOutDuration": 8,
+          "decayExponent": 1.5
+        }
+      }
+    }
+  }
+}

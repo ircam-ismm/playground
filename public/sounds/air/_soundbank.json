@@ -1,0 +1,42 @@
+{
+  "name": "air",
+  "url": "sounds/air",
+  "path": "public/sounds/air",
+  "version": "0.0.0",
+  "presets": {
+    "activated": {
+      "triggerSynth": true,
+      "soloistSynth": true,
+      "granularSynth": true
+    }
+  },
+  "files": {
+    "air.wav": {
+      "name": "air.wav",
+      "path": "public/sounds/air/air.wav",
+      "url": "sounds/air/air.wav",
+      "presets": {
+        "triggerSynth": {
+          "repeat": 15,
+          "period": 1.597,
+          "jitter": 1.665,
+          "releaseDuration": 10.844
+        },
+        "granularSynth": {
+          "volume": 1,
+          "releaseDuration": 3,
+          "speed": 1,
+          "positionVar": 0.027,
+          "periodAbs": 0.02,
+          "durationAbs": 0.1,
+          "resampling": 0,
+          "resamplingVar": 0
+        },
+        "soloistSynth": {
+          "fadeOutDuration": 8,
+          "decayExponent": 1.5
+        }
+      }
+    }
+  }
+}

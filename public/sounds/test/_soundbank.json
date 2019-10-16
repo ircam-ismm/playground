@@ -1,0 +1,150 @@
+{
+  "name": "test",
+  "url": "sounds/test",
+  "path": "public/sounds/test",
+  "version": "0.0.0",
+  "presets": {
+    "activated": {
+      "triggerSynth": true,
+      "soloistSynth": true,
+      "granularSynth": true
+    }
+  },
+  "files": {
+    "clack.wav": {
+      "name": "clack.wav",
+      "path": "public/sounds/test/clack.wav",
+      "url": "sounds/test/clack.wav",
+      "presets": {
+        "triggerSynth": {
+          "repeat": 13,
+          "period": 0.063,
+          "jitter": 0.142,
+          "releaseDuration": 1
+        },
+        "granularSynth": {
+          "volume": 0.458,
+          "releaseDuration": 3,
+          "speed": 1,
+          "positionVar": 0.003,
+          "periodAbs": 0.02,
+          "durationAbs": 0.1,
+          "resampling": 0,
+          "resamplingVar": 0
+        },
+        "soloistSynth": {
+          "fadeOutDuration": 8,
+          "decayExponent": 1.5
+        }
+      }
+    },
+    "click.wav": {
+      "name": "click.wav",
+      "path": "public/sounds/test/click.wav",
+      "url": "sounds/test/click.wav",
+      "presets": {
+        "triggerSynth": {
+          "repeat": 17,
+          "period": 0.075,
+          "jitter": 0.009,
+          "releaseDuration": 1
+        },
+        "granularSynth": {
+          "volume": 0.153,
+          "releaseDuration": 3,
+          "speed": 1,
+          "positionVar": 0.003,
+          "periodAbs": 0.02,
+          "durationAbs": 0.1,
+          "resampling": 0,
+          "resamplingVar": 0
+        },
+        "soloistSynth": {
+          "fadeOutDuration": 8,
+          "decayExponent": 1.5
+        }
+      }
+    },
+    "cluck.wav": {
+      "name": "cluck.wav",
+      "path": "public/sounds/test/cluck.wav",
+      "url": "sounds/test/cluck.wav",
+      "presets": {
+        "triggerSynth": {
+          "repeat": 16,
+          "period": 0.57,
+          "jitter": 0,
+          "releaseDuration": 2.66
+        },
+        "granularSynth": {
+          "volume": 1,
+          "releaseDuration": 3,
+          "speed": 1,
+          "positionVar": 0.003,
+          "periodAbs": 0.02,
+          "durationAbs": 0.1,
+          "resampling": 0,
+          "resamplingVar": 0
+        },
+        "soloistSynth": {
+          "fadeOutDuration": 8,
+          "decayExponent": 1.5
+        }
+      }
+    },
+    "detendstoi.mp3": {
+      "name": "detendstoi.mp3",
+      "path": "public/sounds/test/detendstoi.mp3",
+      "url": "sounds/test/detendstoi.mp3",
+      "presets": {
+        "triggerSynth": {
+          "repeat": 2,
+          "period": 0.095,
+          "jitter": 0,
+          "releaseDuration": 1
+        },
+        "granularSynth": {
+          "volume": 1,
+          "releaseDuration": 3,
+          "speed": -0.11,
+          "positionVar": 0.003,
+          "periodAbs": 0.02,
+          "durationAbs": 0.08,
+          "resampling": -450,
+          "resamplingVar": 52
+        },
+        "soloistSynth": {
+          "fadeOutDuration": 8,
+          "decayExponent": 1.5
+        }
+      }
+    },
+    "drum-loop.mp3": {
+      "name": "drum-loop.mp3",
+      "path": "public/sounds/test/drum-loop.mp3",
+      "url": "sounds/test/drum-loop.mp3",
+      "presets": {
+        "triggerSynth": {
+          "repeat": 1,
+          "period": 0,
+          "jitter": 0,
+          "releaseDuration": 1
+        },
+        "granularSynth": {
+          "volume": 1,
+          "releaseDuration": 3,
+          "speed": 0.12,
+          "positionVar": 0.003,
+          "periodAbs": 0.02,
+          "durationAbs": 0.1,
+          "resampling": 0,
+          "resamplingVar": 821
+        },
+        "soloistSynth": {
+          "fadeOutDuration": 8,
+          "decayExponent": 1.5
+        }
+      }
+    }
+  }
+}

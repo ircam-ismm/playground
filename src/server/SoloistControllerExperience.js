@@ -1,8 +1,8 @@
 import { Experience } from '@soundworks/core/server';
 
-class GranularControllerExperience extends Experience {
-  constructor(server, clientTypes, soundBankManager) {
-    super(server, clientTypes);
+class SoloistExperience extends Experience {
+  constructor(soundworks, clientTypes, soundBankManager) {
+    super(soundworks, clientTypes);
 
     this.soundBankManager = soundBankManager;
   }
@@ -19,7 +19,6 @@ class GranularControllerExperience extends Experience {
       // );
 
     });
-
   }
 
   enter(client) {
@@ -40,4 +39,4 @@ class GranularControllerExperience extends Experience {
   exit(client) {}
 }
 
-export default GranularControllerExperience;
+export default SoloistExperience;

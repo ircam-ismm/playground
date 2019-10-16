@@ -1,0 +1,39 @@
+{
+  "name": "soundworks",
+  "author": "",
+
+  "clients": {
+    "player": {
+      "target": "browser",
+      "default": true
+    },
+
+    "soloist-controller": {
+      "target": "browser",
+    },
+    "trigger-controller": {
+      "target": "browser",
+    },
+    "granular-controller": {
+      "target": "browser",
+    },
+
+    "soundbank-manager": {
+      "target": "browser",
+    },
+  },
+
+  "htmlTemplateDirectory": ".build/server/tmpl",
+
+  "colors": [
+    "#a6cee3",
+    "#1f78b4",
+    "#b2df8a",
+    "#33a02c",
+    "#fb9a99",
+    "#e31a1c",
+    "#fdbf6f",
+    "#ff7f00",
+    "#cab2d6",
+  ],
+}

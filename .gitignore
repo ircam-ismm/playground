@@ -1,26 +1,15 @@
 # transpiled files and dependencies
 /node_modules
-/public/js
-/public/css
-/public/sounds/*
-!/public/sounds/.gitkeep
-/dist
 
 # ignore all config except default
-/src/server/config/*
-!/src/server/config/default.js
-!/src/server/config/prod.js
+/config/env/*
+!/config/env/default.json
 
 # application instance specific
-/logs
-.soundworks
-/bin/.browserify-cache.json
+.db
+.build
 
-# ignore junk files
-npm-debug.log
+# junk files
+package-lock.json
 .DS_Store
 Thumbs.db
-
-db.json
-
-NOTES.md

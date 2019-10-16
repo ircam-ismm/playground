@@ -1,6 +1,6 @@
 import { Experience } from '@soundworks/core/server';
 
-class GranularControllerExperience extends Experience {
+class TriggerControllerExperience extends Experience {
   constructor(server, clientTypes, soundBankManager) {
     super(server, clientTypes);
 
@@ -40,4 +40,4 @@ class GranularControllerExperience extends Experience {
   exit(client) {}
 }
 
-export default GranularControllerExperience;
+export default TriggerControllerExperience;

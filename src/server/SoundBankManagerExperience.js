@@ -1,6 +1,7 @@
 import { Experience } from '@soundworks/core/server';
 
-class GranularControllerExperience extends Experience {
+
+class SoundBankManagerExperience extends Experience {
   constructor(server, clientTypes, soundBankManager) {
     super(server, clientTypes);
 
@@ -11,15 +12,11 @@ class GranularControllerExperience extends Experience {
     this.soundBankManager.subscribe((oldValues, newValues) => {
       const { soundBankDefaultPresets, soundFileDefaultPresets } = this.soundBankManager;
 
-      // @note - broadcast is not reliable -> send to everyone...
-      // this.server.sockets.broadcast('trigger-controller', null, 'soundBanks',
-      //   newValues,
-      //   soundBankDefaultPresets,
-      //   soundFileDefaultPresets
-      // );
-
+      this.server.sockets.broadcast('soundbank-manager', null, 'soundBanks',
+        newValues,
+        soundBankDefaultPresets,
+        soundFileDefaultPresets);
     });
-
   }
 
   enter(client) {
@@ -37,7 +34,9 @@ class GranularControllerExperience extends Experience {
     client.socket.send('soundBanks', soundBanks, soundBankDefaultPresets, soundFileDefaultPresets);
   }
 
-  exit(client) {}
+  exit(client) {
+
+  }
 }
 
-export default GranularControllerExperience;
+export default SoundBankManagerExperience

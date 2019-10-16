@@ -1,0 +1,69 @@
+{
+  "name": "cherokee",
+  "url": "sounds/cherokee",
+  "path": "public/sounds/cherokee",
+  "version": "0.0.0",
+  "presets": {
+    "activated": {
+      "triggerSynth": true,
+      "soloistSynth": true,
+      "granularSynth": true
+    }
+  },
+  "files": {
+    "cherokee-1.wav": {
+      "name": "cherokee-1.wav",
+      "path": "public/sounds/cherokee/cherokee-1.wav",
+      "url": "sounds/cherokee/cherokee-1.wav",
+      "presets": {
+        "triggerSynth": {
+          "repeat": 1,
+          "period": 2.89,
+          "jitter": 0.046,
+          "releaseDuration": 2.932
+        },
+        "granularSynth": {
+          "volume": 1,
+          "releaseDuration": 3,
+          "speed": -1.7,
+          "positionVar": 0.057,
+          "periodAbs": 0.02,
+          "durationAbs": 0.1,
+          "resampling": -910,
+          "resamplingVar": 1025
+        },
+        "soloistSynth": {
+          "fadeOutDuration": 9.076,
+          "decayExponent": 1.352
+        }
+      }
+    },
+    "cherokee.wav": {
+      "name": "cherokee.wav",
+      "path": "public/sounds/cherokee/cherokee.wav",
+      "url": "sounds/cherokee/cherokee.wav",
+      "presets": {
+        "triggerSynth": {
+          "repeat": 14,
+          "period": 0.269,
+          "jitter": 0.037,
+          "releaseDuration": 2.611
+        },
+        "granularSynth": {
+          "volume": 0.821,
+          "releaseDuration": 3.4,
+          "speed": -0.95,
+          "positionVar": 0.102,
+          "periodAbs": 0.026,
+          "durationAbs": 0.092,
+          "resampling": -880,
+          "resamplingVar": 0
+        },
+        "soloistSynth": {
+          "fadeOutDuration": 9.032,
+          "decayExponent": 1.425
+        }
+      }
+    }
+  }
+}
