@@ -30,7 +30,7 @@
     "@soundworks/service-file-system": "0.0.1-alpha.0",
     "@soundworks/service-platform": "0.0.1-alpha.0",
     "@soundworks/service-position": "0.0.1-alpha.0",
-    "@soundworks/service-sync": "0.0.1-alpha.0",
+    "@soundworks/service-sync": "0.0.1-alpha.2",
     "@wessberg/pointer-events": "^1.0.9",
     "json5": "^2.1.0",
     "lit-element": "^2.2.1",
