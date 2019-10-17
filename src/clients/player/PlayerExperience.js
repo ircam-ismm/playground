@@ -89,7 +89,6 @@ class PlayerExperience extends Experience {
             if (distance < 1) {
               if (this.soloistSynth === null) {
                 const buffer = this.bufferCache.get('soloist');
-                console.log(buffer);
 
                 if (buffer) {
                   const syncStartTime = updates['soloistStartTime'];

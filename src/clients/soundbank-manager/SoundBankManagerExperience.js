@@ -3,12 +3,14 @@ import { html, render } from 'lit-html';
 import '../views/elements/sw-preset';
 import '../views/elements/sw-toggle';
 import throttle from 'lodash.throttle';
+import renderAppInitialization from '../views/renderAppInitialization';
 
 class SoundBankManagerExperience extends Experience {
   constructor(client, config, $container) {
     super(client, config);
 
     this.$container = $container;
+    renderAppInitialization(client, config, $container);
   }
 
   start() {

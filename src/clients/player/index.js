@@ -8,6 +8,7 @@ import serviceFileSystemFactory from '@soundworks/service-file-system/client';
 import serviceAudioBufferLoaderFactory from '@soundworks/service-audio-buffer-loader/client';
 import serviceCheckinFactory from '@soundworks/service-checkin/client';
 import servicePositionFactory from '@soundworks/service-position/client';
+import initQoS from '../utils/qos';
 
 // default views for services
 import PlayerExperience from './PlayerExperience';
@@ -45,6 +46,7 @@ async function init($container, index) {
     // -------------------------------------------------------------------
 
     await client.init(config);
+    initQoS(client);
 
     const playerExperience = new PlayerExperience(client, config, $container, audioContext);
     // store platform service to be able to call all `onUserGesture` at once
@@ -56,19 +58,6 @@ async function init($container, index) {
 
     await client.start();
     playerExperience.start();
-
-    // minimalistic, non subtle QoS
-    client.socket.addListener('close', () => {
-      setTimeout(() => window.location.reload(true), 2000);
-    });
-
-    if (config.env.type === 'production') {
-      document.addEventListener('visibilitychange', () => {
-        if (document.hidden) {
-          window.location.reload(true);
-        }
-      }, false);
-    }
 
     return Promise.resolve();
   } catch(err) {
