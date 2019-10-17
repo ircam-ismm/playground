@@ -17,8 +17,8 @@
       "url": "sounds/bach/gould-bach-first-prelude-15sec-1.wav",
       "presets": {
         "triggerSynth": {
-          "repeat": 1,
-          "period": 0.413,
+          "repeat": 3,
+          "period": 0.643,
           "jitter": 0.009,
           "releaseDuration": 1
         },

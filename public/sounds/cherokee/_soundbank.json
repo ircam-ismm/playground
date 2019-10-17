@@ -56,8 +56,8 @@
           "positionVar": 0.102,
           "periodAbs": 0.026,
           "durationAbs": 0.092,
-          "resampling": -880,
-          "resamplingVar": 0
+          "resampling": 766,
+          "resamplingVar": 982
         },
         "soloistSynth": {
           "fadeOutDuration": 9.032,

@@ -88,8 +88,8 @@ class TriggerControllerExperience extends Experience {
         playerState.subscribe(updates => {
           for (let name in updates) {
             switch (name) {
-              case 'triggerSynthConfig':
-              case 'triggerSynthLoading':
+              case 'triggerConfig':
+              case 'triggerLoading':
                 this.renderApp();
                 break;
             }
@@ -126,8 +126,8 @@ class TriggerControllerExperience extends Experience {
       });
 
     const playerStates = Array.from(this.playerStates.values()).map(s => s.getValues());
-    const loadingPlayers = playerStates.filter(s => s.triggerSynthLoading === true);
-    const loadedPlayers = playerStates.filter(s => s.triggerSynthConfig !== null && s.triggerSynthLoading === false);
+    const loadingPlayers = playerStates.filter(s => s.triggerLoading === true);
+    const loadedPlayers = playerStates.filter(s => s.triggerConfig !== null && s.triggerLoading === false);
 
     const currentSoundBank = this.triggerControllerState.getValues()['currentSoundBank'];
     let soundBankFiles = {}
@@ -176,7 +176,7 @@ class TriggerControllerExperience extends Experience {
               </header>
               <section>
                 ${repeat(
-                  loadedPlayers.filter(player => player.triggerSynthConfig.name === filename),
+                  loadedPlayers.filter(player => player.triggerConfig.name === filename),
                   player => player.id,
                   player => {
                     return html`

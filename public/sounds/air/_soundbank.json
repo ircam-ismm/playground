@@ -7,7 +7,7 @@
     "activated": {
       "triggerSynth": true,
       "soloistSynth": true,
-      "granularSynth": true
+      "granularSynth": false
     }
   },
   "files": {
@@ -17,10 +17,10 @@
       "url": "sounds/air/air.wav",
       "presets": {
         "triggerSynth": {
-          "repeat": 15,
-          "period": 1.597,
-          "jitter": 1.665,
-          "releaseDuration": 10.844
+          "repeat": 13,
+          "period": 1.944,
+          "jitter": 1.456,
+          "releaseDuration": 13.003
         },
         "granularSynth": {
           "volume": 1,

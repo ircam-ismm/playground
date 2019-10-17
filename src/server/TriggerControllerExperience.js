@@ -11,21 +11,16 @@ class TriggerControllerExperience extends Experience {
     this.soundBankManager.subscribe((oldValues, newValues) => {
       const { soundBankDefaultPresets, soundFileDefaultPresets } = this.soundBankManager;
 
-      // @note - broadcast is not reliable -> send to everyone...
-      // this.server.sockets.broadcast('trigger-controller', null, 'soundBanks',
-      //   newValues,
-      //   soundBankDefaultPresets,
-      //   soundFileDefaultPresets
-      // );
-
+      this.server.sockets.broadcast('trigger-controller', null, 'soundBanks',
+        newValues,
+        soundBankDefaultPresets,
+        soundFileDefaultPresets
+      );
     });
 
   }
 
   enter(client) {
-    const soundBanks = this.soundBankManager.getValues();
-    const { soundBankDefaultPresets, soundFileDefaultPresets } = this.soundBankManager;
-
     client.socket.addListener('soundBanks:updateSoundBankPreset', (...args) => {
       this.soundBankManager.updateSoundBankPreset(...args);
     });
@@ -33,6 +28,9 @@ class TriggerControllerExperience extends Experience {
     client.socket.addListener('soundBanks:updateSoundFilePreset', (...args) => {
       this.soundBankManager.updateSoundFilePreset(...args);
     });
+
+    const soundBanks = this.soundBankManager.getValues();
+    const { soundBankDefaultPresets, soundFileDefaultPresets } = this.soundBankManager;
 
     client.socket.send('soundBanks', soundBanks, soundBankDefaultPresets, soundFileDefaultPresets);
   }

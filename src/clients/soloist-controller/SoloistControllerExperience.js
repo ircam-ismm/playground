@@ -84,7 +84,7 @@ class SoloistControllerExperience extends Experience {
       });
 
     const positions = playerStates.filter(p => p.position !== null).map(p => p.position);
-    const loadingPlayers = playerStates.filter(s => s.soloistSynthLoading === true);
+    const loadingPlayers = playerStates.filter(s => s.soloistLoading === true);
 
     const { width, height } = this.$container.getBoundingClientRect();
     const areaHeight = height - 75;

@@ -65,7 +65,7 @@ class PlayerExperience extends Experience {
       for (let [nodeId, playerState] of this.playerStates) {
         const state = playerState.getValues();
 
-        ['triggerSynthConfig', 'soloistSynthConfig', 'granularSynthConfig'].forEach(configName => {
+        ['triggerConfig', 'soloistConfig', 'granularConfig'].forEach(configName => {
           const config = state[configName];
 
           for (let path in updated) {
@@ -120,7 +120,7 @@ class PlayerExperience extends Experience {
           case 'triggerPlayerEvent': {
             const playerId = updates[name];
             const playerState = this.playerStates.get(playerId);
-            playerState.set({ triggerSynthEvent: true });
+            playerState.set({ triggerEvent: true });
             break;
           }
         }
@@ -136,7 +136,7 @@ class PlayerExperience extends Experience {
         switch (name) {
           case 'currentSoundBank': {
             for (let [id, playerState] of this.playerStates.entries()) {
-              playerState.set({ granularSynthState: 'stop' });
+              playerState.set({ granularState: 'stop' });
             }
 
             this.assignSoundBank('granular', updates['currentSoundBank']);
@@ -146,10 +146,10 @@ class PlayerExperience extends Experience {
             const { action, filename } = updates[name];
 
             for (let [id, playerState] of this.playerStates.entries()) {
-              const playerFile = playerState.get('granularSynthFile');
+              const playerFile = playerState.get('granularFile');
 
               if (playerFile === filename) {
-                playerState.set({ granularSynthState: action });
+                playerState.set({ granularState: action });
               }
             }
 
@@ -170,7 +170,7 @@ class PlayerExperience extends Experience {
     const soloistTrigger = () => {
       if (triggers.length === 0) {
         soloistActivePlayers.forEach(playerState => {
-          playerState.set({ soloistSynthDistance: 1 });
+          playerState.set({ soloistDistance: 1 });
         });
 
         soloistStartTime = null;
@@ -193,7 +193,7 @@ class PlayerExperience extends Experience {
           const inRadius = (normDistance <= 1);
 
           if (isActive && !inRadius) {
-            playerState.set({ soloistSynthDistance: 1 });
+            playerState.set({ soloistDistance: 1 });
             soloistActivePlayers.delete(playerState);
           }
 
@@ -202,12 +202,12 @@ class PlayerExperience extends Experience {
               soloistActivePlayers.add(playerState);
 
               playerState.set({
-                soloistSynthDistance: normDistance,
-                soloistSynthStartTime: soloistStartTime,
+                soloistDistance: normDistance,
+                soloistStartTime: soloistStartTime,
               });
             } else {
               playerState.set({
-                soloistSynthDistance: normDistance,
+                soloistDistance: normDistance,
               });
             }
           }
@@ -253,8 +253,8 @@ class PlayerExperience extends Experience {
   assignSoundBank(type, soundBankName) {
     if (soundBankName === null) {
       for (let playerState of this.playerStates.values()) {
-        const playerSynthConfigKey = `${type}SynthConfig`;
-        const playerSynthFileKey = `${type}SynthFile`;
+        const playerSynthConfigKey = `${type}Config`;
+        const playerSynthFileKey = `${type}File`;
 
         playerState.set({
           [playerSynthConfigKey]: null,
@@ -271,8 +271,8 @@ class PlayerExperience extends Experience {
   }
 
   assignRandomFile(type, soundBank, playerState) {
-    const synthConfigKey = `${type}SynthConfig`;
-    const synthFileKey = `${type}SynthFile`;
+    const synthConfigKey = `${type}Config`;
+    const synthFileKey = `${type}File`;
 
     const filenames = Object.keys(soundBank.files);
     const rand = Math.floor(Math.random() * filenames.length);

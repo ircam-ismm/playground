@@ -42,19 +42,19 @@ class PlayerExperience extends Experience {
     this.playerState.subscribe((updates) => {
       for (let name in updates) {
         switch (name) {
-          case 'triggerSynthFile': {
+          case 'triggerFile': {
             this.loadFile('trigger', updates[name]);
             break;
           }
-          case 'triggerSynthConfig': {
+          case 'triggerConfig': {
             const config = updates[name];
 
             break;
           }
-          case 'triggerSynthEvent': {
+          case 'triggerEvent': {
             const buffer = this.bufferCache.get('trigger');
             if (buffer) {
-              const triggerSynthConfig = this.playerState.get('triggerSynthConfig');
+              const triggerSynthConfig = this.playerState.get('triggerConfig');
               const config = triggerSynthConfig.presets['triggerSynth'];
               const synth = new TriggerSynth(this.audioContext, buffer, config);
 
@@ -72,29 +72,29 @@ class PlayerExperience extends Experience {
           }
 
           // soloist
-          case 'soloistSynthFile': {
+          case 'soloistFile': {
             this.loadFile('soloist', updates[name]);
             break;
           }
-          case 'soloistSynthConfig': {
+          case 'soloistConfig': {
             if (this.soloistSynth) {
               const params = updates[name].presets['soloistSynth'];
               this.soloistSynth.updateParams(params);
             }
             break;
           }
-          case 'soloistSynthDistance': {
-            // const buffer = this.bufferCache.get('soloist');
+          case 'soloistDistance': {
             const distance = updates[name];
 
             if (distance < 1) {
               if (this.soloistSynth === null) {
                 const buffer = this.bufferCache.get('soloist');
+                console.log(buffer);
 
                 if (buffer) {
-                  const syncStartTime = updates['soloistSynthStartTime'];
+                  const syncStartTime = updates['soloistStartTime'];
                   const locaStartTime = this.sync.getLocalTime(syncStartTime);
-                  const soloistSynthConfig = this.playerState.get('soloistSynthConfig');
+                  const soloistSynthConfig = this.playerState.get('soloistConfig');
                   const params = soloistSynthConfig.presets['soloistSynth'];
 
                   this.soloistSynth = new SoloistSynth(this.audioContext, buffer, locaStartTime);
@@ -116,23 +116,23 @@ class PlayerExperience extends Experience {
           }
 
           // granular
-          case 'granularSynthFile': {
+          case 'granularFile': {
             this.loadFile('granular', updates[name]);
             break;
           }
-          case 'granularSynthConfig': {
+          case 'granularConfig': {
             if (this.granularSynth) {
               const params = updates[name].presets['granularSynth'];
               this.granularSynth.updateParams(params);
             }
             break;
           }
-          case 'granularSynthState': {
+          case 'granularState': {
             const buffer = this.bufferCache.get('granular');
             const action = updates[name];
 
             if (buffer) {
-              const granularSynthConfig = this.playerState.get('granularSynthConfig');
+              const granularSynthConfig = this.playerState.get('granularConfig');
               const params = granularSynthConfig.presets['granularSynth'];
 
               if (this.granularSynth === null && action === 'start') {
@@ -165,15 +165,15 @@ class PlayerExperience extends Experience {
   }
 
   async loadFile(type, url) {
-    const loadingKey = `${type}SynthLoading`;
+    const loadingKey = `${type}Loading`;
 
     this.bufferCache.delete(type);
 
     if (url !== null) {
       this.playerState.set({ [loadingKey]: true });
       const result = await this.audioBufferLoader.load({ [type]: url });
-      this.playerState.set({ [loadingKey]: false });
       this.bufferCache.set(type, result[type]);
+      this.playerState.set({ [loadingKey]: false });
     } else {
       this.playerState.set({ [loadingKey]: false });
     }
@@ -182,7 +182,7 @@ class PlayerExperience extends Experience {
   renderApp() {
     const playerState = this.playerState.getValues();
     const color = this.flashScreen ? '#ffffff' : playerState.color;
-    const opacity = 1 - playerState.soloistSynthDistance;
+    const opacity = 1 - playerState.soloistDistance;
 
     render(html`
       <div class="screen"
@@ -202,7 +202,7 @@ class PlayerExperience extends Experience {
             opacity: ${opacity};
           "
         ></div>
-        <pre><code>${JSON.stringify(this.playerState.getValues(), null, 2)}</code></pre>
+        <pre><code>${JSON.stringify(playerState, null, 2)}</code></pre>
       </div>
     `, this.$container);
   }

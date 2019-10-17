@@ -21,21 +21,21 @@ export default {
   },
 
   // trigger params
-  triggerSynthFile: {
+  triggerFile: {
     type: 'string',
     nullable: true,
     default: null,
   },
-  triggerSynthConfig: {
+  triggerConfig: {
     type: 'any',
     nullable: true,
     default: null,
   },
-  triggerSynthLoading: {
+  triggerLoading: {
     type: 'boolean',
     default: false,
   },
-  triggerSynthEvent: {
+  triggerEvent: {
     type: 'boolean',
     default: null,
     nullable: true,
@@ -43,21 +43,21 @@ export default {
   },
 
   // granular params
-  granularSynthFile: {
+  granularFile: {
     type: 'string',
     nullable: true,
     default: null,
   },
-  granularSynthConfig: {
+  granularConfig: {
     type: 'any',
     nullable: true,
     default: null,
   },
-  granularSynthLoading: {
+  granularLoading: {
     type: 'boolean',
     default: false,
   },
-  granularSynthState: {
+  granularState: {
     type: 'enum',
     list: ['start', 'stop'],
     default: 'stop',
@@ -65,28 +65,28 @@ export default {
   },
 
   // soloist params
-  soloistSynthFile: {
+  soloistFile: {
     type: 'string',
     nullable: true,
     default: null,
   },
-  soloistSynthConfig: {
+  soloistConfig: {
     type: 'any',
     nullable: true,
     default: null,
   },
-  soloistSynthLoading: {
+  soloistLoading: {
     type: 'boolean',
     default: false,
   },
-  soloistSynthDistance: {
+  soloistDistance: {
     type: 'float',
     default: 1,
     min: 0,
     max: 1,
     step: 0.0001,
   },
-  soloistSynthStartTime: {
+  soloistStartTime: {
     type: 'float',
     default: 0,
   },

@@ -1,6 +1,5 @@
 import { Experience } from '@soundworks/core/server';
 
-
 class SoundBankManagerExperience extends Experience {
   constructor(server, clientTypes, soundBankManager) {
     super(server, clientTypes);
@@ -15,14 +14,12 @@ class SoundBankManagerExperience extends Experience {
       this.server.sockets.broadcast('soundbank-manager', null, 'soundBanks',
         newValues,
         soundBankDefaultPresets,
-        soundFileDefaultPresets);
+        soundFileDefaultPresets
+      );
     });
   }
 
   enter(client) {
-    const soundBanks = this.soundBankManager.getValues();
-    const { soundBankDefaultPresets, soundFileDefaultPresets } = this.soundBankManager;
-
     client.socket.addListener('soundBanks:updateSoundBankPreset', (...args) => {
       this.soundBankManager.updateSoundBankPreset(...args);
     });
@@ -31,12 +28,13 @@ class SoundBankManagerExperience extends Experience {
       this.soundBankManager.updateSoundFilePreset(...args);
     });
 
+    const soundBanks = this.soundBankManager.getValues();
+    const { soundBankDefaultPresets, soundFileDefaultPresets } = this.soundBankManager;
+
     client.socket.send('soundBanks', soundBanks, soundBankDefaultPresets, soundFileDefaultPresets);
   }
 
-  exit(client) {
-
-  }
+  exit(client) {}
 }
 
 export default SoundBankManagerExperience

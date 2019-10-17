@@ -102,8 +102,8 @@ class GranularControllerExperience extends Experience {
         playerState.subscribe(updates => {
           for (let name in updates) {
             switch (name) {
-              case 'granularSynthConfig':
-              case 'granularSynthLoading':
+              case 'granularConfig':
+              case 'granularLoading':
                 this.renderApp();
                 break;
             }
@@ -141,8 +141,8 @@ class GranularControllerExperience extends Experience {
 
     const granularState = this.granularControllerState.getValues();
     const playerStates = Array.from(this.playerStates.values()).map(s => s.getValues());
-    const loadingPlayers = playerStates.filter(s => s.granularSynthLoading === true);
-    const loadedPlayers = playerStates.filter(s => s.granularSynthConfig !== null && s.granularSynthLoading === false);
+    const loadingPlayers = playerStates.filter(s => s.granularLoading === true);
+    const loadedPlayers = playerStates.filter(s => s.granularConfig !== null && s.granularLoading === false);
 
     const currentSoundBank = this.granularControllerState.getValues()['currentSoundBank'];
     let soundBankFiles = {}
@@ -164,11 +164,17 @@ class GranularControllerExperience extends Experience {
       <section style="width: ${width - 120}px; float: left; box-sizing: border-box; padding: 0 0 10px 10px">
         ${Object.keys(soundBankFiles).map((filename) => {
           const url = soundBankFiles[filename].url;
-          const started = (granularState.startedSynths.indexOf(url) !== -1)
+          const started = (granularState.startedSynths.indexOf(url) !== -1);
+          const numPlayers = loadedPlayers.filter(p => p.granularFile === url).length;
 
           return html`
             <div style="clear:left; position: relative; margin-top: 20px;">
-              <h2 style="height: 30px; line-height: 30px; font-size: 14px;">> ${filename}</h2>
+              <h2 style="height: 30px; line-height: 30px; font-size: 14px;">
+                > ${filename}
+                <span style="display: inline-block; font-size: 10px;">
+                  (# players: ${numPlayers})
+                </span>
+              </h2>
               <button
                 style="
                   width: 400px;
