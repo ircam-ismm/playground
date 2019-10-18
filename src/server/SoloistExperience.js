@@ -131,8 +131,9 @@ class SoloistExperience extends Experience {
           activePlayers.add(player);
         }
 
-        if (inRadius)
+        if (inRadius) {
           this.send(player, 'soloist:distance', normDistance, false);
+        }
       });
     }
 

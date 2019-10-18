@@ -8,6 +8,7 @@ class PlayerExperience extends Experience {
     this.store = store;
     this.comm = comm;
 
+    // this.platform = this.require('platform');
     this.checkin = this.require('checkin');
     this.locator = this.require('locator');
     this.sync = this.require('sync');

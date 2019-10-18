@@ -174,12 +174,15 @@ const store = {
   randomlySetPlayerFilePair(uuid, type) {
     if (this.globals.currentPresetFileCollection[type]) {
       const player = this.playerCollection.getByUuid(uuid);
-      const collection = this.globals.currentPresetFileCollection[type];
-      const file = collection[Math.floor(Math.random() * collection.length)];
-      player.setCurrentFile(type, file);
 
-      this.emit(`update-file`, player, type);
-      this.emit('update', this.toJSON());
+      if (player) {
+        const collection = this.globals.currentPresetFileCollection[type];
+        const file = collection[Math.floor(Math.random() * collection.length)];
+        player.setCurrentFile(type, file);
+
+        this.emit(`update-file`, player, type);
+        this.emit('update', this.toJSON());
+      }
     }
   },
 

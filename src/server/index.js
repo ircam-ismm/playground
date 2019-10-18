@@ -57,12 +57,13 @@ if (globals.areaBackground) {
   config.setup.area.background = globals.areaBackground;
 }
 
+config.globals = globals;
+
 const sharedParams = soundworks.server.require('shared-params');
 const { min, max, step, defaultValue } = globals.soloist.fadeOutDuration;
 sharedParams.addNumber('fadeOutDuration', 'fadeOutDuration', min, max, step, defaultValue);
 
 const sharedConfig = soundworks.server.require('shared-config');
-config.globals = globals;
 sharedConfig.share('globals', 'player');
 sharedConfig.share('globals', 'soloist');
 sharedConfig.share('globals', 'controller');
