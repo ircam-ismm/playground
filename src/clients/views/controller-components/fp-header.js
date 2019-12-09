@@ -26,6 +26,7 @@ class FpHeader extends LitElement {
       button {
         font-family: Consolas, monaco, monospace;
         padding: 6px 20px;
+        margin: 4px;
         font-size: 16px;
         background-color: #232323;
         color: white;

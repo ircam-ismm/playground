@@ -17,13 +17,13 @@
       "url": "sounds/air/air.wav",
       "presets": {
         "triggerSynth": {
-          "repeat": 13,
-          "period": 1.944,
-          "jitter": 1.456,
+          "repeat": 8,
+          "period": 2.464,
+          "jitter": 0.778,
           "releaseDuration": 13.003
         },
         "granularSynth": {
-          "volume": 1,
+          "volume": 0.787,
           "releaseDuration": 3,
           "speed": 1,
           "positionVar": 0.027,

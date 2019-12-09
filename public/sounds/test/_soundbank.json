@@ -5,7 +5,7 @@
   "version": "0.0.0",
   "presets": {
     "activated": {
-      "triggerSynth": true,
+      "triggerSynth": false,
       "soloistSynth": true,
       "granularSynth": true
     }

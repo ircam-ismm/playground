@@ -5,8 +5,8 @@
   "version": "0.0.0",
   "presets": {
     "activated": {
-      "triggerSynth": true,
-      "soloistSynth": true,
+      "triggerSynth": false,
+      "soloistSynth": false,
       "granularSynth": true
     }
   },
@@ -27,10 +27,10 @@
           "releaseDuration": 3,
           "speed": 1,
           "positionVar": 0.003,
-          "periodAbs": 0.02,
+          "periodAbs": 0.045,
           "durationAbs": 0.1,
-          "resampling": 0,
-          "resamplingVar": 0
+          "resampling": 467,
+          "resamplingVar": 295
         },
         "soloistSynth": {
           "fadeOutDuration": 8,
@@ -44,9 +44,9 @@
       "url": "sounds/bach/gould-bach-first-prelude-15sec.wav",
       "presets": {
         "triggerSynth": {
-          "repeat": 17,
-          "period": 0.136,
-          "jitter": 0.162,
+          "repeat": 13,
+          "period": 1.554,
+          "jitter": 0.39,
           "releaseDuration": 15.892
         },
         "granularSynth": {

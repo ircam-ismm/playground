@@ -6,8 +6,8 @@
   "presets": {
     "activated": {
       "triggerSynth": true,
-      "soloistSynth": true,
-      "granularSynth": true
+      "soloistSynth": false,
+      "granularSynth": false
     }
   },
   "files": {
@@ -18,15 +18,15 @@
       "presets": {
         "triggerSynth": {
           "repeat": 1,
-          "period": 2.89,
+          "period": 2.319,
           "jitter": 0.046,
           "releaseDuration": 2.932
         },
         "granularSynth": {
-          "volume": 1,
-          "releaseDuration": 3,
-          "speed": -1.7,
-          "positionVar": 0.057,
+          "volume": 0.741,
+          "releaseDuration": 4.7,
+          "speed": -1.24,
+          "positionVar": 0.158,
           "periodAbs": 0.02,
           "durationAbs": 0.1,
           "resampling": -910,

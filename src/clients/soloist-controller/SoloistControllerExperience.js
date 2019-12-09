@@ -93,7 +93,7 @@ class SoloistControllerExperience extends Experience {
     render(
       html`
         <fp-header
-          style="height: 75px"
+          style="min-height: 75px"
           list="${JSON.stringify(filteredSoundBankNames)}"
           value="${currentSoundBank ? currentSoundBank : ''}"
           @change="${this.eventListeners.updateSoundBank}"
