@@ -36,7 +36,7 @@ class SoloistSynth {
 
     this.env.gain.cancelScheduledValues(now);
     this.env.gain.setValueAtTime(this.env.gain.value, now);
-    this.env.gain.linearRampToValueAtTime(value, now + 0.005);
+    this.env.gain.linearRampToValueAtTime(gain, now + 0.005);
   }
 
   release() {
