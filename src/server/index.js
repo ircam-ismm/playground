@@ -17,15 +17,20 @@ import servicePositionFactory from '@soundworks/service-position/server';
 
 // experiences
 import PlayerExperience from './PlayerExperience';
+import AutoPlayControllerExperience from './AutoPlayControllerExperience';
 import SoloistControllerExperience from './SoloistControllerExperience';
 import TriggerControllerExperience from './TriggerControllerExperience';
 import GranularControllerExperience from './GranularControllerExperience';
 import SoundBankManagerExperience from './SoundBankManagerExperience';
 
+import InstructionsViewerExperience from './InstructionsViewerExperience';
+import MainControllerExperience from './MainControllerExperience';
+
 // schemas
 import globalsSchema from './schemas/globalsSchema';
 import playerSchema from './schemas/playerSchema';
 // controllers schema
+import autoPlayControllerSchema from './schemas/autoPlayControllerSchema';
 import soloistControllerSchema from './schemas/soloistControllerSchema';
 import triggerControllerSchema from './schemas/triggerControllerSchema';
 import granularControllerSchema from './schemas/granularControllerSchema';
@@ -81,6 +86,7 @@ console.log(`
           name: config.app.name,
           author: config.app.author,
           colors: config.app.colors,
+          randomlyAssignPosition: config.app.randomlyAssignPosition,
         },
         env: {
           type: config.env.type,
@@ -93,6 +99,7 @@ console.log(`
     // register schemas and init shared states
     server.stateManager.registerSchema('globals', globalsSchema);
     server.stateManager.registerSchema('player', playerSchema);
+    server.stateManager.registerSchema('auto-play-controller', autoPlayControllerSchema);
     server.stateManager.registerSchema('granular-controller', granularControllerSchema);
     server.stateManager.registerSchema('trigger-controller', triggerControllerSchema);
     server.stateManager.registerSchema('soloist-controller', soloistControllerSchema);
@@ -102,11 +109,13 @@ console.log(`
     server.router.use(serveStatic('public'));
     server.router.use('build', serveStatic(path.join('.build', 'public')));
 
-    const globalsState = server.stateManager.create('globals');
-    const triggerControllerState = server.stateManager.create('trigger-controller');
-    const granularControllerState = server.stateManager.create('granular-controller');
-    const soloistControllerState = server.stateManager.create('soloist-controller');
-    soloistControllerState.set(area); // init soloist state
+    const globalsState = await server.stateManager.create('globals');
+    const autoPlayControllerState = await server.stateManager.create('auto-play-controller');
+    const triggerControllerState = await server.stateManager.create('trigger-controller');
+    const granularControllerState = await server.stateManager.create('granular-controller');
+
+    const soloistControllerState = await server.stateManager.create('soloist-controller', area);
+    // soloistControllerState.set(area); // init soloist state
 
 
     const fileSystem = server.serviceManager.get('file-system');
@@ -114,6 +123,10 @@ console.log(`
       // presets of a given sound bank
       {
         activated: {
+          autoPlaySynth: {
+            type: 'boolean',
+            default: true,
+          },
           triggerSynth: {
             type:'boolean',
             default: true,
@@ -129,6 +142,33 @@ console.log(`
         }
       },
       {
+        autoPlaySynth: {
+          // randomizeBuffer: {
+          //   type: 'boolean',
+          //   default: true,
+          // },
+          repeatPeriod: {
+            type: 'float',
+            min: 0,
+            max: 60,
+            default: 1,
+            step: 0.001,
+          },
+          maxReleaseOffset: {
+            type: 'float',
+            min: 0,
+            max: 20,
+            default: 1,
+            step: 0.001,
+          },
+          releaseDuration: {
+            type: 'float',
+            min: 0,
+            max: 20,
+            default: 1,
+            step: 0.001,
+          },
+        },
         triggerSynth: {
           repeat: {
             type: 'integer',
@@ -240,6 +280,7 @@ console.log(`
     const playerExperience = new PlayerExperience(server,
       'player',
       {
+        autoPlay: autoPlayControllerState,
         soloist: soloistControllerState,
         trigger: triggerControllerState,
         granular: granularControllerState,
@@ -247,6 +288,11 @@ console.log(`
       soundBankManager
     );
     // controllers
+    const autoPlayControllerExperience = new AutoPlayControllerExperience(server,
+      'auto-play-controller',
+      soundBankManager
+    );
+
     const soloistControllerExperience = new SoloistControllerExperience(server,
       'soloist-controller',
       soundBankManager
@@ -268,15 +314,22 @@ console.log(`
       soundBankManager
     );
 
+    const instructionsViewerExperience = new InstructionsViewerExperience(server, 'instructions-viewer');
+    const mainControllerExperience = new MainControllerExperience(server, 'main-controller');
 
     await server.start();
-    playerExperience.start();
 
+    autoPlayControllerExperience.start();
     soloistControllerExperience.start();
     triggerControllerExperience.start();
     granularControllerExperience.start();
 
+    instructionsViewerExperience.start();
+    mainControllerExperience.start();
+
     soundbankManagerExperience.start();
+
+    playerExperience.start();
 
     // bind file-system service and soundBankManager together
     fileSystem.state.subscribe(updates => {
@@ -291,14 +344,18 @@ console.log(`
     soundBankManager.updateFromFileTree(tree);
 
 
-    // osc control
-    // @todo - create an abstraction able to communicate with states
 
-        // Create an osc.js UDP Port listening on port 57121.
+    // ------------------------------------------------------------------
+    // OSC controls for /soloist-controller
+    // @todo - create an abstraction able to communicate with states
+    // ------------------------------------------------------------------
+    // create an osc.js UDP port listening on port 57121.
+    // config shoud come from env config file...
+    // ------------------------------------------------------------------
     const udpPort = new osc.UDPPort({
-        localAddress: '127.0.0.1',
-        localPort: 57121,
-        metadata: true
+      localAddress: '127.0.0.1',
+      localPort: 57121,
+      metadata: true
     });
 
     udpPort.on('message', msg => {
@@ -325,7 +382,6 @@ console.log(`
     });
 
     udpPort.open();
-
 
   } catch (err) {
     console.error(err);

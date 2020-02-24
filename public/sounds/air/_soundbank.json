@@ -5,6 +5,7 @@
   "version": "0.0.0",
   "presets": {
     "activated": {
+      "autoPlaySynth": true,
       "triggerSynth": true,
       "soloistSynth": true,
       "granularSynth": false
@@ -16,6 +17,11 @@
       "path": "public/sounds/air/air.wav",
       "url": "sounds/air/air.wav",
       "presets": {
+        "autoPlaySynth": {
+          "repeatPeriod": 1,
+          "maxReleaseOffset": 3.155,
+          "releaseDuration": 7.784
+        },
         "triggerSynth": {
           "repeat": 8,
           "period": 2.464,

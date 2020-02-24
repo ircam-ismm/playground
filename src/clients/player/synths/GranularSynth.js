@@ -10,7 +10,7 @@ class GranularSynth {
 
     this.env = audioContext.createGain();
     this.env.gain.value = 0;
-    this.env.gain.setValueAtTime(1, audioContext.currentTime);
+    this.env.gain.setValueAtTime(0, audioContext.currentTime);
 
     this.engine = new audio.GranularEngine({
       buffer: buffer,

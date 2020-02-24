@@ -5,6 +5,7 @@
   "version": "0.0.0",
   "presets": {
     "activated": {
+      "autoPlaySynth": true,
       "triggerSynth": false,
       "soloistSynth": false,
       "granularSynth": true
@@ -16,6 +17,11 @@
       "path": "public/sounds/bach/gould-bach-first-prelude-15sec-1.wav",
       "url": "sounds/bach/gould-bach-first-prelude-15sec-1.wav",
       "presets": {
+        "autoPlaySynth": {
+          "repeatPeriod": 1,
+          "maxReleaseOffset": 1,
+          "releaseDuration": 1
+        },
         "triggerSynth": {
           "repeat": 3,
           "period": 0.643,
@@ -43,6 +49,11 @@
       "path": "public/sounds/bach/gould-bach-first-prelude-15sec.wav",
       "url": "sounds/bach/gould-bach-first-prelude-15sec.wav",
       "presets": {
+        "autoPlaySynth": {
+          "repeatPeriod": 1,
+          "maxReleaseOffset": 1,
+          "releaseDuration": 1
+        },
         "triggerSynth": {
           "repeat": 13,
           "period": 1.554,

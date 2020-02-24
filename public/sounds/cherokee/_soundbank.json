@@ -5,6 +5,7 @@
   "version": "0.0.0",
   "presets": {
     "activated": {
+      "autoPlaySynth": true,
       "triggerSynth": true,
       "soloistSynth": false,
       "granularSynth": false
@@ -16,6 +17,11 @@
       "path": "public/sounds/cherokee/cherokee-1.wav",
       "url": "sounds/cherokee/cherokee-1.wav",
       "presets": {
+        "autoPlaySynth": {
+          "repeatPeriod": 3.638,
+          "maxReleaseOffset": 5.958,
+          "releaseDuration": 10.034
+        },
         "triggerSynth": {
           "repeat": 1,
           "period": 2.319,
@@ -43,6 +49,11 @@
       "path": "public/sounds/cherokee/cherokee.wav",
       "url": "sounds/cherokee/cherokee.wav",
       "presets": {
+        "autoPlaySynth": {
+          "repeatPeriod": 2.867,
+          "maxReleaseOffset": 5.738,
+          "releaseDuration": 6.748
+        },
         "triggerSynth": {
           "repeat": 14,
           "period": 0.269,

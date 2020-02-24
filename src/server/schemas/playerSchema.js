@@ -90,4 +90,24 @@ export default {
     type: 'float',
     default: 0,
   },
+
+  // auto play params
+  autoPlayFile: {
+    type: 'string',
+    nullable: true,
+    default: null,
+  },
+  autoPlayConfig: {
+    type: 'any',
+    nullable: true,
+    default: null,
+  },
+  autoPlayLoading: {
+    type: 'boolean',
+    default: false,
+  },
+  autoPlayEnabled: {
+    type: 'boolean',
+    default: false,
+  },
 };

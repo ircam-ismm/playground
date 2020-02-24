@@ -39,9 +39,9 @@ class SoloistControllerExperience extends Experience {
     this.soloistState = await this.client.stateManager.attach('soloist-controller');
     this.soloistState.subscribe(updates => this.renderApp());
 
-    this.client.stateManager.observe(async (schemaName, nodeId) => {
+    this.client.stateManager.observe(async (schemaName, stateId, nodeId) => {
       if (schemaName === 'player') {
-        const state = await this.client.stateManager.attach(schemaName, nodeId);
+        const state = await this.client.stateManager.attach(schemaName, stateId);
 
         state.subscribe(updates => this.renderApp());
 

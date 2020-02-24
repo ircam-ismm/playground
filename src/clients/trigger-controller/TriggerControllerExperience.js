@@ -26,7 +26,7 @@ class TriggerControllerExperience extends Experience {
 
   async start() {
     this.localState = {
-      editedFiles: new Set(),
+      editedFiles: new Set(), // list presets that are currently edited (GUI opened)
       padSize: 60,
       soundBankValues: null,
       soundBankDefaultPresets: null,
@@ -76,9 +76,9 @@ class TriggerControllerExperience extends Experience {
       }
     });
 
-    this.client.stateManager.observe(async (schemaName, nodeId) => {
+    this.client.stateManager.observe(async (schemaName, stateId, nodeId) => {
       if (schemaName === 'player') {
-        const playerState = await this.client.stateManager.attach(schemaName, nodeId);
+        const playerState = await this.client.stateManager.attach(schemaName, stateId);
 
         playerState.onDetach(() => {
           this.playerStates.delete(nodeId);

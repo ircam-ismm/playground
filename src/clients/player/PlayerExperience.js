@@ -1,6 +1,7 @@
 import { Experience } from '@soundworks/core/client';
 import { render, html } from 'lit-html';
 import renderAppInitialization from '../views/renderAppInitialization';
+import AutoPlaySynth from './synths/AutoPlaySynth';
 import TriggerSynth from './synths/TriggerSynth';
 import GranularSynth from './synths/GranularSynth';
 import SoloistSynth from './synths/SoloistSynth';
@@ -23,12 +24,19 @@ class PlayerExperience extends Experience {
 
     this.granularSynth = null;
     this.soloistSynth = null;
+    this.autoPlaySynth = null;
 
     renderAppInitialization(client, config, $container);
 
-    setTimeout(() => {
-      this.position.setNormalizedPosition(Math.random(), Math.random());
-    }, 1000);
+    //
+    if (config.app.randomlyAssignPosition) {
+      const unsubscribe = this.client.serviceManager.observe((state) => {
+        if (state.position === 'started') {
+          this.position.setNormalizedPosition(Math.random(), Math.random());
+          unsubscribe();
+        }
+      });
+    }
   }
 
   async start() {
@@ -39,7 +47,7 @@ class PlayerExperience extends Experience {
 
     this.flashScreen = false;
 
-    this.playerState.subscribe((updates) => {
+    this.playerState.subscribe(async (updates) => {
       for (let name in updates) {
         switch (name) {
           case 'triggerFile': {
@@ -53,6 +61,7 @@ class PlayerExperience extends Experience {
           }
           case 'triggerEvent': {
             const buffer = this.bufferCache.get('trigger');
+
             if (buffer) {
               const triggerSynthConfig = this.playerState.get('triggerConfig');
               const config = triggerSynthConfig.presets['triggerSynth'];
@@ -127,6 +136,10 @@ class PlayerExperience extends Experience {
             break;
           }
           case 'granularState': {
+            if (!this.bufferCache.get('granular')) {
+              await this.loadFile('granular', this.playerState.get('granularFile'));
+            }
+
             const buffer = this.bufferCache.get('granular');
             const action = updates[name];
 
@@ -147,6 +160,48 @@ class PlayerExperience extends Experience {
             break;
           }
 
+          // auto synth
+          case 'autoPlayFile': {
+            await this.loadFile('autoPlay', updates[name]);
+            // if the synth is enabled we only change the buffer
+            if (this.autoPlaySynth !== null) {
+              const buffer = this.bufferCache.get('autoPlay');
+              this.autoPlaySynth.buffer = buffer;
+            }
+            break;
+          }
+          case 'autoPlayConfig': {
+            if (this.autoPlaySynth) {
+              const params = updates[name].presets['autoPlaySynth'];
+              this.autoPlaySynth.updateParams(params);
+            }
+            break;
+          }
+          case 'autoPlayEnabled': {
+            if (!this.bufferCache.get('autoPlay')) {
+              await this.loadFile('autoPlay', this.playerState.get('autoPlayFile'));
+            }
+
+            const buffer = this.bufferCache.get('autoPlay');
+            const enabled = updates[name];
+
+            if (buffer) {
+              const autoPlaySynthConfig = this.playerState.get('autoPlayConfig');
+              const params = autoPlaySynthConfig.presets['autoPlaySynth'];
+
+              if (this.autoPlaySynth === null && enabled) {
+                this.autoPlaySynth = new AutoPlaySynth(this.audioContext, buffer);
+                this.autoPlaySynth.updateParams(params);
+                this.autoPlaySynth.connect(this.master);
+                this.autoPlaySynth.start();
+              } else if (this.autoPlaySynth !== null && !enabled) {
+                this.autoPlaySynth.stop();
+                this.autoPlaySynth = null;
+              }
+            }
+
+            break;
+          }
         }
       }
 
@@ -187,7 +242,8 @@ class PlayerExperience extends Experience {
       <div class="screen"
         style="
           background-color: ${color};
-          position: relative
+          position: relative;
+          overflow-y: auto;
         "
       >
         <div

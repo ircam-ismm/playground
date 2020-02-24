@@ -8,6 +8,9 @@
       "default": true
     },
 
+    "auto-play-controller": {
+      "target": "browser",
+    },
     "soloist-controller": {
       "target": "browser",
     },
@@ -19,6 +22,13 @@
     },
 
     "soundbank-manager": {
+      "target": "browser",
+    },
+
+    "main-controller": {
+      "target": "browser",
+    },
+    "instructions-viewer": {
       "target": "browser",
     },
   },
@@ -36,4 +46,6 @@
     "#ff7f00",
     "#cab2d6",
   ],
+
+  "randomlyAssignPosition": true,
 }

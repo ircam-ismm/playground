@@ -10,7 +10,7 @@ import '../views/elements/sw-preset';
 import '../views/controller-components/fp-header';
 import '../views/controller-components/fp-loading-players';
 
-class GranularControllerExperience extends Experience {
+class AutoPlayControllerExperience extends Experience {
   constructor(client, config = {}, $container) {
     super(client);
 
@@ -26,7 +26,6 @@ class GranularControllerExperience extends Experience {
 
   async start() {
     this.localState = {
-      editedFiles: new Set(),
       soundBankValues: null,
       soundBankDefaultPresets: null,
       soundFileDefaultPresets: null,
@@ -35,60 +34,25 @@ class GranularControllerExperience extends Experience {
     this.eventListeners = {
       updateSoundBank: e => {
         const soundBankName = e.target.value || null;
-
-        this.granularControllerState.set({
-          currentSoundBank: soundBankName,
-          startedSynths: [],
-        });
-      },
-      toggleSynth: e => {
-        // e.stopPropagation();
-        e.preventDefault();
-
-        const startedSynths = this.granularControllerState.getValues()['startedSynths'];
-        const filename = e.target.dataset.filename;
-        const index = startedSynths.indexOf(filename);
-        let toggleSynthEvent;
-
-        if (index === -1) {
-          startedSynths.push(filename);
-          toggleSynthEvent = { action: 'start', filename };
-        } else {
-          startedSynths.splice(index, 1);
-          toggleSynthEvent = { action: 'stop', filename };
-        }
-
-        this.granularControllerState.set({ startedSynths, toggleSynthEvent });
+        this.autoPlayControllerState.set({ currentSoundBank: soundBankName });
       },
       updateFilePreset: throttle((soundbank, filename, param, value) => {
         this.client.socket.send('soundBanks:updateSoundFilePreset',
           soundbank,
           filename,
-          'granularSynth',
+          'autoPlaySynth',
           { [param]: value }
         );
       }, 50),
-
-      // local stuff
-      addToEditedFile: filename => {
-        this.localState.editedFiles.add(filename);
-        this.renderApp();
-      },
-      removeFromEditedFile: filename => {
-        this.localState.editedFiles.delete(filename);
-        this.renderApp();
+      toggleSynth: e => {
+        const enabled = !(this.autoPlayControllerState.get('enabled'));
+        this.autoPlayControllerState.set({ enabled });
       },
     };
 
     // listen all interesting states
-    this.granularControllerState = await this.client.stateManager.attach('granular-controller');
-    this.granularControllerState.subscribe(updates => {
-      if ('currentSoundBank' in updates) {
-        this.localState.editedFiles.clear();
-      }
-
-      this.renderApp();
-    });
+    this.autoPlayControllerState = await this.client.stateManager.attach('auto-play-controller');
+    this.autoPlayControllerState.subscribe(updates => this.renderApp());
 
     this.client.stateManager.observe(async (schemaName, stateId, nodeId) => {
       if (schemaName === 'player') {
@@ -102,8 +66,8 @@ class GranularControllerExperience extends Experience {
         playerState.subscribe(updates => {
           for (let name in updates) {
             switch (name) {
-              case 'granularConfig':
-              case 'granularLoading':
+              case 'autoPlayConfig':
+              case 'autoPlayLoading':
                 this.renderApp();
                 break;
             }
@@ -136,20 +100,21 @@ class GranularControllerExperience extends Experience {
     const filteredSoundBankNames = Object.keys(this.localState.soundBankValues)
       .sort()
       .filter((name) => {
-        return this.localState.soundBankValues[name].presets.activated.granularSynth;
+        return this.localState.soundBankValues[name].presets.activated.autoPlaySynth;
       });
 
-    const granularState = this.granularControllerState.getValues();
     const playerStates = Array.from(this.playerStates.values()).map(s => s.getValues());
-    const loadingPlayers = playerStates.filter(s => s.granularLoading === true);
-    const loadedPlayers = playerStates.filter(s => s.granularConfig !== null && s.granularLoading === false);
+    const loadingPlayers = playerStates.filter(s => s.autoPlayLoading === true);
+    const loadedPlayers = playerStates.filter(s => s.autoPlayConfig !== null && s.autoPlayLoading === false);
 
-    const currentSoundBank = this.granularControllerState.getValues()['currentSoundBank'];
+    const currentSoundBank = this.autoPlayControllerState.getValues()['currentSoundBank'];
     let soundBankFiles = {}
 
     if (currentSoundBank !== null) {
       soundBankFiles = this.localState.soundBankValues[currentSoundBank].files;
     }
+
+    const autoPlayState = this.autoPlayControllerState.getValues();
 
     const width = window.innerWidth;
     const height = window.innerHeight;
@@ -162,44 +127,34 @@ class GranularControllerExperience extends Experience {
         @change="${this.eventListeners.updateSoundBank}"
       ></fp-header>
       <section style="width: ${width - 121}px; float: left; box-sizing: border-box; padding: 0 0 10px 10px">
+
+        <button
+          style="
+            width: 400px;
+            height: 30px;
+            background-color: ${autoPlayState.enabled ? '#dc3545' : '#242424'};
+            color: #ffffff;
+            margin: 20px 0;
+            border-color: ${autoPlayState.enabled ? '#dc3545' : '#686868'};
+            font-size: 14px;
+            font-family: Consolas, monaco, monospace;
+          "
+          @touchstart="${this.eventListeners.toggleSynth}"
+          @mousedown="${this.eventListeners.toggleSynth}"
+        >${autoPlayState.enabled ? 'stop' : 'start'}</button>
+
+
         ${Object.keys(soundBankFiles).map((filename) => {
           const url = soundBankFiles[filename].url;
-          const started = (granularState.startedSynths.indexOf(url) !== -1);
-          const numPlayers = loadedPlayers.filter(p => p.granularFile === url).length;
+          const numPlayers = loadedPlayers.filter(p => p.autoPlayFile === url).length;
 
           return html`
             <div style="clear:left; position: relative; margin-top: 20px;">
-              <h2 style="height: 30px; line-height: 30px; font-size: 14px;">
-                > ${filename}
-                <span style="display: inline-block; font-size: 10px;">
-                  (# players: ${numPlayers})
-                </span>
-              </h2>
-              <button
-                style="
-                  width: 400px;
-                  height: 30px;
-                  background-color: ${started ? '#dc3545' : '#242424'};
-                  color: #ffffff;
-                  position: absolute;
-                  right: 160px;
-                  top: 0;
-                  border-color: ${started ? '#dc3545' : '#686868'};
-                  font-size: 14px;
-                  font-family: Consolas, monaco, monospace;
-                "
-                data-filename="${url}"
-                @touchstart="${this.eventListeners.toggleSynth}"
-                @mousedown="${this.eventListeners.toggleSynth}"
-              >${started ? 'stop' : 'start'}</button>
               <sw-preset
-                style="position: absolute; top: 0; right: 0"
-                width="400"
-                expanded="${ifDefined(this.localState.editedFiles.has(filename) ? true : undefined)}"
-                definitions="${JSON.stringify(this.localState.soundFileDefaultPresets.granularSynth)}"
-                values="${JSON.stringify(soundBankFiles[filename].presets.granularSynth)}"
-                @open="${e => this.eventListeners.addToEditedFile(filename)}"
-                @close="${e => this.eventListeners.removeFromEditedFile(filename)}"
+                label="${filename} - (# players: ${numPlayers})"
+                width="500"
+                definitions="${JSON.stringify(this.localState.soundFileDefaultPresets.autoPlaySynth)}"
+                values="${JSON.stringify(soundBankFiles[filename].presets.autoPlaySynth)}"
                 @update="${e => this.eventListeners.updateFilePreset(currentSoundBank, filename, e.detail.name, e.detail.value)}"
               ></sw-preset>
             </div>
@@ -220,4 +175,4 @@ class GranularControllerExperience extends Experience {
   }
 }
 
-export default GranularControllerExperience;
+export default AutoPlayControllerExperience;

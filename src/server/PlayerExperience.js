@@ -65,7 +65,7 @@ class PlayerExperience extends Experience {
       for (let [nodeId, playerState] of this.playerStates) {
         const state = playerState.getValues();
 
-        ['triggerConfig', 'soloistConfig', 'granularConfig'].forEach(configName => {
+        ['triggerConfig', 'soloistConfig', 'granularConfig', 'autoPlayConfig'].forEach(configName => {
           const config = state[configName];
 
           for (let path in updated) {
@@ -88,18 +88,35 @@ class PlayerExperience extends Experience {
     // ------------------------------------------------------------
     // observe players
     // ------------------------------------------------------------
-    this.server.stateManager.observe(async (schemaName, nodeId) => {
+    this.server.stateManager.observe(async (schemaName, stateId, nodeId) => {
       if (schemaName === 'player') {
-        const playerState = await this.server.stateManager.attach(schemaName, nodeId);
+        const playerState = await this.server.stateManager.attach(schemaName, stateId);
         playerState.onDetach(() => this.playerStates.delete(nodeId));
 
         // add new player to current synth preset
-        ['soloist', 'trigger', 'granular'].forEach(type => {
+        ['soloist', 'trigger', 'granular', 'autoPlay'].forEach(async type => {
           const currentSoundBank = this.controllerStates[type].getValues()['currentSoundBank'];
 
           if (currentSoundBank !== null) {
             const soundBank = this.soundBankManager.getValues()[currentSoundBank];
-            this.assignRandomFile(type, soundBank, playerState);
+            await this.assignRandomFile(type, soundBank, playerState);
+
+            // if granular is enabled when the user connects
+            if (type === 'granular') {
+              const startedGranularSynth = this.controllerStates['granular'].get('startedSynths');
+
+              startedGranularSynth.forEach(file => {
+                if (file === playerState.get('granularFile')) {
+                  playerState.set({ granularState: 'start' });
+                }
+              });
+            }
+
+            // if autoPlay is enabled when the user connects
+            if (type === 'autoPlay') {
+              const autoPlayEnabled = this.controllerStates['autoPlay'].get('enabled');
+              playerState.set({ autoPlayEnabled: autoPlayEnabled });
+            }
           }
         });
 
@@ -239,6 +256,29 @@ class PlayerExperience extends Experience {
         }
       }
     });
+
+
+    this.controllerStates['autoPlay'].subscribe(updates => {
+      for (let key in updates) {
+        switch (key) {
+          case 'currentSoundBank': {
+            if (updates['currentSoundBank'] === null) {
+              for (let playerState of this.playerStates.values()) {
+                playerState.set({ autoPlayEnabled: false });
+              }
+            }
+            this.assignSoundBank('autoPlay', updates['currentSoundBank']);
+            break;
+          }
+          case 'enabled': {
+            for (let playerState of this.playerStates.values()) {
+              playerState.set({ autoPlayEnabled: updates[key] });
+            }
+            break;
+          }
+        }
+      }
+    });
   }
 
   enter(client) {
@@ -249,37 +289,70 @@ class PlayerExperience extends Experience {
     super.exit(client);
   }
 
-  // assign sound files from sound bank
-  assignSoundBank(type, soundBankName) {
+  // randomly assign sound files from sound bank
+  async assignSoundBank(type, soundBankName) {
     if (soundBankName === null) {
       for (let playerState of this.playerStates.values()) {
         const playerSynthConfigKey = `${type}Config`;
         const playerSynthFileKey = `${type}File`;
 
-        playerState.set({
+        await playerState.set({
           [playerSynthConfigKey]: null,
           [playerSynthFileKey]: null,
         });
       }
     } else {
       const soundBank = this.soundBankManager.getValues()[soundBankName];
-
+      // console.time('assignFiles');
       for (let playerState of this.playerStates.values()) {
-        this.assignRandomFile(type, soundBank, playerState);
+        await this.assignRandomFile(type, soundBank, playerState);
       }
+      // console.timeEnd('assignFiles');
     }
   }
 
-  assignRandomFile(type, soundBank, playerState) {
+  async assignRandomFile(type, soundBank, playerState) {
     const synthConfigKey = `${type}Config`;
     const synthFileKey = `${type}File`;
 
+    let filename;
     const filenames = Object.keys(soundBank.files);
-    const rand = Math.floor(Math.random() * filenames.length);
-    const filename = filenames[rand];
+
+    const strategy = 'even';
+    // evenly distribute soundfiles between all clients
+    // @todo - make that more efficient, this is very brut force but ok for now
+    // ~20ms for 100 clients
+    // ~40ms for 200 clients
+    if (strategy === 'even') {
+      const numPlayersPerFile = {};
+
+      filenames.forEach(filename => {
+        const url = soundBank.files[filename].url;
+        numPlayersPerFile[url] = 0;
+      });
+
+      for (let peerState of this.playerStates.values()) {
+        if (peerState !== playerState) {
+          const url = peerState.get(synthFileKey);
+
+          if (url in numPlayersPerFile) {
+            numPlayersPerFile[url] += 1;
+          }
+        }
+      }
+
+      const numPlayersAsArray = Object.values(numPlayersPerFile);
+      const min = Math.min.apply(null, numPlayersAsArray);
+      const index = numPlayersAsArray.indexOf(min);
+
+      filename = filenames[index];
+    } else {
+      filename = filenames[Math.floor(Math.random() * filenames.length)];
+    }
 
     const synthConfig = soundBank.files[filename];
-    playerState.set({
+
+    await playerState.set({
       [synthConfigKey]: synthConfig,
       [synthFileKey]: synthConfig.url,
     });

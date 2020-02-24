@@ -1,0 +1,48 @@
+{
+  "name": "untitled folder",
+  "url": "sounds/untitled folder",
+  "path": "public/sounds/untitled folder",
+  "version": "0.0.0",
+  "presets": {
+    "activated": {
+      "autoPlaySynth": true,
+      "triggerSynth": true,
+      "soloistSynth": true,
+      "granularSynth": true
+    }
+  },
+  "files": {
+    "ouverture_texte.mp3": {
+      "name": "ouverture_texte.mp3",
+      "path": "public/sounds/intro/ouverture_texte.mp3",
+      "url": "sounds/intro/ouverture_texte.mp3",
+      "presets": {
+        "autoPlaySynth": {
+          "repeatPeriod": 41.831,
+          "maxReleaseOffset": 9.66,
+          "releaseDuration": 13.247
+        },
+        "triggerSynth": {
+          "repeat": 1,
+          "period": 0,
+          "jitter": 0,
+          "releaseDuration": 1
+        },
+        "granularSynth": {
+          "volume": 1,
+          "releaseDuration": 3,
+          "speed": 0.96,
+          "positionVar": 0.011,
+          "periodAbs": 0.034,
+          "durationAbs": 0.028,
+          "resampling": -152,
+          "resamplingVar": 2
+        },
+        "soloistSynth": {
+          "fadeOutDuration": 8,
+          "decayExponent": 1.5
+        }
+      }
+    }
+  }
+}

@@ -19,4 +19,9 @@ export default {
     default: null,
     nullable: true,
   },
+  instructionsState: {
+    type: 'enum',
+    list: ['welcome', 'instructions', 'none'],
+    default: 'welcome',
+  },
 }
