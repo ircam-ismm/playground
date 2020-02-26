@@ -111,18 +111,17 @@ class InstructionsViewerExperience extends Experience {
             ></div>`: ``}
 
           ${instructionsState === 'instructions' ?
-            html`<h1
+            html`<div
               style="
-                width: ${areaWidth}px;
                 position: absolute;
-                top: ${areaHeight / 2 - 60}px;
-                font-size: 40px;
-                text-align: center;
+                top: 0;
+                left: 0;
+                width: ${areaWidth}px;
+                height: ${areaHeight}px;
+                background: url(./images/instructions.png) 50% 50% no-repeat;
+                background-size: contain;
               "
-            >
-              WiFi: CoSiMa<br>
-              url: http://apps.cosima.ircam.fr
-            </h1>`: ``}
+            ></div>`: ``}
         </div>
         `
       , this.$container

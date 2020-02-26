@@ -216,8 +216,6 @@ class PlayerExperience extends Experience {
   }
 
   async handleGranularSynth(action) {
-    console.log(action);
-
     if (this.granularSynth !== null && action == 'stop') {
       this.granularSynth.stop();
       this.granularSynth = null;
