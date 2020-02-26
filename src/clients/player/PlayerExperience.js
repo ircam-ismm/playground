@@ -1,6 +1,7 @@
 import { Experience } from '@soundworks/core/client';
 import { render, html } from 'lit-html';
 import renderAppInitialization from '../views/renderAppInitialization';
+import AudioBus from './synths/AudioBus';
 import AutoPlaySynth from './synths/AutoPlaySynth';
 import TriggerSynth from './synths/TriggerSynth';
 import GranularSynth from './synths/GranularSynth';
@@ -25,6 +26,7 @@ class PlayerExperience extends Experience {
     this.granularSynth = null;
     this.soloistSynth = null;
     this.autoPlaySynth = null;
+    this.showConnectedScreen = true;
 
     renderAppInitialization(client, config, $container);
 
@@ -43,11 +45,39 @@ class PlayerExperience extends Experience {
     super.start();
 
     this.playerState = await this.client.stateManager.create('player');
-    this.master = this.audioContext.destination;
+    this.globalsState = await this.client.stateManager.attach('globals');
+
+    this.master = new AudioBus(this.audioContext);
+    this.master.connect(this.audioContext.destination);
+    this.master.volume = this.globalsState.get('masterVolume');
+
+    this.masterBus = this.master.input;
 
     this.flashScreen = false;
 
-    this.playerState.subscribe(async (updates) => {
+    this.globalsState.subscribe(async updates => {
+      for (let [name, value] of Object.entries(updates)) {
+        switch (name) {
+          case 'instructionsState':
+            if (value === 'thanks') {
+              setTimeout(() => {
+                const now = this.audioContext.currentTime;
+                this.master.muteNode.gain.linearRampToValueAtTime(0, now + 10);
+                this.showConnectedScreen = false;
+                this.renderApp();
+              }, Math.random() * 5000);
+            }
+            break;
+          case 'masterVolume':
+            this.master.volume = value;
+            this.renderApp();
+            break;
+        }
+      }
+    });
+
+    this.playerState.subscribe(async updates => {
+
       for (let name in updates) {
         switch (name) {
           case 'triggerFile': {
@@ -56,7 +86,6 @@ class PlayerExperience extends Experience {
           }
           case 'triggerConfig': {
             const config = updates[name];
-
             break;
           }
           case 'triggerEvent': {
@@ -67,7 +96,7 @@ class PlayerExperience extends Experience {
               const config = triggerSynthConfig.presets['triggerSynth'];
               const synth = new TriggerSynth(this.audioContext, buffer, config);
 
-              synth.connect(this.master);
+              synth.connect(this.masterBus);
               synth.trigger();
               // flash the screen
               this.flashScreen = true;
@@ -106,7 +135,7 @@ class PlayerExperience extends Experience {
                   const params = soloistSynthConfig.presets['soloistSynth'];
 
                   this.soloistSynth = new SoloistSynth(this.audioContext, buffer, locaStartTime);
-                  this.soloistSynth.connect(this.master);
+                  this.soloistSynth.connect(this.masterBus);
                   this.soloistSynth.updateParams(params);
                 }
               }
@@ -122,7 +151,6 @@ class PlayerExperience extends Experience {
             }
             break;
           }
-
           // granular
           case 'granularFile': {
             this.loadFile('granular', updates[name]);
@@ -136,30 +164,10 @@ class PlayerExperience extends Experience {
             break;
           }
           case 'granularState': {
-            if (!this.bufferCache.get('granular')) {
-              await this.loadFile('granular', this.playerState.get('granularFile'));
-            }
-
-            const buffer = this.bufferCache.get('granular');
             const action = updates[name];
-
-            if (buffer) {
-              const granularSynthConfig = this.playerState.get('granularConfig');
-              const params = granularSynthConfig.presets['granularSynth'];
-
-              if (this.granularSynth === null && action === 'start') {
-                this.granularSynth = new GranularSynth(this.audioContext, buffer);
-                this.granularSynth.updateParams(params);
-                this.granularSynth.connect(this.master);
-                this.granularSynth.start();
-              } else if (this.granularSynth !== null && action == 'stop') {
-                this.granularSynth.stop();
-                this.granularSynth = null;
-              }
-            }
+            this.handleGranularSynth(action);
             break;
           }
-
           // auto synth
           case 'autoPlayFile': {
             await this.loadFile('autoPlay', updates[name]);
@@ -178,28 +186,8 @@ class PlayerExperience extends Experience {
             break;
           }
           case 'autoPlayEnabled': {
-            if (!this.bufferCache.get('autoPlay')) {
-              await this.loadFile('autoPlay', this.playerState.get('autoPlayFile'));
-            }
-
-            const buffer = this.bufferCache.get('autoPlay');
             const enabled = updates[name];
-
-            if (buffer) {
-              const autoPlaySynthConfig = this.playerState.get('autoPlayConfig');
-              const params = autoPlaySynthConfig.presets['autoPlaySynth'];
-
-              if (this.autoPlaySynth === null && enabled) {
-                this.autoPlaySynth = new AutoPlaySynth(this.audioContext, buffer);
-                this.autoPlaySynth.updateParams(params);
-                this.autoPlaySynth.connect(this.master);
-                this.autoPlaySynth.start();
-              } else if (this.autoPlaySynth !== null && !enabled) {
-                this.autoPlaySynth.stop();
-                this.autoPlaySynth = null;
-              }
-            }
-
+            this.handleAutoPlaySynth(enabled);
             break;
           }
         }
@@ -208,6 +196,9 @@ class PlayerExperience extends Experience {
       this.renderApp();
     });
 
+    this.handleAutoPlaySynth(this.playerState.get('autoPlayEnabled'));
+    this.handleGranularSynth(this.playerState.get('granularState'));
+
     const id = this.client.id;
     const position = this.position.state.getValues();
     const index = this.checkin.state.getValues()['index'];
@@ -215,7 +206,61 @@ class PlayerExperience extends Experience {
 
     await this.playerState.set({ id, position, index, color });
 
+    // remove connected screen
+    setTimeout(() => {
+      this.showConnectedScreen = false;
+      this.renderApp();
+    }, 8 * 1000);
+
     this.renderApp();
+  }
+
+  async handleGranularSynth(action) {
+    console.log(action);
+
+    if (this.granularSynth !== null && action == 'stop') {
+      this.granularSynth.stop();
+      this.granularSynth = null;
+    } else if (this.granularSynth === null && action === 'start') {
+      if (!this.bufferCache.get('granular')) {
+        await this.loadFile('granular', this.playerState.get('granularFile'));
+      }
+
+      const buffer = this.bufferCache.get('granular');
+
+      if (buffer) {
+        const granularSynthConfig = this.playerState.get('granularConfig');
+        const params = granularSynthConfig.presets['granularSynth'];
+
+        this.granularSynth = new GranularSynth(this.audioContext, buffer);
+        this.granularSynth.updateParams(params);
+        this.granularSynth.connect(this.masterBus);
+        this.granularSynth.start();
+      }
+    }
+  }
+
+  async handleAutoPlaySynth(enabled) {
+    if (this.autoPlaySynth !== null && !enabled) {
+      this.autoPlaySynth.stop();
+      this.autoPlaySynth = null;
+    } else if (this.autoPlaySynth === null && enabled) {
+      if (!this.bufferCache.get('autoPlay')) {
+        await this.loadFile('autoPlay', this.playerState.get('autoPlayFile'));
+      }
+
+      const buffer = this.bufferCache.get('autoPlay');
+
+      if (buffer) {
+        const autoPlaySynthConfig = this.playerState.get('autoPlayConfig');
+        const params = autoPlaySynthConfig.presets['autoPlaySynth'];
+
+        this.autoPlaySynth = new AutoPlaySynth(this.audioContext, buffer);
+        this.autoPlaySynth.updateParams(params);
+        this.autoPlaySynth.connect(this.masterBus);
+        this.autoPlaySynth.start();
+      }
+    }
   }
 
   async loadFile(type, url) {
@@ -235,6 +280,7 @@ class PlayerExperience extends Experience {
 
   renderApp() {
     const playerState = this.playerState.getValues();
+    const globalsState = this.globalsState.getValues();
     const color = this.flashScreen ? '#ffffff' : playerState.color;
     const opacity = 1 - playerState.soloistDistance;
 
@@ -246,6 +292,67 @@ class PlayerExperience extends Experience {
           overflow-y: auto;
         "
       >
+        ${globalsState.instructionsState === 'thanks' ?
+          // final screen
+          html`
+            <div
+          style="
+            position: absolute;
+            top: 0;
+            height: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            "
+          >
+            <p
+              style="
+                padding-top: 120px;
+                text-align: center;
+                font-size: 14px;
+                line-height: 20px;
+              "
+            >
+              Merci, <br />vous pouvez ranger votre téléphone
+              <br />
+              <br />
+              <br />
+              Thanks, <br />you can put away you phone
+            </p>
+          </div>
+          `
+        : ''}
+
+        ${this.showConnectedScreen ?
+          html`
+            <div
+          style="
+            position: absolute;
+            top: 0;
+            height: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            "
+          >
+            <p
+              style="
+                padding-top: 120px;
+                text-align: center;
+                font-size: 14px;
+                line-height: 20px;
+              "
+            >
+              (vous êtes bien connectés...)
+              <br />
+              <br />
+              <br />
+              (you are connected...)
+            </p>
+          </div>
+          `
+        : ''}
+
         <div
           style="
             position: absolute;
@@ -257,7 +364,10 @@ class PlayerExperience extends Experience {
             opacity: ${opacity};
           "
         ></div>
-        <pre><code>${JSON.stringify(playerState, null, 2)}</code></pre>
+        <pre><code style="font-size: 7px; padding: 4px; display: block;">
+masterVolume: ${globalsState.masterVolume}
+${JSON.stringify(playerState, null, 2)}
+        </code></pre>
       </div>
     `, this.$container);
   }

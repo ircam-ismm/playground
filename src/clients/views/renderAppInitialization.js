@@ -12,7 +12,6 @@ const renderScreen = {
     let blink = false;
     let bindListener = false;
 
-
     if (serviceState.available === null) {
       msg = 'Checkin...';
     } else if (serviceState.authorized === null) {

@@ -20,8 +20,13 @@ export default {
     nullable: true,
   },
   instructionsState: {
-    type: 'enum',
-    list: ['welcome', 'instructions', 'none'],
+    type: 'string',
     default: 'welcome',
+  },
+  masterVolume: {
+    type: 'integer',
+    min: -80,
+    max: 6,
+    default: 0,
   },
 }

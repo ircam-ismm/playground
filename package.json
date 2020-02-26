@@ -28,7 +28,7 @@
     "@soundworks/service-audio-buffer-loader": "^0.0.1-alpha.3",
     "@soundworks/service-checkin": "^0.0.1-alpha.2",
     "@soundworks/service-file-system": "^0.0.1-alpha.2",
-    "@soundworks/service-platform": "^0.0.1-alpha.2",
+    "@soundworks/service-platform": "^0.0.1-alpha.3",
     "@soundworks/service-position": "^0.0.1-alpha.2",
     "@soundworks/service-sync": "^0.0.1-alpha.4",
     "@wessberg/pointer-events": "^1.0.9",

@@ -54,8 +54,8 @@ class MainControllerExperience extends Experience {
 
   renderApp() {
     const playerStates = Array.from(this.playerStates.values()).map(s => s.getValues());
+    const globalsState = this.globalsState.getValues();
     const globalsSchema = this.globalsState.getSchema();
-    const instructionsState = this.globalsState.get('instructionsState');
 
     render(
       html`
@@ -67,13 +67,23 @@ class MainControllerExperience extends Experience {
             "
           >#players: ${playerStates.length}</h1>
 
+          <sw-slider-enhanced
+            width="500"
+            label="master"
+            min="-80"
+            max="6"
+            step="1"
+            .value="${globalsState.masterVolume}"
+            @change="${e => this.globalsState.set({ masterVolume: e.detail.value })}"
+          ></sw-slider-enhanced>
+
           <p
             style="
               font-size: 13px;
               margin: 20px 0;
             "
-          >current instructions state: ${instructionsState}</p>
-          ${globalsSchema.instructionsState.list.map(value => {
+          >current instructions state: ${globalsState.instructionsState}</p>
+          ${['welcome', 'instructions', 'none', 'thanks'].map(value => {
             return html`
               <sw-button
                 text="${value}"
