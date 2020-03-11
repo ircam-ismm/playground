@@ -48,7 +48,7 @@ async function init($container, index) {
     await client.init(config);
     initQoS(client);
 
-    const playerExperience = new PlayerExperience(client, config, $container, audioContext);
+    const playerExperience = new PlayerExperience(client, config, $container, audioContext, index);
     // store platform service to be able to call all `onUserGesture` at once
     if (playerExperience.platform) {
       platformServices.add(playerExperience.platform);

@@ -18,9 +18,9 @@
       "url": "sounds/intro/ouverture_texte.mp3",
       "presets": {
         "autoPlaySynth": {
-          "repeatPeriod": 5.066,
-          "maxReleaseOffset": 0.955,
-          "releaseDuration": 1.38
+          "repeatPeriod": 49.372,
+          "maxReleaseOffset": 5.722,
+          "releaseDuration": 11.741
         },
         "triggerSynth": {
           "repeat": 1,
@@ -31,11 +31,11 @@
         "granularSynth": {
           "volume": 1,
           "releaseDuration": 8.3,
-          "speed": 0.76,
+          "speed": 0.68,
           "positionVar": 0.017,
           "periodAbs": 0.059,
           "durationAbs": 0.046,
-          "resampling": -509,
+          "resampling": -350,
           "resamplingVar": 2
         },
         "soloistSynth": {

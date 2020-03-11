@@ -8,7 +8,7 @@ import GranularSynth from './synths/GranularSynth';
 import SoloistSynth from './synths/SoloistSynth';
 
 class PlayerExperience extends Experience {
-  constructor(client, config = {}, $container, audioContext) {
+  constructor(client, config = {}, $container, audioContext, index) {
     super(client);
 
     this.config = config;
@@ -34,6 +34,10 @@ class PlayerExperience extends Experience {
     if (config.app.randomlyAssignPosition) {
       const unsubscribe = this.client.serviceManager.observe((state) => {
         if (state.position === 'started') {
+          // const angle = 2 * Math.PI / 42 * index;
+          // const x = (Math.cos(angle) + 1) / 2;
+          // const y = (Math.sin(angle) + 1) / 2;
+          // this.position.setNormalizedPosition(x, y);
           this.position.setNormalizedPosition(Math.random(), Math.random());
           unsubscribe();
         }
@@ -66,6 +70,13 @@ class PlayerExperience extends Experience {
                 this.showConnectedScreen = false;
                 this.renderApp();
               }, Math.random() * 5000);
+            } else {
+              // back to full
+              const now = this.audioContext.currentTime;
+              this.master.muteNode.gain.cancelScheduledValues(now);
+              this.master.muteNode.gain.setValueAtTime(1, now);
+
+              this.renderApp();
             }
             break;
           case 'masterVolume':
@@ -295,7 +306,7 @@ class PlayerExperience extends Experience {
           html`
             <div
           style="
-            position: absolute;
+            position: fixed;
             top: 0;
             height: 0;
             width: 100%;
@@ -325,7 +336,7 @@ class PlayerExperience extends Experience {
           html`
             <div
           style="
-            position: absolute;
+            position: fixed;
             top: 0;
             height: 0;
             width: 100%;

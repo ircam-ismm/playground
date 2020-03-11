@@ -1,0 +1,112 @@
+{
+  "name": "ouverture",
+  "url": "sounds/ouverture",
+  "path": "public/sounds/ouverture",
+  "version": "0.0.0",
+  "presets": {
+    "activated": {
+      "autoPlaySynth": true,
+      "triggerSynth": true,
+      "soloistSynth": true,
+      "granularSynth": true
+    }
+  },
+  "files": {
+    "ouverture_anthony_master.mp3": {
+      "name": "ouverture_anthony_master.mp3",
+      "path": "public/sounds/ouverture/ouverture_anthony_master.mp3",
+      "url": "sounds/ouverture/ouverture_anthony_master.mp3",
+      "presets": {
+        "autoPlaySynth": {
+          "repeatPeriod": 38.606,
+          "maxReleaseOffset": 5.119,
+          "releaseDuration": 10.043
+        },
+        "triggerSynth": {
+          "repeat": 1,
+          "period": 0,
+          "jitter": 0,
+          "releaseDuration": 1
+        },
+        "granularSynth": {
+          "volume": 1,
+          "releaseDuration": 3,
+          "speed": 0.44,
+          "positionVar": 0.003,
+          "periodAbs": 0.056,
+          "durationAbs": 0.053,
+          "resampling": -752,
+          "resamplingVar": 0
+        },
+        "soloistSynth": {
+          "fadeOutDuration": 8,
+          "decayExponent": 1.5
+        }
+      }
+    },
+    "ouverture_estelle_master.mp3": {
+      "name": "ouverture_estelle_master.mp3",
+      "path": "public/sounds/ouverture/ouverture_estelle_master.mp3",
+      "url": "sounds/ouverture/ouverture_estelle_master.mp3",
+      "presets": {
+        "autoPlaySynth": {
+          "repeatPeriod": 42.078,
+          "maxReleaseOffset": 5.39,
+          "releaseDuration": 10.379
+        },
+        "triggerSynth": {
+          "repeat": 1,
+          "period": 0,
+          "jitter": 0,
+          "releaseDuration": 1
+        },
+        "granularSynth": {
+          "volume": 1,
+          "releaseDuration": 3,
+          "speed": 0.38,
+          "positionVar": 0.003,
+          "periodAbs": 0.02,
+          "durationAbs": 0.08,
+          "resampling": -425,
+          "resamplingVar": 0
+        },
+        "soloistSynth": {
+          "fadeOutDuration": 8,
+          "decayExponent": 1.5
+        }
+      }
+    },
+    "ouverture_michelle_master.mp3": {
+      "name": "ouverture_michelle_master.mp3",
+      "path": "public/sounds/ouverture/ouverture_michelle_master.mp3",
+      "url": "sounds/ouverture/ouverture_michelle_master.mp3",
+      "presets": {
+        "autoPlaySynth": {
+          "repeatPeriod": 38.548,
+          "maxReleaseOffset": 5.825,
+          "releaseDuration": 10.62
+        },
+        "triggerSynth": {
+          "repeat": 1,
+          "period": 0,
+          "jitter": 0,
+          "releaseDuration": 1
+        },
+        "granularSynth": {
+          "volume": 1,
+          "releaseDuration": 3,
+          "speed": 0.26,
+          "positionVar": 0.003,
+          "periodAbs": 0.042,
+          "durationAbs": 0.035,
+          "resampling": 384,
+          "resamplingVar": 0
+        },
+        "soloistSynth": {
+          "fadeOutDuration": 8,
+          "decayExponent": 1.5
+        }
+      }
+    }
+  }
+}
