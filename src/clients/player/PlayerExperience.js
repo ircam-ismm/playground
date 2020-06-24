@@ -12,6 +12,7 @@ class PlayerExperience extends Experience {
     super(client);
 
     this.config = config;
+    console.log(this.config);
     this.$container = $container;
     this.audioContext = audioContext;
 
@@ -306,7 +307,7 @@ class PlayerExperience extends Experience {
           html`
             <div
           style="
-            position: fixed;
+            position: absolute;
             top: 0;
             height: 0;
             width: 100%;
@@ -322,11 +323,7 @@ class PlayerExperience extends Experience {
                 line-height: 20px;
               "
             >
-              Merci, <br />vous pouvez ranger votre téléphone
-              <br />
-              <br />
-              <br />
-              Thanks, <br />you can put away you phone
+              ${this.config.app.thanksMessage}
             </p>
           </div>
           `
@@ -336,7 +333,7 @@ class PlayerExperience extends Experience {
           html`
             <div
           style="
-            position: fixed;
+            position: absolute;
             top: 0;
             height: 0;
             width: 100%;
@@ -352,11 +349,7 @@ class PlayerExperience extends Experience {
                 line-height: 20px;
               "
             >
-              (vous êtes bien connectés...)
-              <br />
-              <br />
-              <br />
-              (you are connected...)
+              ${this.config.app.connectionMessage}
             </p>
           </div>
           `

@@ -1,0 +1,15 @@
+{
+  "name": "sounds",
+  "url": "../projects/default/sounds",
+  "path": "projects/default/sounds",
+  "version": "0.0.0",
+  "presets": {
+    "activated": {
+      "autoPlaySynth": true,
+      "triggerSynth": true,
+      "soloistSynth": true,
+      "granularSynth": true
+    }
+  },
+  "files": {}
+}

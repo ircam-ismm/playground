@@ -3,6 +3,7 @@ import 'source-map-support/register';
 
 import { Server } from '@soundworks/core/server';
 import getConfig from './utils/getConfig';
+import getProjectConfig from './utils/getProjectConfig';
 import path from 'path';
 import serveStatic from 'serve-static';
 import compile from 'template-literal';
@@ -42,6 +43,9 @@ import osc from 'osc';
 const ENV = process.env.ENV || 'default';
 const config = getConfig(ENV);
 
+const projectConfig = getProjectConfig(config.app.project);
+console.log(projectConfig);
+
 console.log(`
 --------------------------------------------------------
 - running "${config.app.name}" in "${ENV}" environment -
@@ -69,8 +73,8 @@ console.log(`
     server.registerService('file-system', serviceFileSystemFactory, {
       directories: [{
         name: 'sounds',
-        path: path.join('public', 'sounds'),
-        publicDirectory: 'public',
+        path: path.join('projects', config.app.project, 'sounds'),
+        publicDirectory: path.join('projects', config.app.project),
         watch: true,
       }]
     }, []);
@@ -83,10 +87,12 @@ console.log(`
       return {
         clientType: clientType,
         app: {
-          name: config.app.name,
-          author: config.app.author,
-          colors: config.app.colors,
-          randomlyAssignPosition: config.app.randomlyAssignPosition,
+          name: projectConfig.name,
+          author: projectConfig.author,
+          colors: projectConfig.colors,
+          randomlyAssignPosition: projectConfig.randomlyAssignPosition,
+          connectionMessage: projectConfig.connectionMessage,
+          thanksMessage: projectConfig.thanksMessage,
         },
         env: {
           type: config.env.type,
@@ -106,8 +112,13 @@ console.log(`
 
     // html template and static files (in most case, this should not be modified)
     server.configureHtmlTemplates({ compile }, path.join('.build', 'server', 'tmpl'))
+
     server.router.use(serveStatic('public'));
     server.router.use('build', serveStatic(path.join('.build', 'public')));
+    server.router.use('vendors', serveStatic(path.join('.vendors', 'public')));
+    // project specific routes
+    server.router.use('sounds', serveStatic(path.join('projects', config.app.project, 'sounds')));
+    server.router.use('images', serveStatic(path.join('projects', config.app.project, 'images')));
 
     const globalsState = await server.stateManager.create('globals');
     const autoPlayControllerState = await server.stateManager.create('auto-play-controller');

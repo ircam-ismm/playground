@@ -1,6 +1,8 @@
 {
-  "name": "Constella(c)tions",
+  "name": "playground",
   "author": "",
+
+  "project": "default",
 
   "clients": {
     "player": {
@@ -33,18 +35,4 @@
   },
 
   "htmlTemplateDirectory": ".build/server/tmpl",
-
-  "colors": [
-    "#a6cee3",
-    "#1f78b4",
-    "#b2df8a",
-    "#33a02c",
-    "#fb9a99",
-    "#e31a1c",
-    "#fdbf6f",
-    "#ff7f00",
-    "#cab2d6",
-  ],
-
-  "randomlyAssignPosition": true,
 }
