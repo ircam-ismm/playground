@@ -9,8 +9,8 @@ const renderScreen = {
     const serviceState = platform.state.getValues();
 
     let msg;
+    let bindListener = undefined;
     let blink = false;
-    let bindListener = false;
 
     if (serviceState.available === null) {
       msg = 'Checkin...';
@@ -19,7 +19,16 @@ const renderScreen = {
     } else if (serviceState.initialized === null) {
       msg = 'Please click to join';
       blink = true;
-      bindListener = platform.onUserGesture;
+      let called = false;
+
+      bindListener = (e) => {
+        if (called) {
+          return;
+        }
+
+        called = true;
+        platform.onUserGesture(e);
+      }
     } else if (serviceState.finalized === null) {
       msg = 'Finalizing...'
     }

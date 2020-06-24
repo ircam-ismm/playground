@@ -7,15 +7,16 @@
   "license": "BSD-3-Clause",
   "version": "3.0.0-alpha.0",
   "scripts": {
-    "start": "node dist/server/index.js",
-    "prewatch": "npm run clean",
-    "watch": "npm run watch:build & sleep 5 && npm run watch:process-inspect server",
+    "dev:process": "soundworks-template-build --watch-process",
+    "dev:process-inspect": "soundworks-template-build --watch-process-inspect",
+    "dev:build": "soundworks-template-build --build --watch",
+    "dev": "npm run build && (npm run dev:process-inspect server & npm run dev:build)",
     "build": "soundworks-template-build --build",
     "clean": "soundworks-template-build --clean",
     "minify": "soundworks-template-build --build && soundworks-template-build --minify",
-    "watch:process": "soundworks-template-build --watch-process",
-    "watch:process-inspect": "soundworks-template-build --watch-process-inspect",
-    "watch:build": "soundworks-template-build --build --watch"
+    "prebuild": "npm run clean",
+    "postinstall": "mkdir -p .vendors/public && cp -R node_modules/@webcomponents/webcomponentsjs .vendors/public",
+    "start": "node dist/server/index.js"
   },
   "repository": {
     "type": "git",
@@ -24,13 +25,14 @@
   "dependencies": {
     "@babel/polyfill": "^7.4.4",
     "@ircam/parameters": "^1.2.2",
-    "@soundworks/core": "^3.0.0-alpha.7",
+    "@soundworks/core": "^3.0.0-alpha.9",
     "@soundworks/service-audio-buffer-loader": "^0.0.1-alpha.3",
     "@soundworks/service-checkin": "^0.0.1-alpha.2",
     "@soundworks/service-file-system": "^0.0.1-alpha.2",
     "@soundworks/service-platform": "^0.0.1-alpha.3",
     "@soundworks/service-position": "^0.0.1-alpha.2",
     "@soundworks/service-sync": "^0.0.1-alpha.4",
+    "@webcomponents/webcomponentsjs": "^2.4.3",
     "@wessberg/pointer-events": "^1.0.9",
     "json5": "^2.1.0",
     "lit-element": "^2.2.1",
@@ -44,6 +46,6 @@
     "waves-masters": "^1.2.1"
   },
   "devDependencies": {
-    "@soundworks/template-build": "^3.0.0-alpha.1"
+    "@soundworks/template-build": "^3.0.0-alpha.4"
   }
 }

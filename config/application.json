@@ -7,7 +7,6 @@
       "target": "browser",
       "default": true
     },
-
     "auto-play-controller": {
       "target": "browser",
     },
