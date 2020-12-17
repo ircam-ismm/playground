@@ -1,6 +1,7 @@
 
-import audio from 'waves-audio';
+import * as audio from 'waves-audio';
 
+console.log(audio);
 const scheduler = audio.getScheduler();
 scheduler.period = 0.05;
 

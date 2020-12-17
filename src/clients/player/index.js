@@ -1,5 +1,5 @@
 import '@babel/polyfill';
-import '@wessberg/pointer-events';
+import 'pepjs';
 import { Client } from '@soundworks/core/client';
 // import services
 import servicePlatformFactory from '@soundworks/service-platform/client';
@@ -12,7 +12,7 @@ import initQoS from '../utils/qos';
 
 // default views for services
 import PlayerExperience from './PlayerExperience';
-import audio from 'waves-audio';
+import * as audio from 'waves-audio';
 
 const audioContext = audio.audioContext;
 const config = window.soundworksConfig;
