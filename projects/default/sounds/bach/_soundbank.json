@@ -7,7 +7,7 @@
     "activated": {
       "autoPlaySynth": true,
       "triggerSynth": false,
-      "soloistSynth": false,
+      "soloistSynth": true,
       "granularSynth": true
     }
   },
@@ -39,6 +39,7 @@
           "resamplingVar": 295
         },
         "soloistSynth": {
+          "fadeInDuration": 0.05,
           "fadeOutDuration": 8,
           "decayExponent": 1.5
         }
@@ -71,6 +72,7 @@
           "resamplingVar": 0
         },
         "soloistSynth": {
+          "fadeInDuration": 0.05,
           "fadeOutDuration": 8,
           "decayExponent": 1.5
         }

@@ -1,12 +1,18 @@
-import { Experience } from '@soundworks/core/client';
+import { AbstractExperience } from '@soundworks/core/client';
 import { render, html } from 'lit-html';
-import '../views/elements/sw-dot-map.js';
-import '../views/elements/sw-slider-enhanced.js';
-import '../views/controller-components/fp-header.js';
-import '../views/controller-components/fp-loading-players';
+import renderInitializationScreens from '@soundworks/template-helpers/client/render-initialization-screens.js';
+
+import '@ircam/simple-components/sc-slider.js';
+import '@ircam/simple-components/sc-text.js';
+import '@ircam/simple-components/sc-toggle.js';
+import '@ircam/simple-components/sc-dot-map.js';
+
+import '../views/playground-header.js';
+import '../views/playground-loading-players';
+
 import throttle from 'lodash.throttle';
 
-class SoloistControllerExperience extends Experience {
+class SoloistControllerExperience extends AbstractExperience {
   constructor(client, config, $container) {
     super(client);
 
@@ -14,44 +20,48 @@ class SoloistControllerExperience extends Experience {
     this.$container = $container;
 
     this.playerStates = new Map();
+
+    renderInitializationScreens(client, config, $container);
   }
 
   async start() {
     this.localState = {
       soundBankValues: {},
-      // soundBankDefaultPresets: null,
-      // soundFileDefaultPresets: null,
+      rotateMap: true,
     };
 
-    this.eventListeners = {
-      updateTriggers: throttle(e => {
-        this.soloistState.set({ triggers: e.detail }) ;
+    this.listeners = {
+      updateTriggers: throttle(value => {
+        this.soloistState.set({ triggers: value });
       }, 50),
-      updateRadius: e => {
-        this.soloistState.set({ radius: e.detail.value }) ;
+      updateRadius: value => {
+        this.soloistState.set({ radius: value });
       },
-      updateSoundBank: e => {
-        const soundBankName = e.target.value || null;
+      updateSoundBank: soundBankName => {
         this.soloistState.set({ currentSoundBank: soundBankName });
       },
+      rotateMap: value => {
+        this.localState.rotateMap = value;
+        this.render();
+      }
     };
 
     this.soloistState = await this.client.stateManager.attach('soloist-controller');
-    this.soloistState.subscribe(updates => this.renderApp());
+    this.soloistState.subscribe(updates => this.render());
 
     this.client.stateManager.observe(async (schemaName, stateId, nodeId) => {
       if (schemaName === 'player') {
         const state = await this.client.stateManager.attach(schemaName, stateId);
 
-        state.subscribe(updates => this.renderApp());
+        state.subscribe(updates => this.render());
 
         state.onDetach(() => {
           this.playerStates.delete(nodeId);
-          this.renderApp();
+          this.render();
         });
 
         this.playerStates.set(nodeId, state);
-        this.renderApp();
+        this.render();
       }
     });
 
@@ -62,17 +72,15 @@ class SoloistControllerExperience extends Experience {
       soundFileDefaultPresets
     ) => {
       this.localState.soundBankValues = values;
-      // this.localState.soundBankDefaultPresets = soundBankDefaultPresets;
-      // this.localState.soundFileDefaultPresets = soundFileDefaultPresets;
-      this.renderApp();
+      this.render();
     });
 
-    window.addEventListener('resize', () => this.renderApp());
+    window.addEventListener('resize', () => this.render());
 
     super.start();
   }
 
-  renderApp() {
+  render() {
     const soloistState = this.soloistState.getValues();
     const playerStates = Array.from(this.playerStates.values()).map(s => s.getValues());
 
@@ -90,67 +98,110 @@ class SoloistControllerExperience extends Experience {
     const areaHeight = height - 75;
     const areaWidth = width - 120;
 
+    let xRange = soloistState.xRange;
+    let yRange = soloistState.yRange;
+
+    if (this.localState.rotateMap) {
+      xRange = xRange.slice(0).reverse();
+      yRange = yRange.slice(0).reverse();
+    }
+
     render(
       html`
-        <fp-header
-          style="min-height: 75px"
+        <playground-header
+          style="min-height: 75px; max-width: calc(100vw - 400px);"
           list="${JSON.stringify(filteredSoundBankNames)}"
           value="${currentSoundBank ? currentSoundBank : ''}"
-          @change="${this.eventListeners.updateSoundBank}"
-        ></fp-header>
+          @change="${e => this.listeners.updateSoundBank(e.detail.value)}"
+        ></playground-header>
 
-        <sw-slider-enhanced
-          style="position: absolute; top: 20px; right: 0"
-          width="300"
-          height="30"
-          value="${soloistState.radius}"
-          min="0"
-          max="1"
-          step="0.01"
-          label="radius"
-          @change=${this.eventListeners.updateRadius}
-        ></sw-slider-enhanced>
+        <div style="position: absolute; top: 6px; right: 10px">
+          <div>
+            <sc-text
+              value="radius"
+              width="100"
+              readonly
+            ></sc-text>
+            <sc-slider
+              display-number
+              width="280"
+              value="${soloistState.radius}"
+              min="0"
+              max="1"
+              step="0.01"
+              label="radius"
+              @input=${e => this.listeners.updateRadius(e.detail.value)}
+            ></sc-slider>
+          </div>
+          <div style="margin-top: 4px">
+            <sc-text
+              value="rotate map"
+              width="100"
+              readonly
+            ></sc-text>
+            <sc-toggle
+              ?active="${this.localState.rotateMap}"
+              @change="${e => this.listeners.rotateMap(e.detail.value)}"
+            ></sc-toggle>
+          </div>
+        </div>
 
         <div style="position: relative; float: left;">
-          <sw-dot-map
-            class="players"
+          <!-- display map of players -->
+          <sc-dot-map
+            style="
+              position: absolute;
+              top: 0;
+              left: 0;
+              z-index: 0;
+            "
             width="${areaWidth}"
             height="${areaHeight}"
-            x-range="${JSON.stringify(soloistState.xRange)}"
-            y-range="${JSON.stringify(soloistState.yRange)}"
-            dots-color="#ffffff"
-            background-color="#232323"
-            dots="${JSON.stringify(positions)}"
-          ></sw-dot-map>
-          <sw-dot-map
-            class="feedback"
-            style="position: absolute; top: 0; left: 0; z-index: 1"
+            color="white"
+            x-range="${JSON.stringify(xRange)}"
+            y-range="${JSON.stringify(yRange)}"
+            value="${JSON.stringify(positions)}"
+          ></sc-dot-map>
+           <!-- display pointer feedback -->
+          <sc-dot-map
+            style="
+              position: absolute;
+              top: 0;
+              left: 0;
+              z-index: 1;
+            "
             width="${areaWidth}"
             height="${areaHeight}"
-            x-range="${JSON.stringify(soloistState.xRange)}"
-            y-range="${JSON.stringify(soloistState.yRange)}"
-            dots-color="#aa3456"
-            dots-radius-rel="${soloistState.radius}"
-            dots-opacity="0.2"
+            x-range="${JSON.stringify(xRange)}"
+            y-range="${JSON.stringify(yRange)}"
+            value="${JSON.stringify(soloistState.triggers)}"
+            radius-rel="${soloistState.radius}"
+            color="#AA3456"
+            opacity="0.2"
             background-opacity="0"
-            dots="${JSON.stringify(soloistState.triggers)}"
-          ></sw-dot-map>
-          <sw-dot-map
-            class="interactions"
-            style="position: absolute; top: 0; left: 0; z-index: 2"
+          ></sc-dot-map>
+           <!-- pointer input -->
+          <sc-dot-map
+            style="
+              position: absolute;
+              top: 0;
+              left: 0;
+              z-index: 2;
+            "
             width="${areaWidth}"
             height="${areaHeight}"
-            x-range="${JSON.stringify(soloistState.xRange)}"
-            y-range="${JSON.stringify(soloistState.yRange)}"
-            dots-color="#aa3456"
-            dots-radius-rel="${soloistState.radius}"
-            dots-opacity="0.1"
+            x-range="${JSON.stringify(xRange)}"
+            y-range="${JSON.stringify(yRange)}"
+            radius-rel="${soloistState.radius}"
+            color="#AA3456"
+            opacity="0.2"
             background-opacity="0"
             capture-events
-            @input=${this.eventListeners.updateTriggers}
-          ></sw-dot-map>
+            @input="${e => this.listeners.updateTriggers(e.detail.value)}"
+          ></sc-dot-map>
         </div>
-        <fp-loading-players
+
+        <playground-loading-players
           style="
             width: 120px;
             float: right;
@@ -159,7 +210,7 @@ class SoloistControllerExperience extends Experience {
           "
           list=${JSON.stringify(loadingPlayers)}
           infos=${JSON.stringify({ '# players': playerStates.length })}
-        ></fp-loading-players>
+        ></playground-loading-players>
         `
       , this.$container
     );

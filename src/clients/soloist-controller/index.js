@@ -1,12 +1,13 @@
-import '@babel/polyfill';
-import "@wessberg/pointer-events";
+import 'core-js/stable';
+import 'regenerator-runtime/runtime';
 import { Client } from '@soundworks/core/client';
-import SoloistControllerExperience from './SoloistControllerExperience';
-import initQoS from '../utils/qos';
+import initQoS from '@soundworks/template-helpers/client/init-qos.js';
+
+import SoloistControllerExperience from './SoloistControllerExperience.js';
 
 const config = window.soundworksConfig;
 
-async function init() {
+async function launch() {
   try {
     const client = new Client();
 
@@ -21,17 +22,18 @@ async function init() {
     await client.init(config);
     initQoS(client);
 
-    const $container = document.querySelector('#container');
-    const soloistControllerExperience = new SoloistControllerExperience(client, config, $container);
+    const $container = document.querySelector('#__soundworks-container');
+    const experience = new SoloistControllerExperience(client, config, $container);
 
     document.body.classList.remove('loading');
     // start everything
     await client.start();
-    soloistControllerExperience.start();
+    experience.start();
 
+    return Promise.resolve();
   } catch(err) {
     console.error(err);
   }
 }
 
-window.addEventListener('load', init);
+window.addEventListener('load', launch);

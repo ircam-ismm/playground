@@ -1,6 +1,8 @@
 import { LitElement, html, css } from 'lit-element';
+import { classMap } from 'lit-html/directives/class-map.js';
+import { btn, btnActive } from './defaultStyles.js';
 
-class FpHeader extends LitElement {
+class PlaygroundHeader extends LitElement {
   static get properties() {
     return {
       list: {
@@ -20,24 +22,18 @@ class FpHeader extends LitElement {
         display: block;
         box-sizing: border-box;
         background-color: #121212;
-        padding: 20px;
+        padding: 20px 10px;
       }
 
       button {
-        font-family: Consolas, monaco, monospace;
-        padding: 6px 20px;
-        margin: 4px;
-        font-size: 16px;
-        background-color: #232323;
-        color: white;
-        border-radius: 1px;
-        border: 1px solid #686868;
-        user-select: none;
+        ${btn}
+        width: 150px;
+        font-size: 15px;
+        margin: 4px 0;
       }
 
       button.active {
-        background-color: #dc3545;
-        border-color: #dc3545;
+        ${btnActive}
       }
     `;
   }
@@ -58,12 +54,13 @@ class FpHeader extends LitElement {
       >none</button>
 
       ${this.list.map(value => {
+        const classes = { active: this.value === value };
         return html`
           <button
             @touchstart="${this.updateValue}"
             @mousedown="${this.updateValue}"
             value="${value}"
-            class="${value === this.value ? 'active' : ''}"
+            class="${classMap(classes)}"
           >${value}</button>
         `;
       })}
@@ -74,6 +71,7 @@ class FpHeader extends LitElement {
     e.preventDefault();
 
     this.value = e.target.value ? e.target.value : null;
+
     const event = new CustomEvent('change', {
       detail: { value: this.value },
     });
@@ -83,4 +81,4 @@ class FpHeader extends LitElement {
   }
 }
 
-customElements.define('fp-header', FpHeader);
+customElements.define('playground-header', PlaygroundHeader);

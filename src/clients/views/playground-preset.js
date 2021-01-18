@@ -1,9 +1,10 @@
 import { LitElement, html, css } from 'lit-element';
-import { ifDefined } from 'lit-html/directives/if-defined';
-import './sw-slider-enhanced';
-import './sw-toggle';
 
-class SwPreset extends LitElement {
+import '@ircam/simple-components/sc-text.js';
+import '@ircam/simple-components/sc-toggle.js';
+import '@ircam/simple-components/sc-slider.js';
+
+class PlaygroundPreset extends LitElement {
   static get properties() {
     return {
       width: {
@@ -31,10 +32,6 @@ class SwPreset extends LitElement {
         box-sizing: border-box;
       }
 
-      sw-slider-enhanced, .toggle-enhanced {
-        margin-bottom: 4px;
-      }
-
       button {
         color: #ffffff;
         font-family: Consolas, monaco, monospace;
@@ -42,6 +39,7 @@ class SwPreset extends LitElement {
         border: none;
         height: 30px;
         min-width: 100px;
+        font-size: 12px;
       }
 
       button:active {
@@ -75,12 +73,6 @@ class SwPreset extends LitElement {
         right: 0;
         z-index: 2;
       }
-
-      label {
-        text-indent: 6px;
-        overflow: hidden;
-        user-select: none;
-      }
     `;
   }
 
@@ -110,49 +102,39 @@ class SwPreset extends LitElement {
 
               if (def.type === 'integer' || def.type === 'float') {
                 return html`
-                  <sw-slider-enhanced
-                    label="${name}"
-                    type="number"
-                    width="${this.width}"
-                    height="30"
-                    min="${def.min}"
-                    max="${def.max}"
-                    step="${def.step}"
-                    name="${name}"
-                    .value="${value}"
-                    @change="${(e) => this.propagateValue(name, e.detail.value)}"
-                  ></sw-slider-enhanced>
+                  <div style="margin-bottom: 4px">
+                    <sc-text
+                      value="${name}"
+                      width="140"
+                      readonly
+                    ></sc-text>
+                    <sc-slider
+                      width="${this.width - 150}"
+                      display-number
+                      min="${def.min}"
+                      max="${def.max}"
+                      step="${def.step}"
+                      .value="${value}"
+                      @input="${(e) => this.propagateValue(name, e.detail.value)}"
+                    ></sc-slider>
+                  </div>
                 `;
               } else if (def.type === 'boolean') {
-                const labelWidth = this.width * 0.25; // cf slider extended...
-
                 return html`
-                  <div class="toggle-enhanced" style="width: ${this.width}px; height: 30px; position: relative">
-                    <label
-                      style="
-                        width: ${labelWidth}px;
-                        height: 30px;
-                        line-height: 30px;
-                        position: absolute;
-                        top: 0;
-                        left: 0;
-                        line-height: 30px;
-                      "
-                    >${name}</label>
-                    <sw-toggle
-                      style="
-                        position: absolute;
-                        left: ${labelWidth}px;
-                        top: 0;
-                      "
-                      size="30"
-                      active="${ifDefined(value ? true : undefined)}"
-                      @change="${(e) => this.propagateValue(name, e.detail.active)}"
-                    ></sw-toggle>
+                  <div style="margin-bottom: 4px">
+                    <sc-text
+                      value="${name}"
+                      width="140"
+                      readonly
+                    ></sc-text>
+                    <sc-toggle
+                      ?active="${value}"
+                      @change="${(e) => this.propagateValue(name, e.detail.value)}"
+                    ></sc-toggle>
                   </div>
                 `;
               } else {
-                console.error(`sw-preset: ${def.type} not implemented`);
+                console.error(`playground-preset: ${def.type} not implemented`);
               }
             })}
           </div>
@@ -192,4 +174,4 @@ class SwPreset extends LitElement {
   }
 }
 
-customElements.define('sw-preset', SwPreset);
+customElements.define('playground-preset', PlaygroundPreset);

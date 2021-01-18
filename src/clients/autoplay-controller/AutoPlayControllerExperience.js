@@ -1,17 +1,16 @@
-import { Experience } from '@soundworks/core/client';
+import { AbstractExperience } from '@soundworks/core/client';
 import { render, html } from 'lit-html';
-import { ifDefined } from 'lit-html/directives/if-defined';
-import { repeat } from 'lit-html/directives/repeat';
-import throttle from 'lodash.throttle';
-import renderAppInitialization from '../views/renderAppInitialization';
-import '../views/elements/sw-slider';
-import '../views/elements/sw-slider-enhanced';
-import '../views/elements/sw-preset';
-import '../views/controller-components/fp-header';
-import '../views/controller-components/fp-loading-players';
+import renderInitializationScreens from '@soundworks/template-helpers/client/render-initialization-screens.js';
 
-class AutoPlayControllerExperience extends Experience {
-  constructor(client, config = {}, $container) {
+import throttle from 'lodash.throttle';
+
+import '../views/playground-preset.js';
+import '../views/playground-header.js';
+import '../views/playground-loading-players.js';
+import { btn, btnActive } from '../views/defaultStyles.js';
+
+class AutoPlayControllerExperience extends AbstractExperience {
+  constructor(client, config, $container) {
     super(client);
 
     this.config = config;
@@ -21,7 +20,7 @@ class AutoPlayControllerExperience extends Experience {
 
     this.playerStates = new Map();
 
-    renderAppInitialization(client, config, $container);
+    renderInitializationScreens(client, config, $container);
   }
 
   async start() {
@@ -32,8 +31,7 @@ class AutoPlayControllerExperience extends Experience {
     };
 
     this.eventListeners = {
-      updateSoundBank: e => {
-        const soundBankName = e.target.value || null;
+      updateSoundBank: soundBankName => {
         this.autoPlayControllerState.set({ currentSoundBank: soundBankName });
       },
       updateFilePreset: throttle((soundbank, filename, param, value) => {
@@ -51,7 +49,7 @@ class AutoPlayControllerExperience extends Experience {
     };
 
     // listen all interesting states
-    this.autoPlayControllerState = await this.client.stateManager.attach('auto-play-controller');
+    this.autoPlayControllerState = await this.client.stateManager.attach('autoplay-controller');
     this.autoPlayControllerState.subscribe(updates => this.renderApp());
 
     this.client.stateManager.observe(async (schemaName, stateId, nodeId) => {
@@ -120,24 +118,26 @@ class AutoPlayControllerExperience extends Experience {
     const height = window.innerHeight;
 
     render(html`
-      <fp-header
+      <playground-header
         style="min-height: 75px"
         list="${JSON.stringify(filteredSoundBankNames)}"
         value="${currentSoundBank ? currentSoundBank : ''}"
-        @change="${this.eventListeners.updateSoundBank}"
-      ></fp-header>
-      <section style="width: ${width - 121}px; float: left; box-sizing: border-box; padding: 0 0 10px 10px">
+        @change="${e => this.eventListeners.updateSoundBank(e.detail.value)}"
+      ></playground-header>
+
+      <section style="
+        width: ${width - 121}px;
+        float: left;
+        box-sizing: border-box;
+        padding: 0 0 10px 10px
+      ">
 
         <button
           style="
-            width: 400px;
-            height: 30px;
-            background-color: ${autoPlayState.enabled ? '#dc3545' : '#242424'};
-            color: #ffffff;
-            margin: 20px 0;
-            border-color: ${autoPlayState.enabled ? '#dc3545' : '#686868'};
-            font-size: 14px;
-            font-family: Consolas, monaco, monospace;
+            ${btn}
+            ${autoPlayState.enabled ? btnActive : ''}
+            margin-top: 20px;
+            width: 50%;
           "
           @touchstart="${this.eventListeners.toggleSynth}"
           @mousedown="${this.eventListeners.toggleSynth}"
@@ -150,18 +150,19 @@ class AutoPlayControllerExperience extends Experience {
 
           return html`
             <div style="clear:left; position: relative; margin-top: 20px;">
-              <sw-preset
+              <playground-preset
                 label="${filename} - (# players: ${numPlayers})"
                 width="500"
                 definitions="${JSON.stringify(this.localState.soundFileDefaultPresets.autoPlaySynth)}"
                 values="${JSON.stringify(soundBankFiles[filename].presets.autoPlaySynth)}"
                 @update="${e => this.eventListeners.updateFilePreset(currentSoundBank, filename, e.detail.name, e.detail.value)}"
-              ></sw-preset>
+              ></playground-preset>
             </div>
           `;
         })}
       </section>
-      <fp-loading-players
+
+      <playground-loading-players
         style="
           width: 120px;
           float: right;
@@ -170,7 +171,7 @@ class AutoPlayControllerExperience extends Experience {
         "
         list=${JSON.stringify(loadingPlayers)}
         infos=${JSON.stringify({ '# players': playerStates.length })}
-      ></fp-loading-players>
+      ></playground-loading-players>
     `, this.$container);
   }
 }

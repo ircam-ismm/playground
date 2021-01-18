@@ -14,13 +14,16 @@ class GranularSynth {
     this.env.gain.setValueAtTime(0, audioContext.currentTime);
 
     this.engine = new audio.GranularEngine({
+      audioContext: audioContext,
       buffer: buffer,
       cyclic: true,
     });
 
     this.engine.connect(this.env);
 
-    this.playControl = new audio.PlayControl(this.engine);
+    this.playControl = new audio.PlayControl(this.engine, {
+      audioContext: audioContext,
+    });
   }
 
   connect(destination) {

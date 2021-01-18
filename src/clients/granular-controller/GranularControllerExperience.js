@@ -1,17 +1,17 @@
-import { Experience } from '@soundworks/core/client';
+import { AbstractExperience } from '@soundworks/core/client';
 import { render, html } from 'lit-html';
-import { ifDefined } from 'lit-html/directives/if-defined';
-import { repeat } from 'lit-html/directives/repeat';
-import throttle from 'lodash.throttle';
-import renderAppInitialization from '../views/renderAppInitialization';
-import '../views/elements/sw-slider';
-import '../views/elements/sw-slider-enhanced';
-import '../views/elements/sw-preset';
-import '../views/controller-components/fp-header';
-import '../views/controller-components/fp-loading-players';
+import renderInitializationScreens from '@soundworks/template-helpers/client/render-initialization-screens.js';
 
-class GranularControllerExperience extends Experience {
-  constructor(client, config = {}, $container) {
+import { ifDefined } from 'lit-html/directives/if-defined';
+import throttle from 'lodash.throttle';
+
+import '../views/playground-preset.js';
+import '../views/playground-header.js';
+import '../views/playground-loading-players.js';
+import { btn, btnActive } from '../views/defaultStyles.js';
+
+class GranularControllerExperience extends AbstractExperience {
+  constructor(client, config, $container) {
     super(client);
 
     this.config = config;
@@ -21,7 +21,7 @@ class GranularControllerExperience extends Experience {
 
     this.playerStates = new Map();
 
-    renderAppInitialization(client, config, $container);
+    renderInitializationScreens(client, config, $container);
   }
 
   async start() {
@@ -41,12 +41,8 @@ class GranularControllerExperience extends Experience {
           startedSynths: [],
         });
       },
-      toggleSynth: e => {
-        // e.stopPropagation();
-        e.preventDefault();
-
+      toggleSynth: filename => {
         const startedSynths = this.granularControllerState.getValues()['startedSynths'];
-        const filename = e.target.dataset.filename;
         const index = startedSynths.indexOf(filename);
         let toggleSynthEvent;
 
@@ -155,12 +151,13 @@ class GranularControllerExperience extends Experience {
     const height = window.innerHeight;
 
     render(html`
-      <fp-header
+      <playground-header
         style="min-height: 75px"
         list="${JSON.stringify(filteredSoundBankNames)}"
         value="${currentSoundBank ? currentSoundBank : ''}"
         @change="${this.eventListeners.updateSoundBank}"
-      ></fp-header>
+      ></playground-header>
+
       <section style="width: ${width - 121}px; float: left; box-sizing: border-box; padding: 0 0 10px 10px">
         ${Object.keys(soundBankFiles).map((filename) => {
           const url = soundBankFiles[filename].url;
@@ -177,22 +174,18 @@ class GranularControllerExperience extends Experience {
               </h2>
               <button
                 style="
+                  ${btn}
+                  ${started ? btnActive : ''}
                   width: 400px;
-                  height: 30px;
-                  background-color: ${started ? '#dc3545' : '#242424'};
-                  color: #ffffff;
                   position: absolute;
                   right: 160px;
                   top: 0;
-                  border-color: ${started ? '#dc3545' : '#686868'};
-                  font-size: 14px;
-                  font-family: Consolas, monaco, monospace;
                 "
                 data-filename="${url}"
-                @touchstart="${this.eventListeners.toggleSynth}"
-                @mousedown="${this.eventListeners.toggleSynth}"
+                @touchstart="${e => this.eventListeners.toggleSynth(url)}"
+                @mousedown="${e => this.eventListeners.toggleSynth(url)}"
               >${started ? 'stop' : 'start'}</button>
-              <sw-preset
+              <playground-preset
                 style="position: absolute; top: 0; right: 0"
                 width="400"
                 expanded="${ifDefined(this.localState.editedFiles.has(filename) ? true : undefined)}"
@@ -201,21 +194,21 @@ class GranularControllerExperience extends Experience {
                 @open="${e => this.eventListeners.addToEditedFile(filename)}"
                 @close="${e => this.eventListeners.removeFromEditedFile(filename)}"
                 @update="${e => this.eventListeners.updateFilePreset(currentSoundBank, filename, e.detail.name, e.detail.value)}"
-              ></sw-preset>
+              ></playground-preset>
             </div>
           `;
         })}
       </section>
-      <fp-loading-players
+
+      <playground-loading-players
         style="
           width: 120px;
           float: right;
-          min-height:
-          calc(100vh - 75px)
+          min-height: calc(100vh - 75px)
         "
         list=${JSON.stringify(loadingPlayers)}
         infos=${JSON.stringify({ '# players': playerStates.length })}
-      ></fp-loading-players>
+      ></playground-loading-players>
     `, this.$container);
   }
 }

@@ -1,6 +1,6 @@
-import { Experience } from '@soundworks/core/server';
+import { AbstractExperience } from '@soundworks/core/server';
 
-class SoloistExperience extends Experience {
+class SoloistExperience extends AbstractExperience {
   constructor(soundworks, clientTypes, soundBankManager) {
     super(soundworks, clientTypes);
 

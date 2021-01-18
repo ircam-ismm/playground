@@ -1,6 +1,6 @@
-import { Experience } from '@soundworks/core/server';
+import { AbstractExperience } from '@soundworks/core/server';
 
-class GranularControllerExperience extends Experience {
+class GranularControllerExperience extends AbstractExperience {
   constructor(server, clientTypes, soundBankManager) {
     super(server, clientTypes);
 

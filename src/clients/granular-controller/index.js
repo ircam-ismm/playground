@@ -1,12 +1,12 @@
-import '@babel/polyfill';
-import '@wessberg/pointer-events';
+import 'regenerator-runtime/runtime';
 import { Client } from '@soundworks/core/client';
+import initQoS from '@soundworks/template-helpers/client/init-qos.js';
+
 import GranularControllerExperience from './GranularControllerExperience';
-import initQoS from '../utils/qos';
 
 const config = window.soundworksConfig;
 
-async function init($container, index) {
+(async function init($container, index) {
   try {
     const client = new Client();
 
@@ -21,7 +21,7 @@ async function init($container, index) {
     await client.init(config);
     initQoS(client);
 
-    const $container = document.querySelector('#container');
+    const $container = document.querySelector('#__soundworks-container');
     const experience = new GranularControllerExperience(client, config, $container);
 
     document.body.classList.remove('loading');
@@ -29,9 +29,8 @@ async function init($container, index) {
     await client.start();
     experience.start();
 
+    return Promise.resolve();
   } catch(err) {
     console.error(err);
   }
-}
-
-window.addEventListener('load', init);
+}());

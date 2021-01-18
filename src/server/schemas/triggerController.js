@@ -11,4 +11,10 @@ export default {
     nullable: true,
     event: true,
   },
+  triggerAllEvent: {
+    type: 'boolean',
+    default: null,
+    nullable: true,
+    event: true,
+  },
 };

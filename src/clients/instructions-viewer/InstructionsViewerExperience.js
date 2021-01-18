@@ -1,12 +1,10 @@
-import { Experience } from '@soundworks/core/client';
+import { AbstractExperience } from '@soundworks/core/client';
 import { render, html } from 'lit-html';
-import '../views/elements/sw-dot-map.js';
-import '../views/elements/sw-slider-enhanced.js';
-import '../views/controller-components/fp-header.js';
-import '../views/controller-components/fp-loading-players';
-import throttle from 'lodash.throttle';
+import renderInitializationScreens from '@soundworks/template-helpers/client/render-initialization-screens.js';
 
-class InstructionsViewerExperience extends Experience {
+import '@ircam/simple-components/sc-dot-map.js';
+
+class InstructionsViewerExperience extends AbstractExperience {
   constructor(client, config, $container) {
     super(client);
 
@@ -14,6 +12,8 @@ class InstructionsViewerExperience extends Experience {
     this.$container = $container;
 
     this.playerStates = new Map();
+
+    renderInitializationScreens(client, config, $container);
   }
 
   async start() {
@@ -63,29 +63,39 @@ class InstructionsViewerExperience extends Experience {
     render(
       html`
         <div style="position: relative; float: left;">
-          <sw-dot-map
-            class="players"
+          <sc-dot-map
+            style="
+              position: absolute;
+              top: 0;
+              left: 0;
+              z-index: 0;
+            "
             width="${areaWidth}"
             height="${areaHeight}"
-            x-range="${JSON.stringify(soloistState.xRange)}"
-            y-range="${JSON.stringify(soloistState.yRange)}"
-            dots-color="#ffffff"
+            color="white"
             background-color="#000000"
-            dots="${JSON.stringify(positions)}"
-          ></sw-dot-map>
-          <sw-dot-map
-            class="feedback"
-            style="position: absolute; top: 0; left: 0; z-index: 1"
+            x-range="${JSON.stringify(soloistState.xRange)}"
+            y-range="${JSON.stringify(soloistState.yRange)}"
+            value="${JSON.stringify(positions)}"
+          ></sc-dot-map>
+           <!-- display pointer feedback -->
+          <sc-dot-map
+            style="
+              position: absolute;
+              top: 0;
+              left: 0;
+              z-index: 1;
+            "
             width="${areaWidth}"
             height="${areaHeight}"
             x-range="${JSON.stringify(soloistState.xRange)}"
             y-range="${JSON.stringify(soloistState.yRange)}"
-            dots-color="#aa3456"
-            dots-radius-rel="${soloistState.radius}"
-            dots-opacity="0.2"
+            value="${JSON.stringify(soloistState.triggers)}"
+            radius-rel="${soloistState.radius}"
+            color="#AA3456"
+            opacity="0.2"
             background-opacity="0"
-            dots="${JSON.stringify(soloistState.triggers)}"
-          ></sw-dot-map>
+          ></sc-dot-map>
         </div>
         <div
           style="

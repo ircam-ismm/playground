@@ -1,6 +1,6 @@
-import { Experience } from '@soundworks/core/server';
+import { AbstractExperience } from '@soundworks/core/server';
 
-class AutoPlayControllerExperience extends Experience {
+class AutoPlayControllerExperience extends AbstractExperience {
   constructor(soundworks, clientTypes, soundBankManager) {
     super(soundworks, clientTypes);
 
@@ -11,7 +11,7 @@ class AutoPlayControllerExperience extends Experience {
     this.soundBankManager.subscribe((oldValues, newValues) => {
       const { soundBankDefaultPresets, soundFileDefaultPresets } = this.soundBankManager;
 
-      this.server.sockets.broadcast('auto-play-controller', null, 'soundBanks',
+      this.server.sockets.broadcast('autoplay-controller', null, 'soundBanks',
         newValues,
         soundBankDefaultPresets,
         soundFileDefaultPresets

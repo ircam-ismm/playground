@@ -14,7 +14,7 @@
     "#cab2d6",
   ],
 
-  "randomlyAssignPosition": false,
+  "randomlyAssignPosition": true,
 
   "connectionMessage": "(you are connected...)",
   "thanksMessage": "(thanks...)",

@@ -1,6 +1,6 @@
-import { Experience } from '@soundworks/core/server';
+import { AbstractExperience } from '@soundworks/core/server';
 
-class TriggerControllerExperience extends Experience {
+class TriggerControllerExperience extends AbstractExperience {
   constructor(server, clientTypes, soundBankManager) {
     super(server, clientTypes);
 

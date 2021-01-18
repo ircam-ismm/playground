@@ -1,6 +1,6 @@
-import { Experience } from '@soundworks/core/server';
+import { AbstractExperience } from '@soundworks/core/server';
 
-class MainControllerExperience extends Experience {
+class ControllerExperience extends AbstractExperience {
   constructor(soundworks, clientTypes, soundBankManager) {
     super(soundworks, clientTypes);
   }
@@ -12,4 +12,4 @@ class MainControllerExperience extends Experience {
   exit(client) {}
 }
 
-export default MainControllerExperience;
+export default ControllerExperience;

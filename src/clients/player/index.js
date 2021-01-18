@@ -1,63 +1,63 @@
-import '@babel/polyfill';
-import 'pepjs';
+import 'regenerator-runtime/runtime';
 import { Client } from '@soundworks/core/client';
-// import services
-import servicePlatformFactory from '@soundworks/service-platform/client';
-import serviceSyncFactory from '@soundworks/service-sync/client';
-import serviceFileSystemFactory from '@soundworks/service-file-system/client';
-import serviceAudioBufferLoaderFactory from '@soundworks/service-audio-buffer-loader/client';
-import serviceCheckinFactory from '@soundworks/service-checkin/client';
-import servicePositionFactory from '@soundworks/service-position/client';
-import initQoS from '../utils/qos';
+import initQoS from '@soundworks/template-helpers/client/init-qos.js';
 
-// default views for services
-import PlayerExperience from './PlayerExperience';
+// import plugins
+import pluginPlatformFactory from '@soundworks/plugin-platform/client';
+import pluginSyncFactory from '@soundworks/plugin-sync/client';
+import pluginFileSystemFactory from '@soundworks/plugin-filesystem/client';
+import pluginAudioBufferLoaderFactory from '@soundworks/plugin-audio-buffer-loader/client';
+import pluginCheckinFactory from '@soundworks/plugin-checkin/client';
+import pluginPositionFactory from '@soundworks/plugin-position/client';
+
+// default views for plugins
+import PlayerExperience from './PlayerExperience.js';
 import * as audio from 'waves-audio';
 
-const audioContext = audio.audioContext;
+const AudioContext = window.AudioContext || window.webkitAudioContext;
+const audioContext = new AudioContext;
+
 const config = window.soundworksConfig;
 // initalize all clients at once for emulated clients
-const platformServices = new Set();
+const experiences = new Set();
 
-async function init($container, index) {
+async function launch($container, index) {
   try {
     const client = new Client();
 
     // -------------------------------------------------------------------
-    // register services
+    // register plugins
     // -------------------------------------------------------------------
 
-    client.registerService('platform', servicePlatformFactory, {
+    client.pluginManager.register('platform', pluginPlatformFactory, {
       features: [
         ['web-audio', audioContext],
       ]
     }, []);
 
-    client.registerService('sync', serviceSyncFactory, {
+    client.pluginManager.register('sync', pluginSyncFactory, {
       getTimeFunction: () => audioContext.currentTime,
     }, ['platform']);
 
-    client.registerService('checkin', serviceCheckinFactory, {}, []);
-    client.registerService('audio-buffer-loader', serviceAudioBufferLoaderFactory, {}, []);
-    client.registerService('position', servicePositionFactory, {}, []);
+    client.pluginManager.register('checkin', pluginCheckinFactory, {}, []);
+    client.pluginManager.register('audio-buffer-loader', pluginAudioBufferLoaderFactory, {}, []);
+    client.pluginManager.register('position', pluginPositionFactory, {}, []);
 
     // -------------------------------------------------------------------
     // launch application
     // -------------------------------------------------------------------
-
-    await client.init(config);
+        await client.init(config);
     initQoS(client);
 
-    const playerExperience = new PlayerExperience(client, config, $container, audioContext, index);
-    // store platform service to be able to call all `onUserGesture` at once
-    if (playerExperience.platform) {
-      platformServices.add(playerExperience.platform);
-    }
-    // remove loader and init default views for the services
+    const experience = new PlayerExperience(client, config, $container, audioContext, index);
+    // store exprience for emulated clients
+    experiences.add(experience);
+
     document.body.classList.remove('loading');
 
+    // start all the things
     await client.start();
-    playerExperience.start();
+    experience.start();
 
     return Promise.resolve();
   } catch(err) {
@@ -65,54 +65,44 @@ async function init($container, index) {
   }
 }
 
-window.addEventListener('load', async () => {
-  // -------------------------------------------------------------------
-  // bootstrapping
-  // -------------------------------------------------------------------
-  const $container = document.querySelector('#container');
-  // this allows to emulate multiple clients in the same page
-  // to facilitate development and testing
-  // ...be careful in production...
-  function getQueryVariable(variable) {
-    const query = window.location.search.substring(1);
-    const vars = query.split('&');
+// -------------------------------------------------------------------
+// bootstrapping
+// -------------------------------------------------------------------
+const $container = document.querySelector('#__soundworks-container');
+const searchParams = new URLSearchParams(window.location.search);
+// enable instanciation of multiple clients in the same page to facilitate
+// development and testing (be careful in production...)
+const numEmulatedClients = parseInt(searchParams.get('emulate')) || 1;
 
-    for (let i = 0; i < vars.length; i++) {
-        const pair = vars[i].split('=');
-        if (decodeURIComponent(pair[0]) == variable) {
-            return decodeURIComponent(pair[1]);
-        }
-    }
+// special logic for emulated clients (1 click to rule them all)
+if (numEmulatedClients > 1) {
+  for (let i = 0; i < numEmulatedClients; i++) {
+    const $div = document.createElement('div');
+    $div.classList.add('emulate');
+    $container.appendChild($div);
 
-    return null;
+    launch($div, i);
   }
 
-  const numClients = parseInt(getQueryVariable('emulate')) || 1;
+  const $initPlatformBtn = document.createElement('div');
+  $initPlatformBtn.classList.add('init-platform');
+  $initPlatformBtn.textContent = 'resume all';
 
-  // special logic for emulated clients (1 click to rule them all)
-  if (numClients > 1) {
-    for (let i = 0; i < numClients; i++) {
-      const $div = document.createElement('div');
-      $div.classList.add('emulate');
-      $container.appendChild($div);
-
-      init($div, i);
-    }
-
-    const $initPlatform = document.createElement('div');
-    $initPlatform.classList.add('init-platform');
-    $initPlatform.textContent = 'resume all';
-
-    function initPlatforms(e) {
-      platformServices.forEach(service => service.onUserGesture(e));
-      $initPlatform.remove();
-    }
-
-    $initPlatform.addEventListener('touchend', initPlatforms);
-    $initPlatform.addEventListener('mouseup', initPlatforms);
-
-    document.body.appendChild($initPlatform);
-  } else {
-    init($container, 0);
+  function initPlatforms(e) {
+    experiences.forEach(experience => {
+      if (experience.platform) {
+        experience.platform.onUserGesture(e)
+      }
+    });
+    $initPlatformBtn.removeEventListener('touchend', initPlatforms);
+    $initPlatformBtn.removeEventListener('mouseup', initPlatforms);
+    $initPlatformBtn.remove();
   }
-});
+
+  $initPlatformBtn.addEventListener('touchend', initPlatforms);
+  $initPlatformBtn.addEventListener('mouseup', initPlatforms);
+
+  $container.appendChild($initPlatformBtn);
+} else {
+  launch($container, 0);
+}

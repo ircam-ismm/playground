@@ -1,11 +1,11 @@
 {
-  "name": "soundworks-template",
+  "name": "playground",
   "authors": [
     "Benjamin Matuszewski"
   ],
-  "description": "soundworks application template",
+  "description": "generic application for deploying sounds on an array of smartphones",
   "license": "BSD-3-Clause",
-  "version": "3.0.0-alpha.0",
+  "version": "2.0.0",
   "scripts": {
     "build": "npm run clean && soundworks-template-build -b",
     "build:production": "npm run clean && soundworks-template-build -b -m",
@@ -16,33 +16,30 @@
     "postinstall": "mkdir -p .vendors/public && cp -R node_modules/@webcomponents/webcomponentsjs .vendors/public",
     "start": "node .build/server/index.js"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/collective-soundworks/soundworks-template"
-  },
   "dependencies": {
-    "@babel/polyfill": "^7.4.4",
     "@ircam/parameters": "^1.2.2",
-    "@soundworks/core": "3.0.0-alpha.8",
-    "@soundworks/service-audio-buffer-loader": "^0.0.1-alpha.3",
-    "@soundworks/service-checkin": "^0.0.1-alpha.2",
-    "@soundworks/service-file-system": "^0.0.1-alpha.2",
-    "@soundworks/service-platform": "^0.0.1-alpha.3",
-    "@soundworks/service-position": "^0.0.1-alpha.2",
-    "@soundworks/service-sync": "^0.0.1-alpha.4",
+    "@ircam/simple-components": "^1.1.4",
+    "@soundworks/core": "^3.0.0",
+    "@soundworks/plugin-audio-buffer-loader": "^1.0.0",
+    "@soundworks/plugin-checkin": "^1.0.2",
+    "@soundworks/plugin-filesystem": "^1.0.0",
+    "@soundworks/plugin-platform": "^1.0.1",
+    "@soundworks/plugin-position": "^1.0.0",
+    "@soundworks/plugin-sync": "^1.0.0",
+    "@soundworks/template-helpers": "^1.0.1",
     "@webcomponents/webcomponentsjs": "^2.4.3",
-    "@wessberg/pointer-events": "^1.0.9",
+    "core-js": "^3.6.5",
     "json5": "^2.1.0",
     "lit-element": "^2.2.1",
     "lit-html": "^1.1.2",
     "lodash.throttle": "^4.1.1",
-    "osc": "^2.3.1",
-    "pepjs": "^0.5.2",
+    "osc": "^2.4.1",
+    "regenerator-runtime": "^0.13.7",
     "serve-static": "^1.14.1",
     "template-literal": "^1.0.3",
     "waves-audio": "^0.5.2",
     "waves-loaders": "^0.1.5",
-    "waves-masters": "^1.2.1"
+    "waves-masters": "^2.3.0"
   },
   "devDependencies": {
     "@soundworks/template-build": "^3.0.1"

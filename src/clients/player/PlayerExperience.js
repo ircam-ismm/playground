@@ -1,18 +1,18 @@
-import { Experience } from '@soundworks/core/client';
+import { AbstractExperience } from '@soundworks/core/client';
 import { render, html } from 'lit-html';
-import renderAppInitialization from '../views/renderAppInitialization';
-import AudioBus from './synths/AudioBus';
-import AutoPlaySynth from './synths/AutoPlaySynth';
-import TriggerSynth from './synths/TriggerSynth';
-import GranularSynth from './synths/GranularSynth';
-import SoloistSynth from './synths/SoloistSynth';
+import renderInitializationScreens from '@soundworks/template-helpers/client/render-initialization-screens.js';
 
-class PlayerExperience extends Experience {
-  constructor(client, config = {}, $container, audioContext, index) {
+import AudioBus from './synths/AudioBus.js';
+import AutoPlaySynth from './synths/AutoPlaySynth.js';
+import TriggerSynth from './synths/TriggerSynth.js';
+import GranularSynth from './synths/GranularSynth.js';
+import SoloistSynth from './synths/SoloistSynth.js';
+
+class PlayerExperience extends AbstractExperience {
+  constructor(client, config, $container, audioContext, index) {
     super(client);
 
     this.config = config;
-    console.log(this.config);
     this.$container = $container;
     this.audioContext = audioContext;
 
@@ -29,21 +29,20 @@ class PlayerExperience extends Experience {
     this.autoPlaySynth = null;
     this.showConnectedScreen = true;
 
-    renderAppInitialization(client, config, $container);
+    this.rafId = null;
 
-    //
+    // assign random position
+    // @todo - add something in url
     if (config.app.randomlyAssignPosition) {
-      const unsubscribe = this.client.serviceManager.observe((state) => {
-        if (state.position === 'started') {
-          // const angle = 2 * Math.PI / 42 * index;
-          // const x = (Math.cos(angle) + 1) / 2;
-          // const y = (Math.sin(angle) + 1) / 2;
-          // this.position.setNormalizedPosition(x, y);
+      const unsubscribe = this.client.pluginManager.observe(pluginsState => {
+        if (pluginsState.position === 'started') {
           this.position.setNormalizedPosition(Math.random(), Math.random());
           unsubscribe();
         }
       });
     }
+
+    renderInitializationScreens(client, config, $container);
   }
 
   async start() {
@@ -54,42 +53,53 @@ class PlayerExperience extends Experience {
 
     this.master = new AudioBus(this.audioContext);
     this.master.connect(this.audioContext.destination);
-    this.master.volume = this.globalsState.get('masterVolume');
-
-    this.masterBus = this.master.input;
+    this.master.volume = this.globalsState.get('master');
+    this.master.mute = this.globalsState.get('mute');
+    this.master.cutoffFrequency = this.globalsState.get('cutoffFrequency');
 
     this.flashScreen = false;
 
-    this.globalsState.subscribe(async updates => {
+    const updateFromGlobalState = async updates => {
       for (let [name, value] of Object.entries(updates)) {
         switch (name) {
-          case 'instructionsState':
+          case 'instructionsState': {
             if (value === 'thanks') {
-              setTimeout(() => {
-                const now = this.audioContext.currentTime;
-                this.master.muteNode.gain.linearRampToValueAtTime(0, now + 10);
+              this.thanksTimeout = setTimeout(() => {
+                this.master.fadeTo(0, 10);
                 this.showConnectedScreen = false;
-                this.renderApp();
+                this.render();
               }, Math.random() * 5000);
             } else {
+              clearTimeout(this.thanksTimeout);
               // back to full
-              const now = this.audioContext.currentTime;
-              this.master.muteNode.gain.cancelScheduledValues(now);
-              this.master.muteNode.gain.setValueAtTime(1, now);
-
-              this.renderApp();
+              this.master.fadeTo(1);
+              this.render();
             }
             break;
-          case 'masterVolume':
+          }
+          case 'master': {
             this.master.volume = value;
-            this.renderApp();
+            this.render();
             break;
+          }
+          case 'mute': {
+            this.master.mute = value;
+            this.render();
+            break;
+          }
+          case 'cutoffFrequency': {
+            this.master.cutoffFrequency = value;
+            this.render();
+            break;
+          }
         }
       }
-    });
+    }
 
-    this.playerState.subscribe(async updates => {
+    this.globalsState.subscribe(updateFromGlobalState);
+    updateFromGlobalState(this.globalsState.getValues());
 
+    const updateFromPlayerState = async updates => {
       for (let name in updates) {
         switch (name) {
           case 'triggerFile': {
@@ -108,17 +118,18 @@ class PlayerExperience extends Experience {
               const config = triggerSynthConfig.presets['triggerSynth'];
               const synth = new TriggerSynth(this.audioContext, buffer, config);
 
-              synth.connect(this.masterBus);
+              synth.connect(this.master.input);
               synth.trigger();
               // flash the screen
               this.flashScreen = true;
-              this.renderApp();
+              this.render();
 
               setTimeout(() => {
                 this.flashScreen = false;
-                this.renderApp();
+                this.render();
               }, 100);
             }
+            break;
           }
 
           // soloist
@@ -147,8 +158,9 @@ class PlayerExperience extends Experience {
                   const params = soloistSynthConfig.presets['soloistSynth'];
 
                   this.soloistSynth = new SoloistSynth(this.audioContext, buffer, locaStartTime);
-                  this.soloistSynth.connect(this.masterBus);
+                  this.soloistSynth.connect(this.master.input);
                   this.soloistSynth.updateParams(params);
+                  this.soloistSynth.start();
                 }
               }
 
@@ -205,8 +217,11 @@ class PlayerExperience extends Experience {
         }
       }
 
-      this.renderApp();
-    });
+      this.render();
+    }
+
+    this.playerState.subscribe(updateFromPlayerState);
+    updateFromPlayerState(this.playerState.getValues());
 
     this.handleAutoPlaySynth(this.playerState.get('autoPlayEnabled'));
     this.handleGranularSynth(this.playerState.get('granularState'));
@@ -221,10 +236,10 @@ class PlayerExperience extends Experience {
     // remove connected screen
     setTimeout(() => {
       this.showConnectedScreen = false;
-      this.renderApp();
+      this.render();
     }, 8 * 1000);
 
-    this.renderApp();
+    this.render();
   }
 
   async handleGranularSynth(action) {
@@ -244,7 +259,7 @@ class PlayerExperience extends Experience {
 
         this.granularSynth = new GranularSynth(this.audioContext, buffer);
         this.granularSynth.updateParams(params);
-        this.granularSynth.connect(this.masterBus);
+        this.granularSynth.connect(this.master.input);
         this.granularSynth.start();
       }
     }
@@ -267,7 +282,7 @@ class PlayerExperience extends Experience {
 
         this.autoPlaySynth = new AutoPlaySynth(this.audioContext, buffer);
         this.autoPlaySynth.updateParams(params);
-        this.autoPlaySynth.connect(this.masterBus);
+        this.autoPlaySynth.connect(this.master.input);
         this.autoPlaySynth.start();
       }
     }
@@ -288,90 +303,99 @@ class PlayerExperience extends Experience {
     }
   }
 
-  renderApp() {
-    const playerState = this.playerState.getValues();
-    const globalsState = this.globalsState.getValues();
-    const color = this.flashScreen ? '#ffffff' : playerState.color;
-    const opacity = 1 - playerState.soloistDistance;
+  render() {
+    window.cancelAnimationFrame(this.rafId);
 
-    render(html`
-      <div class="screen"
-        style="
-          background-color: ${color};
-          position: relative;
-          overflow-y: auto;
-        "
-      >
-        ${globalsState.instructionsState === 'thanks' ?
-          // final screen
-          html`
-            <div
-          style="
-            position: absolute;
-            top: 0;
-            height: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.9);
-            "
-          >
-            <p
-              style="
-                padding-top: 120px;
-                text-align: center;
-                font-size: 14px;
-                line-height: 20px;
-              "
-            >
-              ${this.config.app.thanksMessage}
-            </p>
-          </div>
-          `
-        : ''}
+    this.rafId = window.requestAnimationFrame(() => {
+      const playerState = this.playerState.getValues();
+      const globalsState = this.globalsState.getValues();
+      const color = this.flashScreen ? '#ffffff' : playerState.color;
+      const opacity = 1 - playerState.soloistDistance;
 
-        ${this.showConnectedScreen ?
-          html`
-            <div
+      const template = html`
+        <div class="screen"
           style="
-            position: absolute;
-            top: 0;
-            height: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.9);
-            "
-          >
-            <p
-              style="
-                padding-top: 120px;
-                text-align: center;
-                font-size: 14px;
-                line-height: 20px;
-              "
-            >
-              ${this.config.app.connectionMessage}
-            </p>
-          </div>
-          `
-        : ''}
-
-        <div
-          style="
-            position: absolute;
-            top: 0;
-            height: 0;
-            width: 100%;
-            height: 100%;
-            background-color: white;
-            opacity: ${opacity};
+            background-color: ${color};
+            position: relative;
+            overflow-y: auto;
+            min-height: 100%;
           "
-        ></div>
-        <pre><code style="font-size: 7px; padding: 4px; display: block;">
-masterVolume: ${globalsState.masterVolume}
+        >
+          ${globalsState.instructionsState === 'thanks' ?
+            // final screen
+            html`
+              <div
+            style="
+              position: absolute;
+              top: 0;
+              height: 0;
+              width: 100%;
+              height: 100%;
+              background-color: rgba(0, 0, 0, 0.9);
+              "
+            >
+              <p
+                style="
+                  padding-top: 120px;
+                  text-align: center;
+                  font-size: 14px;
+                  line-height: 20px;
+                "
+              >
+                ${this.config.app.thanksMessage}
+              </p>
+            </div>
+            `
+          : ''}
+
+          ${this.showConnectedScreen ?
+            html`
+              <div
+              style="
+                position: absolute;
+                top: 0;
+                height: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0, 0, 0, 0.9);
+                "
+              >
+                <p
+                  style="
+                    padding-top: 120px;
+                    text-align: center;
+                    font-size: 14px;
+                    line-height: 20px;
+                  "
+                >
+                  ${this.config.app.connectionMessage}
+                </p>
+            </div>
+            `
+          : ''}
+
+          <div
+            style="
+              position: absolute;
+              top: 0;
+              height: 0;
+              width: 100%;
+              height: 100%;
+              background-color: white;
+              opacity: ${opacity};
+            "
+          ></div>
+          <pre><code style="font-size: 7px; padding: 4px; display: block;">
+master: ${globalsState.master}
+mute: ${globalsState.mute}
+cutoffFrequency: ${globalsState.cutoffFrequency}
 ${JSON.stringify(playerState, null, 2)}
-        </code></pre>
-      </div>
-    `, this.$container);
+          </code></pre>
+        </div>
+      `;
+
+      render(template, this.$container);
+    });
   }
 }
 

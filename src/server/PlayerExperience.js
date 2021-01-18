@@ -1,4 +1,4 @@
-import { Experience } from '@soundworks/core/server';
+import { AbstractExperience } from '@soundworks/core/server';
 
 function getNormalizedDistance(center, target, radius) {
   const dx = target.x - center.x;
@@ -9,7 +9,7 @@ function getNormalizedDistance(center, target, radius) {
   return normDistance;
 }
 
-class PlayerExperience extends Experience {
+class PlayerExperience extends AbstractExperience {
   constructor(
     server,
     clientTypes,
@@ -28,11 +28,13 @@ class PlayerExperience extends Experience {
 
     this.soundBankManager = soundBankManager;
 
-    this.playerStates = new Map();
+    this.players = new Map();
   }
 
-  start() {
+  async start() {
     super.start();
+
+    const globals = await this.server.stateManager.attach('globals');
 
     // ------------------------------------------------------------
     // propagate param change to players...
@@ -62,7 +64,7 @@ class PlayerExperience extends Experience {
         }
       }
 
-      for (let [nodeId, playerState] of this.playerStates) {
+      for (let [nodeId, playerState] of this.players) {
         const state = playerState.getValues();
 
         ['triggerConfig', 'soloistConfig', 'granularConfig', 'autoPlayConfig'].forEach(configName => {
@@ -85,13 +87,18 @@ class PlayerExperience extends Experience {
     // END - propagate param change to players...
     // ------------------------------------------------------------
 
+
     // ------------------------------------------------------------
     // observe players
     // ------------------------------------------------------------
     this.server.stateManager.observe(async (schemaName, stateId, nodeId) => {
       if (schemaName === 'player') {
-        const playerState = await this.server.stateManager.attach(schemaName, stateId);
-        playerState.onDetach(() => this.playerStates.delete(nodeId));
+        const player = await this.server.stateManager.attach(schemaName, stateId);
+
+        player.onDetach(() => {
+          this.players.delete(nodeId);
+          globals.set({ numConnectedPlayers: this.players.size });
+        });
 
         // add new player to current synth preset
         ['soloist', 'trigger', 'granular', 'autoPlay'].forEach(async type => {
@@ -99,15 +106,15 @@ class PlayerExperience extends Experience {
 
           if (currentSoundBank !== null) {
             const soundBank = this.soundBankManager.getValues()[currentSoundBank];
-            await this.assignRandomFile(type, soundBank, playerState);
+            await this.assignRandomFile(type, soundBank, player);
 
             // if granular is enabled when the user connects
             if (type === 'granular') {
               const startedGranularSynth = this.controllerStates['granular'].get('startedSynths');
 
               startedGranularSynth.forEach(file => {
-                if (file === playerState.get('granularFile')) {
-                  playerState.set({ granularState: 'start' });
+                if (file === player.get('granularFile')) {
+                  player.set({ granularState: 'start' });
                 }
               });
             }
@@ -115,14 +122,16 @@ class PlayerExperience extends Experience {
             // if autoPlay is enabled when the user connects
             if (type === 'autoPlay') {
               const autoPlayEnabled = this.controllerStates['autoPlay'].get('enabled');
-              playerState.set({ autoPlayEnabled: autoPlayEnabled });
+              player.set({ autoPlayEnabled: autoPlayEnabled });
             }
           }
         });
 
-        this.playerStates.set(nodeId, playerState);
+        this.players.set(nodeId, player);
+        globals.set({ numConnectedPlayers: this.players.size });
       }
     });
+
 
     // ------------------------------------------------------------
     // trigger controller state
@@ -134,10 +143,18 @@ class PlayerExperience extends Experience {
             this.assignSoundBank('trigger', updates['currentSoundBank']);
             break;
           }
+          // ok weird, but consistent with other synths...
           case 'triggerPlayerEvent': {
             const playerId = updates[name];
-            const playerState = this.playerStates.get(playerId);
+            const playerState = this.players.get(playerId);
             playerState.set({ triggerEvent: true });
+            break;
+          }
+
+          case 'triggerAllEvent': {
+            this.players.forEach(playerState => {
+              playerState.set({ triggerEvent: true });
+            });
             break;
           }
         }
@@ -152,7 +169,7 @@ class PlayerExperience extends Experience {
       for (let name in updates) {
         switch (name) {
           case 'currentSoundBank': {
-            for (let [id, playerState] of this.playerStates.entries()) {
+            for (let [id, playerState] of this.players.entries()) {
               playerState.set({ granularState: 'stop' });
             }
 
@@ -162,7 +179,7 @@ class PlayerExperience extends Experience {
           case 'toggleSynthEvent': {
             const { action, filename } = updates[name];
 
-            for (let [id, playerState] of this.playerStates.entries()) {
+            for (let [id, playerState] of this.players.entries()) {
               const playerFile = playerState.get('granularFile');
 
               if (playerFile === filename) {
@@ -197,7 +214,7 @@ class PlayerExperience extends Experience {
           soloistStartTime = this.sync.getSyncTime();
         }
 
-        for (let [id, playerState] of this.playerStates.entries()) {
+        for (let [id, playerState] of this.players.entries()) {
           let normDistance = +Infinity;
           // we only consider the closer trigger
           triggers.forEach(trigger => {
@@ -263,7 +280,7 @@ class PlayerExperience extends Experience {
         switch (key) {
           case 'currentSoundBank': {
             if (updates['currentSoundBank'] === null) {
-              for (let playerState of this.playerStates.values()) {
+              for (let playerState of this.players.values()) {
                 playerState.set({ autoPlayEnabled: false });
               }
             }
@@ -271,7 +288,7 @@ class PlayerExperience extends Experience {
             break;
           }
           case 'enabled': {
-            for (let playerState of this.playerStates.values()) {
+            for (let playerState of this.players.values()) {
               playerState.set({ autoPlayEnabled: updates[key] });
             }
             break;
@@ -292,7 +309,7 @@ class PlayerExperience extends Experience {
   // randomly assign sound files from sound bank
   async assignSoundBank(type, soundBankName) {
     if (soundBankName === null) {
-      for (let playerState of this.playerStates.values()) {
+      for (let playerState of this.players.values()) {
         const playerSynthConfigKey = `${type}Config`;
         const playerSynthFileKey = `${type}File`;
 
@@ -304,7 +321,7 @@ class PlayerExperience extends Experience {
     } else {
       const soundBank = this.soundBankManager.getValues()[soundBankName];
       // console.time('assignFiles');
-      for (let playerState of this.playerStates.values()) {
+      for (let playerState of this.players.values()) {
         await this.assignRandomFile(type, soundBank, playerState);
       }
       // console.timeEnd('assignFiles');
@@ -331,7 +348,7 @@ class PlayerExperience extends Experience {
         numPlayersPerFile[url] = 0;
       });
 
-      for (let peerState of this.playerStates.values()) {
+      for (let peerState of this.players.values()) {
         if (peerState !== playerState) {
           const url = peerState.get(synthFileKey);
 

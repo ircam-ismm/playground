@@ -1,84 +1,100 @@
-import '@babel/polyfill';
 import 'source-map-support/register';
-
 import { Server } from '@soundworks/core/server';
-import getConfig from './utils/getConfig';
-import getProjectConfig from './utils/getProjectConfig';
 import path from 'path';
 import serveStatic from 'serve-static';
 import compile from 'template-literal';
+import osc from 'osc';
 
-// import services
-import servicePlatformFactory from '@soundworks/service-platform/server';
-import serviceSyncFactory from '@soundworks/service-sync/server';
-import serviceCheckinFactory from '@soundworks/service-checkin/server';
-import serviceFileSystemFactory from '@soundworks/service-file-system/server';
-import serviceAudioBufferLoaderFactory from '@soundworks/service-audio-buffer-loader/server';
-import servicePositionFactory from '@soundworks/service-position/server';
+// import plugins
+import pluginPlatformFactory from '@soundworks/plugin-platform/server';
+import pluginSyncFactory from '@soundworks/plugin-sync/server';
+import pluginCheckinFactory from '@soundworks/plugin-checkin/server';
+import pluginFileSystemFactory from '@soundworks/plugin-filesystem/server';
+import pluginAudioBufferLoaderFactory from '@soundworks/plugin-audio-buffer-loader/server';
+import pluginPositionFactory from '@soundworks/plugin-position/server';
 
 // experiences
-import PlayerExperience from './PlayerExperience';
-import AutoPlayControllerExperience from './AutoPlayControllerExperience';
-import SoloistControllerExperience from './SoloistControllerExperience';
-import TriggerControllerExperience from './TriggerControllerExperience';
-import GranularControllerExperience from './GranularControllerExperience';
-import SoundBankManagerExperience from './SoundBankManagerExperience';
+import PlayerExperience from './PlayerExperience.js';
+import AutoPlayControllerExperience from './AutoPlayControllerExperience.js';
+import SoloistControllerExperience from './SoloistControllerExperience.js';
+import TriggerControllerExperience from './TriggerControllerExperience.js';
+import GranularControllerExperience from './GranularControllerExperience.js';
+import SoundBankManagerExperience from './SoundBankManagerExperience.js';
 
-import InstructionsViewerExperience from './InstructionsViewerExperience';
-import MainControllerExperience from './MainControllerExperience';
+import InstructionsViewerExperience from './InstructionsViewerExperience.js';
+import ControllerExperience from './ControllerExperience.js';
 
 // schemas
-import globalsSchema from './schemas/globalsSchema';
-import playerSchema from './schemas/playerSchema';
+import globalsSchema from './schemas/globals.js';
+import playerSchema from './schemas/player.js';
 // controllers schema
-import autoPlayControllerSchema from './schemas/autoPlayControllerSchema';
-import soloistControllerSchema from './schemas/soloistControllerSchema';
-import triggerControllerSchema from './schemas/triggerControllerSchema';
-import granularControllerSchema from './schemas/granularControllerSchema';
+import autoPlayControllerSchema from './schemas/autoPlayController.js';
+import soloistControllerSchema from './schemas/soloistController.js';
+import triggerControllerSchema from './schemas/triggerController.js';
+import granularControllerSchema from './schemas/granularController.js';
 
-import SoundBankManager from './soundbank/SoundBankManager';
+import SoundBankManager from './soundbank/SoundBankManager.js';
+import soundbankPresets from './soundbank/soundbankPresets.js'
+import soundfilesPresets from './soundbank/soundfilesPresets.js'
 
-import osc from 'osc';
+import getConfig from './utils/getConfig.js';
+import getProjectConfig from './utils/getProjectConfig.js';
 
 const ENV = process.env.ENV || 'default';
 const config = getConfig(ENV);
+const server = new Server();
 
 const projectConfig = getProjectConfig(config.app.project);
-console.log(projectConfig);
+const area = { xRange: [0, 1], yRange: [0, 1] };
+
+// html template and static files (in most case, this should not be modified)
+server.templateEngine = { compile };
+server.templateDirectory = path.join('.build', 'server', 'tmpl');
+server.router.use(serveStatic('public'));
+server.router.use('build', serveStatic(path.join('.build', 'public')));
+server.router.use('vendors', serveStatic(path.join('.vendors', 'public')));
+// projcet specific routes
+server.router.use('sounds', serveStatic(path.join('projects', config.app.project, 'sounds')));
+server.router.use('images', serveStatic(path.join('projects', config.app.project, 'images')));
 
 console.log(`
 --------------------------------------------------------
-- running "${config.app.name}" in "${ENV}" environment -
+- launching "${config.app.name}" in "${ENV}" environment
+- [pid: ${process.pid}]
+- project ${projectConfig.name} (${projectConfig.author})
 --------------------------------------------------------
 `);
 
+// -------------------------------------------------------------------
+// register plugins and schemas
+// -------------------------------------------------------------------
+
+server.pluginManager.register('platform', pluginPlatformFactory, {}, []);
+server.pluginManager.register('sync', pluginSyncFactory, {}, []);
+server.pluginManager.register('checkin', pluginCheckinFactory, {}, []);
+server.pluginManager.register('audio-buffer-loader', pluginAudioBufferLoaderFactory, {}, []);
+server.pluginManager.register('position', pluginPositionFactory, { area }, []);
+server.pluginManager.register('filesystem', pluginFileSystemFactory, {
+  directories: [{
+    name: 'sounds',
+    path: path.join('projects', config.app.project, 'sounds'),
+    publicDirectory: path.join('projects', config.app.project),
+    watch: true,
+  }]
+}, []);
+
+// -------------------------------------------------------------------
+// register schemas
+// -------------------------------------------------------------------
+server.stateManager.registerSchema('globals', globalsSchema);
+server.stateManager.registerSchema('player', playerSchema);
+server.stateManager.registerSchema('autoplay-controller', autoPlayControllerSchema);
+server.stateManager.registerSchema('granular-controller', granularControllerSchema);
+server.stateManager.registerSchema('trigger-controller', triggerControllerSchema);
+server.stateManager.registerSchema('soloist-controller', soloistControllerSchema);
+
 (async function launch() {
   try {
-    const server = new Server();
-
-    const area = {
-      xRange: [0, 1],
-      yRange: [0, 1],
-    }
-
-    // -------------------------------------------------------------------
-    // register services and schemas
-    // -------------------------------------------------------------------
-
-    server.registerService('platform', servicePlatformFactory, {}, []);
-    server.registerService('sync', serviceSyncFactory, {}, []);
-    server.registerService('checkin', serviceCheckinFactory, {}, []);
-    server.registerService('audio-buffer-loader', serviceAudioBufferLoaderFactory, {}, []);
-    server.registerService('position', servicePositionFactory, { area }, []);
-    server.registerService('file-system', serviceFileSystemFactory, {
-      directories: [{
-        name: 'sounds',
-        path: path.join('projects', config.app.project, 'sounds'),
-        publicDirectory: path.join('projects', config.app.project),
-        watch: true,
-      }]
-    }, []);
-
     // -------------------------------------------------------------------
     // launch application
     // -------------------------------------------------------------------
@@ -102,191 +118,15 @@ console.log(`
       };
     });
 
-    // register schemas and init shared states
-    server.stateManager.registerSchema('globals', globalsSchema);
-    server.stateManager.registerSchema('player', playerSchema);
-    server.stateManager.registerSchema('auto-play-controller', autoPlayControllerSchema);
-    server.stateManager.registerSchema('granular-controller', granularControllerSchema);
-    server.stateManager.registerSchema('trigger-controller', triggerControllerSchema);
-    server.stateManager.registerSchema('soloist-controller', soloistControllerSchema);
-
-    // html template and static files (in most case, this should not be modified)
-    server.configureHtmlTemplates({ compile }, path.join('.build', 'server', 'tmpl'))
-
-    server.router.use(serveStatic('public'));
-    server.router.use('build', serveStatic(path.join('.build', 'public')));
-    server.router.use('vendors', serveStatic(path.join('.vendors', 'public')));
-    // project specific routes
-    server.router.use('sounds', serveStatic(path.join('projects', config.app.project, 'sounds')));
-    server.router.use('images', serveStatic(path.join('projects', config.app.project, 'images')));
-
     const globalsState = await server.stateManager.create('globals');
-    const autoPlayControllerState = await server.stateManager.create('auto-play-controller');
+    const autoPlayControllerState = await server.stateManager.create('autoplay-controller');
     const triggerControllerState = await server.stateManager.create('trigger-controller');
     const granularControllerState = await server.stateManager.create('granular-controller');
-
     const soloistControllerState = await server.stateManager.create('soloist-controller', area);
-    // soloistControllerState.set(area); // init soloist state
 
-
-    const fileSystem = server.serviceManager.get('file-system');
-    const soundBankManager = new SoundBankManager(
-      // presets of a given sound bank
-      {
-        activated: {
-          autoPlaySynth: {
-            type: 'boolean',
-            default: true,
-          },
-          triggerSynth: {
-            type:'boolean',
-            default: true,
-          },
-          soloistSynth: {
-            type:'boolean',
-            default: true,
-          },
-          granularSynth: {
-            type:'boolean',
-            default: true,
-          },
-        }
-      },
-      {
-        autoPlaySynth: {
-          // randomizeBuffer: {
-          //   type: 'boolean',
-          //   default: true,
-          // },
-          repeatPeriod: {
-            type: 'float',
-            min: 0,
-            max: 60,
-            default: 1,
-            step: 0.001,
-          },
-          maxReleaseOffset: {
-            type: 'float',
-            min: 0,
-            max: 20,
-            default: 1,
-            step: 0.001,
-          },
-          releaseDuration: {
-            type: 'float',
-            min: 0,
-            max: 20,
-            default: 1,
-            step: 0.001,
-          },
-        },
-        triggerSynth: {
-          repeat: {
-            type: 'integer',
-            min: 0,
-            max: 20,
-            default: 1,
-            step: 1,
-          },
-          period: {
-            type: 'float',
-            min: 0,
-            max: 5,
-            default: 0,
-            step: 0.001,
-          },
-          jitter: {
-            type: 'float',
-            min: 0,
-            max: 2,
-            default: 0,
-            step: 0.001,
-          },
-          releaseDuration: {
-            type: 'float',
-            min: 0,
-            max: 20,
-            default: 1,
-            step: 0.001,
-          },
-        },
-
-        granularSynth: {
-          volume: {
-            type: 'float',
-            min: 0,
-            max: 1,
-            step: 0.001,
-            default: 1,
-          },
-          releaseDuration: {
-            type: 'float',
-            min: 0,
-            max: 10,
-            step: 0.1,
-            default: 3,
-          },
-          speed: {
-            type: 'float',
-            min: -2,
-            max: 2,
-            step: 0.01,
-            default: 1,
-          },
-          positionVar: {
-            type: 'float',
-            min: 0,
-            max: 0.200,
-            step: 0.001,
-            default: 0.003,
-          },
-          periodAbs: {
-            type: 'float',
-            min: 0.001,
-            max: 0.300,
-            step: 0.001,
-            default: 0.02,
-          },
-          durationAbs: {
-            type: 'float',
-            min: 0.010,
-            max: 0.300,
-            step: 0.001,
-            default: 0.1,
-          },
-          resampling: {
-            type: 'integer',
-            min: -1200,
-            max: 1200,
-            step: 1,
-            default: 0,
-          },
-          resamplingVar: {
-            type: 'integer',
-            min: 0,
-            max: 1200,
-            step: 1,
-            default: 0,
-          },
-        },
-        soloistSynth: {
-          "fadeOutDuration": {
-            type: 'float',
-            min: 0,
-            max: 40,
-            step: 0.001,
-            default: 8,
-          },
-          "decayExponent": {
-            type: 'float',
-            min: 0,
-            max: 2,
-            step: 0.001,
-            default: 1.5,
-          },
-        },
-      },
-    );
+    const fileSystem = server.pluginManager.get('filesystem');
+    // @note - we propabably should review this SoundBank stuff at some point
+    const soundBankManager = new SoundBankManager(soundbankPresets, soundfilesPresets);
 
     const playerExperience = new PlayerExperience(server,
       'player',
@@ -300,7 +140,7 @@ console.log(`
     );
     // controllers
     const autoPlayControllerExperience = new AutoPlayControllerExperience(server,
-      'auto-play-controller',
+      'autoplay-controller',
       soundBankManager
     );
 
@@ -326,7 +166,7 @@ console.log(`
     );
 
     const instructionsViewerExperience = new InstructionsViewerExperience(server, 'instructions-viewer');
-    const mainControllerExperience = new MainControllerExperience(server, 'main-controller');
+    const mainControllerExperience = new ControllerExperience(server, 'controller');
 
     await server.start();
 
@@ -342,7 +182,7 @@ console.log(`
 
     playerExperience.start();
 
-    // bind file-system service and soundBankManager together
+    // bind filesystem plugin and soundBankManager together
     fileSystem.state.subscribe(updates => {
       for (let key in updates) {
         if (key === 'sounds') {

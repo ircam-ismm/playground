@@ -1,17 +1,22 @@
-import { Experience } from '@soundworks/core/client';
+import { AbstractExperience } from '@soundworks/core/client';
 import { render, html } from 'lit-html';
+import renderInitializationScreens from '@soundworks/template-helpers/client/render-initialization-screens.js';
+
 import { ifDefined } from 'lit-html/directives/if-defined';
 import { repeat } from 'lit-html/directives/repeat';
 import throttle from 'lodash.throttle';
-import renderAppInitialization from '../views/renderAppInitialization';
-import '../views/elements/sw-slider';
-import '../views/elements/sw-slider-enhanced';
-import '../views/elements/sw-preset';
-import '../views/controller-components/fp-header';
-import '../views/controller-components/fp-loading-players';
 
-class TriggerControllerExperience extends Experience {
-  constructor(client, config = {}, $container) {
+import '@ircam/simple-components/sc-slider.js';
+import '@ircam/simple-components/sc-text.js';
+import '@ircam/simple-components/sc-dot-map.js';
+
+import '../views/playground-preset';
+import '../views/playground-header';
+import '../views/playground-loading-players';
+import { btn, btnActive } from '../views/defaultStyles.js';
+
+class TriggerControllerExperience extends AbstractExperience {
+  constructor(client, config, $container) {
     super(client);
 
     this.config = config;
@@ -21,7 +26,7 @@ class TriggerControllerExperience extends Experience {
 
     this.playerStates = new Map();
 
-    renderAppInitialization(client, config, $container);
+    renderInitializationScreens(client, config, $container);
   }
 
   async start() {
@@ -33,14 +38,15 @@ class TriggerControllerExperience extends Experience {
       soundFileDefaultPresets: null,
     };
 
-    this.eventListeners = {
-      updateSoundBank: e => {
-        const soundBankName = e.target.value || null;
+    this.listeners = {
+      updateSoundBank: soundBankName => {
         this.triggerControllerState.set({ currentSoundBank: soundBankName });
       },
-      triggerPlayer: e => {
-        const playerId = parseInt(e.target.dataset.id);
+      triggerPlayer: playerId => {
         this.triggerControllerState.set({ triggerPlayerEvent: playerId });
+      },
+      triggerAllPlayers: () => {
+        this.triggerControllerState.set({ triggerAllEvent: true });
       },
       updateFilePreset: throttle((soundbank, filename, param, value) => {
         this.client.socket.send('soundBanks:updateSoundFilePreset',
@@ -51,19 +57,19 @@ class TriggerControllerExperience extends Experience {
         );
       }, 50),
 
+
       // local stuff
-      updatePadSize: e => {
-        const size = e.detail.value;
+      updatePadSize: size => {
         this.localState.padSize = size;
-        this.renderApp();
+        this.render();
       },
       addToEditedFile: filename => {
         this.localState.editedFiles.add(filename);
-        this.renderApp();
+        this.render();
       },
       removeFromEditedFile: filename => {
         this.localState.editedFiles.delete(filename);
-        this.renderApp();
+        this.render();
       },
     };
 
@@ -72,7 +78,7 @@ class TriggerControllerExperience extends Experience {
     this.triggerControllerState.subscribe(updates => {
       if ('currentSoundBank' in updates) {
         this.localState.editedFiles.clear();
-        this.renderApp();
+        this.render();
       }
     });
 
@@ -82,7 +88,7 @@ class TriggerControllerExperience extends Experience {
 
         playerState.onDetach(() => {
           this.playerStates.delete(nodeId);
-          this.renderApp();
+          this.render();
         });
 
         playerState.subscribe(updates => {
@@ -90,18 +96,19 @@ class TriggerControllerExperience extends Experience {
             switch (name) {
               case 'triggerConfig':
               case 'triggerLoading':
-                this.renderApp();
+                this.render();
                 break;
             }
           }
         });
 
         this.playerStates.set(nodeId, playerState);
-        this.renderApp();
+        this.render();
       }
     });
 
     // this could / should probably be a service
+    // this is fucking weird...
     this.client.socket.addListener('soundBanks', (
       values,
       soundBankDefaultPresets,
@@ -110,15 +117,15 @@ class TriggerControllerExperience extends Experience {
       this.localState.soundBankValues = values;
       this.localState.soundBankDefaultPresets = soundBankDefaultPresets;
       this.localState.soundFileDefaultPresets = soundFileDefaultPresets;
-      this.renderApp();
+      this.render();
     });
 
-    window.addEventListener('resize', () => this.renderApp());
+    window.addEventListener('resize', () => this.render());
 
     super.start();
   }
 
-  renderApp() {
+  render() {
     const filteredSoundBankNames = Object.keys(this.localState.soundBankValues)
       .sort()
       .filter((name) => {
@@ -130,7 +137,7 @@ class TriggerControllerExperience extends Experience {
     const loadedPlayers = playerStates.filter(s => s.triggerConfig !== null && s.triggerLoading === false);
 
     const currentSoundBank = this.triggerControllerState.getValues()['currentSoundBank'];
-    let soundBankFiles = {}
+    let soundBankFiles = {};
 
     if (currentSoundBank !== null) {
       soundBankFiles = this.localState.soundBankValues[currentSoundBank].files;
@@ -140,39 +147,57 @@ class TriggerControllerExperience extends Experience {
     const height = window.innerHeight;
 
     render(html`
-      <fp-header
+      <playground-header
         style="min-height: 75px"
         list="${JSON.stringify(filteredSoundBankNames)}"
         value="${currentSoundBank ? currentSoundBank : ''}"
-        @change="${this.eventListeners.updateSoundBank}"
-      ></fp-header>
+        @change="${e => this.listeners.updateSoundBank(e.detail.value)}"
+      ></playground-header>
+
       <section style="width: ${width - 120}px; float: left; box-sizing: border-box; padding: 0 0 10px 10px">
-        <sw-slider-enhanced
-          label="pad size"
-          width="300"
-          height="30"
-          min="30"
-          max="100"
-          step="1"
-          value="${this.localState.padSize}"
-          @change="${this.eventListeners.updatePadSize}"
-        ></sw-slider-enhanced>
+        <div style="margin-top: 10px">
+          <sc-text
+            value="pad size"
+            width="100"
+            readonly
+          ></sc-text>
+          <sc-slider
+            width="300"
+            min="20"
+            max="100"
+            step="1"
+            value="${this.localState.padSize}"
+            @input="${e => this.listeners.updatePadSize(e.detail.value)}"
+          ></sc-slider>
+        </div>
+
+        <div style="margin-top: 20px">
+          <button
+            style="
+              ${btn}
+              ${btnActive}
+              width: 406px;
+            "
+            @mouseup="${e => this.listeners.triggerAllPlayers()}"
+            @touchend="${e => this.listeners.triggerAllPlayers()}"
+          >trigger all</button>
+        </div>
 
         ${Object.keys(soundBankFiles).map((filename) => {
           return html`
             <div style="clear:left; position: relative; margin-top: 20px;">
               <header>
                 <h2 style="height: 30px; line-height: 30px; font-size: 14px;">> ${filename}</h2>
-                <sw-preset
+                <playground-preset
                   style="position: absolute; top: 0; right: 0"
                   width="400"
                   expanded="${ifDefined(this.localState.editedFiles.has(filename) ? true : undefined)}"
                   definitions="${JSON.stringify(this.localState.soundFileDefaultPresets.triggerSynth)}"
                   values="${JSON.stringify(soundBankFiles[filename].presets.triggerSynth)}"
-                  @open="${e => this.eventListeners.addToEditedFile(filename)}"
-                  @close="${e => this.eventListeners.removeFromEditedFile(filename)}"
-                  @update="${e => this.eventListeners.updateFilePreset(currentSoundBank, filename, e.detail.name, e.detail.value)}"
-                ></sw-preset>
+                  @open="${e => this.listeners.addToEditedFile(filename)}"
+                  @close="${e => this.listeners.removeFromEditedFile(filename)}"
+                  @update="${e => this.listeners.updateFilePreset(currentSoundBank, filename, e.detail.name, e.detail.value)}"
+                ></playground-preset>
               </header>
               <section>
                 ${repeat(
@@ -181,9 +206,8 @@ class TriggerControllerExperience extends Experience {
                   player => {
                     return html`
                       <div
-                        @mousedown=${this.eventListeners.triggerPlayer}
-                        @touchstart=${this.eventListeners.triggerPlayer}
-                        data-id=${player.id}
+                        @mousedown="${e => this.listeners.triggerPlayer(player.id)}"
+                        @touchstart="${e => this.listeners.triggerPlayer(player.id)}"
                         style="
                           background-color: ${player.color};
                           width: ${this.localState.padSize}px;
@@ -205,7 +229,7 @@ class TriggerControllerExperience extends Experience {
           `;
         })}
       </section>
-      <fp-loading-players
+      <playground-loading-players
         style="
           width: 120px;
           float: right;
@@ -214,7 +238,7 @@ class TriggerControllerExperience extends Experience {
         "
         list=${JSON.stringify(loadingPlayers)}
         infos=${JSON.stringify({ '# players': playerStates.length })}
-      ></fp-loading-players>
+      ></playground-loading-players>
     `, this.$container);
   }
 }

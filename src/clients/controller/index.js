@@ -2,7 +2,7 @@ import 'regenerator-runtime/runtime';
 import { Client } from '@soundworks/core/client';
 import initQoS from '@soundworks/template-helpers/client/init-qos.js';
 
-import InstructionsViewerExperience from './InstructionsViewerExperience.js';
+import ControllerExperience from './ControllerExperience.js';
 
 const config = window.soundworksConfig;
 
@@ -11,7 +11,7 @@ const config = window.soundworksConfig;
     const client = new Client();
 
     // -------------------------------------------------------------------
-    // register plugins
+    // register services
     // -------------------------------------------------------------------
 
     // -------------------------------------------------------------------
@@ -22,7 +22,7 @@ const config = window.soundworksConfig;
     initQoS(client);
 
     const $container = document.querySelector('#__soundworks-container');
-    const experience = new InstructionsViewerExperience(client, config, $container);
+    const experience = new ControllerExperience(client, config, $container);
 
     document.body.classList.remove('loading');
     // start everything

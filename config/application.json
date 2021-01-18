@@ -9,7 +9,11 @@
       "target": "browser",
       "default": true
     },
-    "auto-play-controller": {
+    "controller": {
+      "target": "browser",
+    },
+
+    "autoplay-controller": {
       "target": "browser",
     },
     "soloist-controller": {
@@ -23,10 +27,6 @@
     },
 
     "soundbank-manager": {
-      "target": "browser",
-    },
-
-    "main-controller": {
       "target": "browser",
     },
     "instructions-viewer": {

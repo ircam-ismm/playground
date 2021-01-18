@@ -39,6 +39,7 @@
           "resamplingVar": 1025
         },
         "soloistSynth": {
+          "fadeInDuration": 1,
           "fadeOutDuration": 9.076,
           "decayExponent": 1.352
         }
@@ -71,6 +72,7 @@
           "resamplingVar": 982
         },
         "soloistSynth": {
+          "fadeInDuration": 1,
           "fadeOutDuration": 9.032,
           "decayExponent": 1.425
         }

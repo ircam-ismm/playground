@@ -1,12 +1,13 @@
-import '@babel/polyfill';
-import '@wessberg/pointer-events';
+import 'core-js/stable';
+import 'regenerator-runtime/runtime';
 import { Client } from '@soundworks/core/client';
-import TriggerControllerExperience from './TriggerControllerExperience';
-import initQoS from '../utils/qos';
+import initQoS from '@soundworks/template-helpers/client/init-qos.js';
+
+import TriggerControllerExperience from './TriggerControllerExperience.js';
 
 const config = window.soundworksConfig;
 
-async function init($container, index) {
+async function launch() {
   try {
     const client = new Client();
 
@@ -21,7 +22,7 @@ async function init($container, index) {
     await client.init(config);
     initQoS(client);
 
-    const $container = document.querySelector('#container');
+    const $container = document.querySelector('#__soundworks-container');
     const experience = new TriggerControllerExperience(client, config, $container);
     // store platform service to be able to call all `onUserGesture` at once
     if (experience.platform) {
@@ -32,9 +33,11 @@ async function init($container, index) {
 
     await client.start();
     experience.start();
+
+    return Promise.resolve();
   } catch(err) {
     console.error(err);
   }
 }
 
-window.addEventListener('load', init);
+window.addEventListener('load', launch);

@@ -6,7 +6,12 @@ class SoloistSynth {
 
     const now = audioContext.currentTime;
 
+    this.fade = audioContext.createGain();
+    this.fade.gain.value = 0;
+    this.fade.gain.setValueAtTime(0, now);
+
     this.env = audioContext.createGain();
+    this.env.connect(this.fade);
     this.env.gain.value = 0;
     this.env.gain.setValueAtTime(0, now);
 
@@ -21,7 +26,7 @@ class SoloistSynth {
   }
 
   connect(destination) {
-    this.env.connect(destination);
+    this.fade.connect(destination);
   }
 
   updateParams(values) {
@@ -31,21 +36,27 @@ class SoloistSynth {
   updateDistance(value) {
     const now = this.audioContext.currentTime;
 
-    const decayExponent = this.params.decayExponent;
+    const { decayExponent } = this.params;
     const gain = Math.pow(1 - value, decayExponent);
 
-    this.env.gain.cancelScheduledValues(now);
-    this.env.gain.setValueAtTime(this.env.gain.value, now);
-    this.env.gain.linearRampToValueAtTime(gain, now + 0.005);
+    this.env.gain.setTargetAtTime(gain, now, 0.01);
+  }
+
+  start() {
+    const now = this.audioContext.currentTime;
+    const { fadeInDuration } = this.params;
+
+    this.fade.gain.setValueAtTime(0, now);
+    this.fade.gain.linearRampToValueAtTime(1, now + fadeInDuration);
   }
 
   release() {
     const now = this.audioContext.currentTime;
     const { fadeOutDuration } = this.params;
 
-    this.env.gain.cancelScheduledValues(now);
-    this.env.gain.setValueAtTime(this.env.gain.value, now);
-    this.env.gain.exponentialRampToValueAtTime(0.0001, now + fadeOutDuration);
+    this.fade.gain.cancelScheduledValues(now);
+    this.fade.gain.setValueAtTime(this.env.gain.value, now);
+    this.fade.gain.exponentialRampToValueAtTime(0.0001, now + fadeOutDuration);
 
     this.src.stop(now + fadeOutDuration);
   }

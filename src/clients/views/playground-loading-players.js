@@ -1,7 +1,7 @@
 import { LitElement, html, css } from 'lit-element';
 import { repeat } from 'lit-html/directives/repeat';
 
-class FpLoadingPlayers extends LitElement {
+class PlaygroundLoadingPlayers extends LitElement {
   static get properties() {
     return {
       list: {
@@ -55,4 +55,4 @@ class FpLoadingPlayers extends LitElement {
   }
 }
 
-customElements.define('fp-loading-players', FpLoadingPlayers);
+customElements.define('playground-loading-players', PlaygroundLoadingPlayers);
