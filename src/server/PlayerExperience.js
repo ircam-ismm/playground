@@ -23,6 +23,7 @@ class PlayerExperience extends AbstractExperience {
     this.checkin = this.require('checkin');
     this.position = this.require('position');
     this.audioBufferLoader = this.require('audio-buffer-loader');
+    this.scripting = this.require('scripting');
 
     this.controllerStates = controllerStates;
 

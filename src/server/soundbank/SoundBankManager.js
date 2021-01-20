@@ -11,8 +11,8 @@ import SoundBank from './SoundBank';
     url: '',
     version: '0.0.0',
     presets: {
-      [preset-name]: {},
-      [preset-name]: {},
+      [preset-name-1]: {},
+      [preset-name-2]: {},
     },
     files: {
      [name]: {
@@ -20,8 +20,8 @@ import SoundBank from './SoundBank';
         path: '',
         url: '',
         presets: {
-          [preset-name]: {},
-          [preset-name]: {},
+          [preset-name-3]: {},
+          [preset-name-4]: {},
         }
       },
       [name]: {
@@ -56,9 +56,6 @@ class SoundBankManager {
       values[name] = JSON.parse(JSON.stringify(this.soundBanks[name]));
     }
 
-    // if (values['air']) {
-    //   console.log(values['air'].files['air.wav'].presets);
-    // }
     return values;
   }
 

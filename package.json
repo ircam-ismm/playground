@@ -25,6 +25,7 @@
     "@soundworks/plugin-filesystem": "^1.0.0",
     "@soundworks/plugin-platform": "^1.0.1",
     "@soundworks/plugin-position": "^1.0.0",
+    "@soundworks/plugin-scripting": "^1.0.1",
     "@soundworks/plugin-sync": "^1.0.0",
     "@soundworks/template-helpers": "^1.0.1",
     "@webcomponents/webcomponentsjs": "^2.4.3",

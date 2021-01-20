@@ -9,6 +9,7 @@ import pluginFileSystemFactory from '@soundworks/plugin-filesystem/client';
 import pluginAudioBufferLoaderFactory from '@soundworks/plugin-audio-buffer-loader/client';
 import pluginCheckinFactory from '@soundworks/plugin-checkin/client';
 import pluginPositionFactory from '@soundworks/plugin-position/client';
+import pluginScriptingFactory from '@soundworks/plugin-scripting/client';
 
 // default views for plugins
 import PlayerExperience from './PlayerExperience.js';
@@ -42,6 +43,7 @@ async function launch($container, index) {
     client.pluginManager.register('checkin', pluginCheckinFactory, {}, []);
     client.pluginManager.register('audio-buffer-loader', pluginAudioBufferLoaderFactory, {}, []);
     client.pluginManager.register('position', pluginPositionFactory, {}, []);
+    client.pluginManager.register('scripting', pluginScriptingFactory, {}, []);
 
     // -------------------------------------------------------------------
     // launch application

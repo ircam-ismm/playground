@@ -12,6 +12,7 @@ import pluginCheckinFactory from '@soundworks/plugin-checkin/server';
 import pluginFileSystemFactory from '@soundworks/plugin-filesystem/server';
 import pluginAudioBufferLoaderFactory from '@soundworks/plugin-audio-buffer-loader/server';
 import pluginPositionFactory from '@soundworks/plugin-position/server';
+import pluginScriptingFactory from '@soundworks/plugin-scripting/server';
 
 // experiences
 import PlayerExperience from './PlayerExperience.js';
@@ -81,6 +82,10 @@ server.pluginManager.register('filesystem', pluginFileSystemFactory, {
     publicDirectory: path.join('projects', config.app.project),
     watch: true,
   }]
+}, []);
+
+server.pluginManager.register('scripting', pluginScriptingFactory, {
+  directory: path.join('projects', config.app.project, 'scripts'),
 }, []);
 
 // -------------------------------------------------------------------

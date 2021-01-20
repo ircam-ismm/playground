@@ -20,29 +20,28 @@ export default {
     type: 'integer',
     default: 0,
   },
-
-  triggerPreset: {
-    type: 'string',
-    default: null,
-    nullable: true,
-  },
-  triggerPresetList: {
-    type: 'any',
-    default: null,
-    nullable: true,
-  },
-  granularPreset: {
-    type: 'string',
-    default: null,
-    nullable: true,
-  },
-  granularPresetList: {
-    type: 'any',
-    default: null,
-    nullable: true,
-  },
   instructionsState: {
     type: 'string',
     default: 'welcome',
   },
+  // triggerPreset: {
+  //   type: 'string',
+  //   default: null,
+  //   nullable: true,
+  // },
+  // triggerPresetList: {
+  //   type: 'any',
+  //   default: null,
+  //   nullable: true,
+  // },
+  // granularPreset: {
+  //   type: 'string',
+  //   default: null,
+  //   nullable: true,
+  // },
+  // granularPresetList: {
+  //   type: 'any',
+  //   default: null,
+  //   nullable: true,
+  // },
 }

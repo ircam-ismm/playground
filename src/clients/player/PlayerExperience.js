@@ -22,6 +22,8 @@ class PlayerExperience extends AbstractExperience {
     this.checkin = this.require('checkin');
     this.position = this.require('position');
     this.audioBufferLoader = this.require('audio-buffer-loader');
+    this.scripting = this.require('scripting');
+
     this.bufferCache = new Map();
 
     this.granularSynth = null;
@@ -57,7 +59,18 @@ class PlayerExperience extends AbstractExperience {
     this.master.mute = this.globalsState.get('mute');
     this.master.cutoffFrequency = this.globalsState.get('cutoffFrequency');
 
-    this.flashScreen = false;
+    const script = await this.scripting.attach('view');
+
+    script.subscribe(() => {
+      if (this.view) {
+        this.view.destroy();
+      }
+
+      this.view = script.execute(render, html, this.$container);
+      this.render();
+    });
+
+    this.view = script.execute(render, html, this.$container);
 
     const updateFromGlobalState = async updates => {
       for (let [name, value] of Object.entries(updates)) {
@@ -98,6 +111,8 @@ class PlayerExperience extends AbstractExperience {
 
     this.globalsState.subscribe(updateFromGlobalState);
     updateFromGlobalState(this.globalsState.getValues());
+
+    this.flashScreen = false;
 
     const updateFromPlayerState = async updates => {
       for (let name in updates) {
@@ -307,94 +322,14 @@ class PlayerExperience extends AbstractExperience {
     window.cancelAnimationFrame(this.rafId);
 
     this.rafId = window.requestAnimationFrame(() => {
-      const playerState = this.playerState.getValues();
-      const globalsState = this.globalsState.getValues();
-      const color = this.flashScreen ? '#ffffff' : playerState.color;
-      const opacity = 1 - playerState.soloistDistance;
+      const data = {
+        player: this.playerState.getValues(),
+        globals: this.globalsState.getValues(),
+        config: this.config,
+        flashScreen: this.flashScreen,
+      };
 
-      const template = html`
-        <div class="screen"
-          style="
-            background-color: ${color};
-            position: relative;
-            overflow-y: auto;
-            min-height: 100%;
-          "
-        >
-          ${globalsState.instructionsState === 'thanks' ?
-            // final screen
-            html`
-              <div
-            style="
-              position: absolute;
-              top: 0;
-              height: 0;
-              width: 100%;
-              height: 100%;
-              background-color: rgba(0, 0, 0, 0.9);
-              "
-            >
-              <p
-                style="
-                  padding-top: 120px;
-                  text-align: center;
-                  font-size: 14px;
-                  line-height: 20px;
-                "
-              >
-                ${this.config.app.thanksMessage}
-              </p>
-            </div>
-            `
-          : ''}
-
-          ${this.showConnectedScreen ?
-            html`
-              <div
-              style="
-                position: absolute;
-                top: 0;
-                height: 0;
-                width: 100%;
-                height: 100%;
-                background-color: rgba(0, 0, 0, 0.9);
-                "
-              >
-                <p
-                  style="
-                    padding-top: 120px;
-                    text-align: center;
-                    font-size: 14px;
-                    line-height: 20px;
-                  "
-                >
-                  ${this.config.app.connectionMessage}
-                </p>
-            </div>
-            `
-          : ''}
-
-          <div
-            style="
-              position: absolute;
-              top: 0;
-              height: 0;
-              width: 100%;
-              height: 100%;
-              background-color: white;
-              opacity: ${opacity};
-            "
-          ></div>
-          <pre><code style="font-size: 7px; padding: 4px; display: block;">
-master: ${globalsState.master}
-mute: ${globalsState.mute}
-cutoffFrequency: ${globalsState.cutoffFrequency}
-${JSON.stringify(playerState, null, 2)}
-          </code></pre>
-        </div>
-      `;
-
-      render(template, this.$container);
+      this.view.update(data);
     });
   }
 }
