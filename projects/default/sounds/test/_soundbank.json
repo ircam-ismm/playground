@@ -20,6 +20,7 @@
         "autoPlaySynth": {
           "repeatPeriod": 0.413,
           "maxReleaseOffset": 0.799,
+          "attackDuration": 1,
           "releaseDuration": 5.271
         },
         "triggerSynth": {
@@ -54,6 +55,7 @@
         "autoPlaySynth": {
           "repeatPeriod": 0.518,
           "maxReleaseOffset": 2.236,
+          "attackDuration": 1,
           "releaseDuration": 8.801
         },
         "triggerSynth": {
@@ -88,6 +90,7 @@
         "autoPlaySynth": {
           "repeatPeriod": 0.429,
           "maxReleaseOffset": 1.459,
+          "attackDuration": 1,
           "releaseDuration": 5.592
         },
         "triggerSynth": {
@@ -122,6 +125,7 @@
         "autoPlaySynth": {
           "repeatPeriod": 1.316,
           "maxReleaseOffset": 2.029,
+          "attackDuration": 1,
           "releaseDuration": 5.808
         },
         "triggerSynth": {
@@ -156,6 +160,7 @@
         "autoPlaySynth": {
           "repeatPeriod": 1,
           "maxReleaseOffset": 1,
+          "attackDuration": 1,
           "releaseDuration": 1
         },
         "triggerSynth": {
@@ -190,6 +195,7 @@
         "autoPlaySynth": {
           "repeatPeriod": 1,
           "maxReleaseOffset": 1,
+          "attackDuration": 1,
           "releaseDuration": 1
         },
         "triggerSynth": {

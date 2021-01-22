@@ -20,6 +20,7 @@
         "autoPlaySynth": {
           "repeatPeriod": 49.372,
           "maxReleaseOffset": 5.722,
+          "attackDuration": 1,
           "releaseDuration": 11.741
         },
         "triggerSynth": {

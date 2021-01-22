@@ -245,9 +245,6 @@ class PlayerExperience extends AbstractExperience {
     this.playerState.subscribe(updateFromPlayerState);
     updateFromPlayerState(this.playerState.getValues());
 
-    this.handleAutoPlaySynth(this.playerState.get('autoPlayEnabled'));
-    // this.handleGranularSynth(this.playerState.get('granularState'));
-
     // remove connected screen
     setTimeout(() => {
       this.showConnectedScreen = false;
@@ -258,7 +255,6 @@ class PlayerExperience extends AbstractExperience {
   }
 
   async handleGranularSynth(action) {
-    console.log('handleGranularSynth', action, this.client.id);
     if (this.granularSynth !== null && action == 'stop') {
       this.granularSynth.stop();
       this.granularSynth = null;

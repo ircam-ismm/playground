@@ -18,6 +18,13 @@ export default {
       default: 1,
       step: 0.001,
     },
+    attackDuration: {
+      type: 'float',
+      min: 0,
+      max: 20,
+      default: 1,
+      step: 0.001,
+    },
     releaseDuration: {
       type: 'float',
       min: 0,
