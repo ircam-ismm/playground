@@ -29,13 +29,14 @@
           "releaseDuration": 1
         },
         "granularSynth": {
-          "volume": 0.153,
+          "volume": 0.024,
           "releaseDuration": 3,
+          "attackDuration": 3,
           "speed": 1,
           "positionVar": 0.003,
           "periodAbs": 0.02,
           "durationAbs": 0.1,
-          "resampling": 0,
+          "resampling": -807,
           "resamplingVar": 0
         },
         "soloistSynth": {
@@ -62,14 +63,15 @@
           "releaseDuration": 2.66
         },
         "granularSynth": {
-          "volume": 1,
+          "volume": 0.085,
           "releaseDuration": 3,
+          "attackDuration": 3,
           "speed": 1,
           "positionVar": 0.003,
           "periodAbs": 0.02,
           "durationAbs": 0.1,
-          "resampling": 0,
-          "resamplingVar": 0
+          "resampling": -17,
+          "resamplingVar": 7
         },
         "soloistSynth": {
           "fadeInDuration": 1,
@@ -95,12 +97,13 @@
           "releaseDuration": 1
         },
         "granularSynth": {
-          "volume": 1,
+          "volume": 0.182,
           "releaseDuration": 3,
-          "speed": -0.11,
+          "attackDuration": 3,
+          "speed": -0.13,
           "positionVar": 0.003,
-          "periodAbs": 0.02,
-          "durationAbs": 0.08,
+          "periodAbs": 0.037,
+          "durationAbs": 0.024,
           "resampling": -450,
           "resamplingVar": 52
         },
@@ -128,14 +131,15 @@
           "releaseDuration": 1
         },
         "granularSynth": {
-          "volume": 0.121,
+          "volume": 0.133,
           "releaseDuration": 3,
-          "speed": -0.4,
+          "attackDuration": 3,
+          "speed": -0.93,
           "positionVar": 0.003,
           "periodAbs": 0.02,
           "durationAbs": 0.1,
           "resampling": 0,
-          "resamplingVar": 821
+          "resamplingVar": 0
         },
         "soloistSynth": {
           "fadeInDuration": 1,
@@ -161,13 +165,14 @@
           "releaseDuration": 1
         },
         "granularSynth": {
-          "volume": 0.261,
+          "volume": 0.248,
           "releaseDuration": 5.3,
+          "attackDuration": 3,
           "speed": 1,
-          "positionVar": 0.047,
-          "periodAbs": 0.173,
-          "durationAbs": 0.054,
-          "resampling": 211,
+          "positionVar": 0.004,
+          "periodAbs": 0.026,
+          "durationAbs": 0.105,
+          "resampling": -80,
           "resamplingVar": 0
         },
         "soloistSynth": {
@@ -194,8 +199,9 @@
           "releaseDuration": 1
         },
         "granularSynth": {
-          "volume": 1,
+          "volume": 0.03,
           "releaseDuration": 3,
+          "attackDuration": 3,
           "speed": 1,
           "positionVar": 0.003,
           "periodAbs": 0.02,

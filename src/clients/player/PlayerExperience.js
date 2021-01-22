@@ -50,7 +50,14 @@ class PlayerExperience extends AbstractExperience {
   async start() {
     super.start();
 
-    this.playerState = await this.client.stateManager.create('player');
+    const id = this.client.id;
+    const position = this.position.getPosition();
+    const index = this.checkin.get('index');
+    const color = this.config.app.colors[index % this.config.app.colors.length];
+
+    this.playerState = await this.client.stateManager.create('player', {
+      id, position, index, color
+    });
     this.globalsState = await this.client.stateManager.attach('globals');
 
     this.master = new AudioBus(this.audioContext);
@@ -239,14 +246,7 @@ class PlayerExperience extends AbstractExperience {
     updateFromPlayerState(this.playerState.getValues());
 
     this.handleAutoPlaySynth(this.playerState.get('autoPlayEnabled'));
-    this.handleGranularSynth(this.playerState.get('granularState'));
-
-    const id = this.client.id;
-    const position = this.position.state.getValues();
-    const index = this.checkin.state.getValues()['index'];
-    const color = this.config.app.colors[index % this.config.app.colors.length];
-
-    await this.playerState.set({ id, position, index, color });
+    // this.handleGranularSynth(this.playerState.get('granularState'));
 
     // remove connected screen
     setTimeout(() => {
@@ -258,6 +258,7 @@ class PlayerExperience extends AbstractExperience {
   }
 
   async handleGranularSynth(action) {
+    console.log('handleGranularSynth', action, this.client.id);
     if (this.granularSynth !== null && action == 'stop') {
       this.granularSynth.stop();
       this.granularSynth = null;

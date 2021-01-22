@@ -111,10 +111,11 @@ class PlayerExperience extends AbstractExperience {
 
             // if granular is enabled when the user connects
             if (type === 'granular') {
-              const startedGranularSynth = this.controllerStates['granular'].get('startedSynths');
+              const startedGranularSynths = this.controllerStates['granular'].get('startedSynths');
 
-              startedGranularSynth.forEach(file => {
+              startedGranularSynths.forEach(file => {
                 if (file === player.get('granularFile')) {
+                  console.log('start', player.get('id'));
                   player.set({ granularState: 'start' });
                 }
               });

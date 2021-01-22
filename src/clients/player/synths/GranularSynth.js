@@ -1,7 +1,6 @@
 
 import * as audio from 'waves-audio';
 
-console.log(audio);
 const scheduler = audio.getScheduler();
 scheduler.period = 0.05;
 
@@ -9,9 +8,17 @@ class GranularSynth {
   constructor(audioContext, buffer) {
     this.audioContext = audioContext;
 
-    this.env = audioContext.createGain();
-    this.env.gain.value = 0;
-    this.env.gain.setValueAtTime(0, audioContext.currentTime);
+    this.releaseDuration = 1;
+    this.attackDuration = 1;
+
+    this.fade = audioContext.createGain();
+    this.fade.gain.value = 0;
+    this.fade.gain.setValueAtTime(0, audioContext.currentTime);
+
+    this.gain = audioContext.createGain();
+    this.gain.connect(this.fade);
+    this.gain.gain.value = 0;
+    this.gain.gain.setValueAtTime(0, audioContext.currentTime);
 
     this.engine = new audio.GranularEngine({
       audioContext: audioContext,
@@ -19,19 +26,22 @@ class GranularSynth {
       cyclic: true,
     });
 
-    this.engine.connect(this.env);
+    this.engine.connect(this.gain);
 
     this.playControl = new audio.PlayControl(this.engine, {
       audioContext: audioContext,
     });
+
+    this.output = this.fade;
   }
 
   connect(destination) {
-    this.env.connect(destination);
+    this.output.connect(destination);
   }
 
   set volume(value) {
-    this.env.gain.linearRampToValueAtTime(value, this.audioContext.currentTime + 0.01);
+    const now = this.audioContext.currentTime;
+    this.gain.gain.setTargetAtTime(value, now, 0.01);
   }
 
   updateParams(values) {
@@ -51,16 +61,26 @@ class GranularSynth {
       if (attr === 'releaseDuration') {
         this.releaseDuration = values[attr];
       }
+
+      if (attr === 'attackDuration') {
+        this.attackDuration = values[attr];
+      }
     }
   }
 
   start() {
+    const now = this.audioContext.currentTime;
+
     this.playControl.start();
-    this.env.gain.linearRampToValueAtTime(1, this.audioContext.currentTime + 0.01);
+    this.fade.gain.setValueAtTime(0, now);
+    this.fade.gain.linearRampToValueAtTime(1, now + this.attackDuration);
   }
 
   stop() {
-    this.env.gain.linearRampToValueAtTime(0, this.audioContext.currentTime + this.releaseDuration);
+    const now = this.audioContext.currentTime;
+    this.fade.gain.cancelScheduledValues(now);
+    this.fade.gain.setValueAtTime(this.fade.gain.value, now)
+    this.fade.gain.linearRampToValueAtTime(0, now + this.releaseDuration);
 
     setTimeout(() => {
       this.playControl.stop();

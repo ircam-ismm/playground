@@ -73,6 +73,13 @@ export default {
       step: 0.1,
       default: 3,
     },
+    attackDuration: {
+      type: 'float',
+      min: 0,
+      max: 10,
+      step: 0.1,
+      default: 1,
+    },
     speed: {
       type: 'float',
       min: -2,

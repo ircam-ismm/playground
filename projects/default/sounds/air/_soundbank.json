@@ -31,6 +31,7 @@
         "granularSynth": {
           "volume": 0.787,
           "releaseDuration": 3,
+          "attackDuration": 3,
           "speed": 1,
           "positionVar": 0.027,
           "periodAbs": 0.02,
