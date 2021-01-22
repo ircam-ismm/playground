@@ -51,12 +51,13 @@ class ControllerExperience extends AbstractExperience {
 
       const template = html`
         <section style="padding: 10px">
-          <h1
-            style="
-              font-size: 20px;
-              margin: 20px 0;
-            "
-          >#players: ${data.globals.get('numConnectedPlayers')}</h1>
+          <div>
+            <h1>"${data.globals.get('projectName')}" by <i>${data.globals.get('projectAuthor')}</i></h1>
+            <p>(directory: ${data.globals.get('projectId')})</p>
+            <h2 style="margin: 20px 0;">
+              # players: ${data.globals.get('numConnectedPlayers')}
+            </h2>
+          </div>
 
           <div>
             <div style="margin-bottom: 4px">
@@ -142,16 +143,12 @@ class ControllerExperience extends AbstractExperience {
               'instructions-viewer',
             ].map(name => {
               return html`
-                <a
-                  style="
-                    color: #ffffff;
-                    display: block;
-                    font-size: 13px;
-                    padding: 2px 20px;
-                    cursor: pointer;
-                  "
-                  @click="${e => window.open(`./${name}`, name, 'width=1000,height=700')}"
-                >- ${name}</a>
+                <sc-button
+                  value="${name}"
+                  width="300"
+                  style="display: block; margin-bottom: 4px;"
+                  @release="${e => window.open(`./${name}`, name, 'width=1000,height=700')}"
+                ></sc-button>
               `;
             })}
           </div>

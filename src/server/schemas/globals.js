@@ -1,5 +1,18 @@
 export default {
 
+  projectId: {
+    type: 'string',
+    default: '',
+  },
+  projectName: {
+    type: 'string',
+    default: '',
+  },
+  projectAuthor: {
+    type: 'string',
+    default: '',
+  },
+
   master: {
     type: 'integer',
     min: -80,
@@ -16,32 +29,37 @@ export default {
     max: 20000,
     default: 16000,
   },
+
   numConnectedPlayers: {
     type: 'integer',
     default: 0,
   },
+
   instructionsState: {
     type: 'string',
     default: 'welcome',
   },
-  // triggerPreset: {
-  //   type: 'string',
-  //   default: null,
-  //   nullable: true,
-  // },
-  // triggerPresetList: {
-  //   type: 'any',
-  //   default: null,
-  //   nullable: true,
-  // },
-  // granularPreset: {
-  //   type: 'string',
-  //   default: null,
-  //   nullable: true,
-  // },
-  // granularPresetList: {
-  //   type: 'any',
-  //   default: null,
-  //   nullable: true,
-  // },
+
+  processingArchive: {
+    type: 'boolean',
+    default: false,
+  },
+
+  archiveProject: {
+    type: 'string',
+    default: null,
+    nullable: true,
+    event: true,
+  },
+  restoreProject: {
+    type: 'string',
+    default: null,
+    nullable: true,
+    event: true,
+  },
+  // list of archives of the project
+  archivedProjects: {
+    type: 'any',
+    default: [],
+  },
 }

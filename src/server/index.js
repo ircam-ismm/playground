@@ -62,7 +62,7 @@ console.log(`
 --------------------------------------------------------
 - launching "${config.app.name}" in "${ENV}" environment
 - [pid: ${process.pid}]
-- project ${projectConfig.name} (${projectConfig.author})
+- project (${config.app.project}) "${projectConfig.name} by ${projectConfig.author}"
 --------------------------------------------------------
 `);
 
@@ -76,11 +76,17 @@ server.pluginManager.register('checkin', pluginCheckinFactory, {}, []);
 server.pluginManager.register('audio-buffer-loader', pluginAudioBufferLoaderFactory, {}, []);
 server.pluginManager.register('position', pluginPositionFactory, { area }, []);
 server.pluginManager.register('filesystem', pluginFileSystemFactory, {
-  directories: [{
-    name: 'sounds',
-    path: path.join('projects', config.app.project, 'sounds'),
-    publicDirectory: 'sounds',
-  }]
+  directories: [
+    {
+      name: 'sounds',
+      path: path.join('projects', config.app.project, 'sounds'),
+      publicDirectory: 'sounds',
+    },
+    {
+      name: 'archives',
+      path: path.join('.archives', config.app.project),
+    },
+  ]
 }, []);
 
 server.pluginManager.register('scripting', pluginScriptingFactory, {
@@ -122,7 +128,11 @@ server.stateManager.registerSchema('soloist-controller', soloistControllerSchema
       };
     });
 
-    const globalsState = await server.stateManager.create('globals');
+    const globalsState = await server.stateManager.create('globals', {
+      projectId: config.app.project,
+      projectName: projectConfig.name,
+      projectAuthor: projectConfig.author,
+    });
     const autoPlayControllerState = await server.stateManager.create('autoplay-controller');
     const triggerControllerState = await server.stateManager.create('trigger-controller');
     const granularControllerState = await server.stateManager.create('granular-controller');
@@ -195,8 +205,11 @@ server.stateManager.registerSchema('soloist-controller', soloistControllerSchema
       }
     });
 
-    const tree = fileSystem.state.get('sounds');
-    soundBankManager.updateFromFileTree(tree);
+    const soundsTree = fileSystem.get('sounds');
+    soundBankManager.updateFromFileTree(soundsTree);
+
+    // const archivesTree = fileSystem.get('archives');
+    // console.log(archivesTree);
 
 
 

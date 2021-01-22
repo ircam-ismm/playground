@@ -149,9 +149,13 @@ class AutoPlayControllerExperience extends AbstractExperience {
           const numPlayers = loadedPlayers.filter(p => p.autoPlayFile === url).length;
 
           return html`
-            <div style="clear:left; position: relative; margin-top: 20px;">
+            <div style="position: relative; margin-top: 20px;">
+              <h2 style="height: 30px; line-height: 30px; font-size: 14px;">
+                > ${filename} - (# players: ${numPlayers})
+              </h2>
               <playground-preset
-                label="${filename} - (# players: ${numPlayers})"
+                style="position: absolute; top: 0; right: 0"
+                label="edit file params"
                 width="500"
                 definitions="${JSON.stringify(this.localState.soundFileDefaultPresets.autoPlaySynth)}"
                 values="${JSON.stringify(soundBankFiles[filename].presets.autoPlaySynth)}"

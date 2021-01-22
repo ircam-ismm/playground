@@ -185,12 +185,15 @@ class TriggerControllerExperience extends AbstractExperience {
 
         ${Object.keys(soundBankFiles).map((filename) => {
           return html`
-            <div style="clear:left; position: relative; margin-top: 20px;">
+            <div style="position: relative; margin-top: 20px;">
               <header>
-                <h2 style="height: 30px; line-height: 30px; font-size: 14px;">> ${filename}</h2>
+                <h2 style="height: 30px; line-height: 30px; font-size: 14px;">
+                  > ${filename}
+                </h2>
                 <playground-preset
                   style="position: absolute; top: 0; right: 0"
-                  width="400"
+                  label="edit file params"
+                  width="500"
                   expanded="${ifDefined(this.localState.editedFiles.has(filename) ? true : undefined)}"
                   definitions="${JSON.stringify(this.localState.soundFileDefaultPresets.triggerSynth)}"
                   values="${JSON.stringify(soundBankFiles[filename].presets.triggerSynth)}"
