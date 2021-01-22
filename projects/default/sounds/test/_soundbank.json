@@ -12,39 +12,6 @@
     }
   },
   "files": {
-    "clack.wav": {
-      "name": "clack.wav",
-      "path": "public/sounds/test/clack.wav",
-      "url": "sounds/test/clack.wav",
-      "presets": {
-        "autoPlaySynth": {
-          "repeatPeriod": 4.865,
-          "maxReleaseOffset": 0.801,
-          "releaseDuration": 3.666
-        },
-        "triggerSynth": {
-          "repeat": 13,
-          "period": 0.063,
-          "jitter": 0.142,
-          "releaseDuration": 1
-        },
-        "granularSynth": {
-          "volume": 0.366,
-          "releaseDuration": 3,
-          "speed": 1,
-          "positionVar": 0.003,
-          "periodAbs": 0.03,
-          "durationAbs": 0.1,
-          "resampling": 1200,
-          "resamplingVar": 0
-        },
-        "soloistSynth": {
-          "fadeInDuration": 1,
-          "fadeOutDuration": 8,
-          "decayExponent": 1.5
-        }
-      }
-    },
     "click.wav": {
       "name": "click.wav",
       "path": "public/sounds/test/click.wav",
@@ -161,9 +128,9 @@
           "releaseDuration": 1
         },
         "granularSynth": {
-          "volume": 1,
+          "volume": 0.121,
           "releaseDuration": 3,
-          "speed": 1.16,
+          "speed": -0.4,
           "positionVar": 0.003,
           "periodAbs": 0.02,
           "durationAbs": 0.1,
@@ -172,6 +139,39 @@
         },
         "soloistSynth": {
           "fadeInDuration": 1,
+          "fadeOutDuration": 8,
+          "decayExponent": 1.5
+        }
+      }
+    },
+    "clack.wav": {
+      "name": "clack.wav",
+      "path": "projects/default/sounds/test/clack.wav",
+      "url": "sounds/test/clack.wav",
+      "presets": {
+        "autoPlaySynth": {
+          "repeatPeriod": 1,
+          "maxReleaseOffset": 1,
+          "releaseDuration": 1
+        },
+        "triggerSynth": {
+          "repeat": 1,
+          "period": 0,
+          "jitter": 0,
+          "releaseDuration": 1
+        },
+        "granularSynth": {
+          "volume": 0.261,
+          "releaseDuration": 5.3,
+          "speed": 1,
+          "positionVar": 0.047,
+          "periodAbs": 0.173,
+          "durationAbs": 0.054,
+          "resampling": 211,
+          "resamplingVar": 0
+        },
+        "soloistSynth": {
+          "fadeInDuration": 0.05,
           "fadeOutDuration": 8,
           "decayExponent": 1.5
         }
@@ -194,14 +194,14 @@
           "releaseDuration": 1
         },
         "granularSynth": {
-          "volume": 0.042,
-          "releaseDuration": 0.7,
+          "volume": 1,
+          "releaseDuration": 3,
           "speed": 1,
-          "positionVar": 0.015,
-          "periodAbs": 0.043,
-          "durationAbs": 0.156,
-          "resampling": 1011,
-          "resamplingVar": 65
+          "positionVar": 0.003,
+          "periodAbs": 0.02,
+          "durationAbs": 0.1,
+          "resampling": 0,
+          "resamplingVar": 0
         },
         "soloistSynth": {
           "fadeInDuration": 0.05,

@@ -10,4 +10,7 @@ The file `project/my-project/config.json` allows to configure the name of the pr
 
 ## @todo
 
+- adding sound files broken cf. filesystem config
+- reload when granular is "on" is broken
+
 - configure an image to be used by the `@soundworks/plugin-location` service.

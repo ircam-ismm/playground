@@ -79,8 +79,7 @@ server.pluginManager.register('filesystem', pluginFileSystemFactory, {
   directories: [{
     name: 'sounds',
     path: path.join('projects', config.app.project, 'sounds'),
-    publicDirectory: path.join('projects', config.app.project),
-    watch: true,
+    publicDirectory: 'sounds',
   }]
 }, []);
 
