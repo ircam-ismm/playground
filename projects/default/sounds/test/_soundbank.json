@@ -33,9 +33,9 @@
           "releaseDuration": 3,
           "speed": 1,
           "positionVar": 0.003,
-          "periodAbs": 0.02,
+          "periodAbs": 0.03,
           "durationAbs": 0.1,
-          "resampling": -230,
+          "resampling": 1200,
           "resamplingVar": 0
         },
         "soloistSynth": {
@@ -172,6 +172,39 @@
         },
         "soloistSynth": {
           "fadeInDuration": 1,
+          "fadeOutDuration": 8,
+          "decayExponent": 1.5
+        }
+      }
+    },
+    "sine.mp3": {
+      "name": "sine.mp3",
+      "path": "projects/default/sounds/test/sine.mp3",
+      "url": "sounds/test/sine.mp3",
+      "presets": {
+        "autoPlaySynth": {
+          "repeatPeriod": 1,
+          "maxReleaseOffset": 1,
+          "releaseDuration": 1
+        },
+        "triggerSynth": {
+          "repeat": 1,
+          "period": 0,
+          "jitter": 0,
+          "releaseDuration": 1
+        },
+        "granularSynth": {
+          "volume": 0.042,
+          "releaseDuration": 0.7,
+          "speed": 1,
+          "positionVar": 0.015,
+          "periodAbs": 0.043,
+          "durationAbs": 0.156,
+          "resampling": 1011,
+          "resamplingVar": 65
+        },
+        "soloistSynth": {
+          "fadeInDuration": 0.05,
           "fadeOutDuration": 8,
           "decayExponent": 1.5
         }

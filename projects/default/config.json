@@ -1,6 +1,7 @@
 {
   "name": "project name",
   "author": "the author",
+  "randomlyAssignPosition": true,
 
   "colors": [
     "#a6cee3",
@@ -13,8 +14,6 @@
     "#ff7f00",
     "#cab2d6",
   ],
-
-  "randomlyAssignPosition": true,
 
   "connectionMessage": "(you are connected...)",
   "thanksMessage": "(thanks...)",
