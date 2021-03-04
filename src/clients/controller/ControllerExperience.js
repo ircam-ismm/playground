@@ -52,7 +52,10 @@ class ControllerExperience extends AbstractExperience {
       const template = html`
         <section style="padding: 10px">
           <div>
-            <h1>"${data.globals.get('projectName')}" by <i>${data.globals.get('projectAuthor')}</i></h1>
+            <h1>"${data.globals.get('projectName')}"
+              ${data.globals.get('projectAuthor') ?
+                `by <i>${data.globals.get('projectAuthor')}</i>` : ''}
+            </h1>
             <p>(directory: ${data.globals.get('projectId')})</p>
             <h2 style="margin: 20px 0;">
               # players: ${data.globals.get('numConnectedPlayers')}
@@ -81,7 +84,7 @@ class ControllerExperience extends AbstractExperience {
                 readonly
               ></sc-text>
               <sc-toggle
-                value="${data.globals.get('mute')}"
+                ?active="${data.globals.get('mute')}"
                 @change="${e => listeners.updateGlobals({ mute: e.detail.value })}"
               ></sc-toggle>
             </div>

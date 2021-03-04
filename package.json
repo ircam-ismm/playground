@@ -28,6 +28,7 @@
     "@soundworks/plugin-position": "^1.0.0",
     "@soundworks/plugin-scripting": "^1.0.1",
     "@soundworks/plugin-sync": "^1.0.0",
+    "@soundworks/state-manager-osc": "0.0.0",
     "@soundworks/template-helpers": "^1.0.1",
     "@webcomponents/webcomponentsjs": "^2.4.3",
     "core-js": "^3.6.5",

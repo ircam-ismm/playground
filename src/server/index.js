@@ -1,5 +1,6 @@
 import 'source-map-support/register';
 import { Server } from '@soundworks/core/server';
+import { StateManagerOsc } from '@soundworks/state-manager-osc';
 import path from 'path';
 import serveStatic from 'serve-static';
 import compile from 'template-literal';
@@ -211,7 +212,16 @@ server.stateManager.registerSchema('soloist-controller', soloistControllerSchema
     // const archivesTree = fileSystem.get('archives');
     // console.log(archivesTree);
 
+    // initialize the StateManagerOsc component
+    const oscConfig = { // these are the defaults
+      localAddress: '0.0.0.0',
+      localPort: 57121,
+      remoteAddress: '127.0.0.1',
+      remotePort: 57122,
+    };
 
+    const oscStateManager = new StateManagerOsc(server.stateManager, oscConfig);
+    await oscStateManager.init();
 
     // ------------------------------------------------------------------
     // OSC controls for /soloist-controller
@@ -220,36 +230,36 @@ server.stateManager.registerSchema('soloist-controller', soloistControllerSchema
     // create an osc.js UDP port listening on port 57121.
     // config shoud come from env config file...
     // ------------------------------------------------------------------
-    const udpPort = new osc.UDPPort({
-      localAddress: '127.0.0.1',
-      localPort: 57121,
-      metadata: true
-    });
+    // const udpPort = new osc.UDPPort({
+    //   localAddress: '127.0.0.1',
+    //   localPort: 57121,
+    //   metadata: true
+    // });
 
-    udpPort.on('message', msg => {
-      switch (msg.address) {
-        case '/soloist-controller/triggers': {
-          if (msg.args.length === 2) {
-            const position = {
-              x: msg.args[0].value,
-              y: msg.args[1].value,
-            }
+    // udpPort.on('message', msg => {
+    //   switch (msg.address) {
+    //     case '/soloist-controller/triggers': {
+    //       if (msg.args.length === 2) {
+    //         const position = {
+    //           x: msg.args[0].value,
+    //           y: msg.args[1].value,
+    //         }
 
-            soloistControllerState.set({ triggers: [position] });
-          } else {
-            soloistControllerState.set({ triggers: [] });
-          }
-          break;
-        }
-        case '/soloist-controller/radius': {
-          const radius = msg.args[0].value;
-          soloistControllerState.set({ radius });
-          break;
-        }
-      }
-    });
+    //         soloistControllerState.set({ triggers: [position] });
+    //       } else {
+    //         soloistControllerState.set({ triggers: [] });
+    //       }
+    //       break;
+    //     }
+    //     case '/soloist-controller/radius': {
+    //       const radius = msg.args[0].value;
+    //       soloistControllerState.set({ radius });
+    //       break;
+    //     }
+    //   }
+    // });
 
-    udpPort.open();
+    // udpPort.open();
 
   } catch (err) {
     console.error(err);
