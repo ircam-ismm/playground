@@ -81,7 +81,7 @@ class ControllerExperience extends AbstractExperience {
                 readonly
               ></sc-text>
               <sc-toggle
-                value="${data.globals.get('mute')}"
+                ?active="${data.globals.get('mute')}"
                 @change="${e => listeners.updateGlobals({ mute: e.detail.value })}"
               ></sc-toggle>
             </div>
