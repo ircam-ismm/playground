@@ -212,6 +212,10 @@ server.stateManager.registerSchema('soloist-controller', soloistControllerSchema
     // const archivesTree = fileSystem.get('archives');
     // console.log(archivesTree);
 
+    soloistControllerState.subscribe(values => {
+      console.log(values);
+    });
+
     // initialize the StateManagerOsc component
     const oscConfig = { // these are the defaults
       localAddress: '0.0.0.0',
