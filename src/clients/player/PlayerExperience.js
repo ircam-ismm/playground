@@ -168,18 +168,19 @@ class PlayerExperience extends AbstractExperience {
           }
           case 'soloistDistance': {
             const distance = updates[name];
+            // console.log(this.checkin.get('index'), distance);
 
             if (distance < 1) {
               if (this.soloistSynth === null) {
                 const buffer = this.bufferCache.get('soloist');
 
                 if (buffer) {
-                  const syncStartTime = updates['soloistStartTime'];
-                  const locaStartTime = this.sync.getLocalTime(syncStartTime);
+                  const syncStartTime = this.playerState.get('soloistStartTime');
                   const soloistSynthConfig = this.playerState.get('soloistConfig');
+                  const localStartTime = this.sync.getLocalTime(syncStartTime);
                   const params = soloistSynthConfig.presets['soloistSynth'];
 
-                  this.soloistSynth = new SoloistSynth(this.audioContext, buffer, locaStartTime);
+                  this.soloistSynth = new SoloistSynth(this.audioContext, buffer, localStartTime);
                   this.soloistSynth.connect(this.master.input);
                   this.soloistSynth.updateParams(params);
                   this.soloistSynth.start();

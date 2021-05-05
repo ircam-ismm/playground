@@ -12,45 +12,10 @@
     }
   },
   "files": {
-    "gould-bach-first-prelude-15sec-1.wav": {
-      "name": "gould-bach-first-prelude-15sec-1.wav",
-      "path": "public/sounds/bach/gould-bach-first-prelude-15sec-1.wav",
-      "url": "sounds/bach/gould-bach-first-prelude-15sec-1.wav",
-      "presets": {
-        "autoPlaySynth": {
-          "repeatPeriod": 1,
-          "maxReleaseOffset": 1,
-          "attackDuration": 1,
-          "releaseDuration": 1
-        },
-        "triggerSynth": {
-          "repeat": 3,
-          "period": 0.643,
-          "jitter": 0.009,
-          "releaseDuration": 1
-        },
-        "granularSynth": {
-          "volume": 1,
-          "releaseDuration": 3,
-          "attackDuration": 3,
-          "speed": 1,
-          "positionVar": 0.003,
-          "periodAbs": 0.045,
-          "durationAbs": 0.1,
-          "resampling": 467,
-          "resamplingVar": 295
-        },
-        "soloistSynth": {
-          "fadeInDuration": 0.05,
-          "fadeOutDuration": 26.178,
-          "decayExponent": 0.582
-        }
-      }
-    },
-    "gould-bach-first-prelude-15sec.wav": {
-      "name": "gould-bach-first-prelude-15sec.wav",
-      "path": "projects/default/sounds/bach/gould-bach-first-prelude-15sec.wav",
-      "url": "projects/default/bach/gould-bach-first-prelude-15sec.wav",
+    "gould-bach-first-prelude.wav": {
+      "name": "gould-bach-first-prelude.wav",
+      "path": "projects/default/sounds/bach/gould-bach-first-prelude.wav",
+      "url": "sounds/bach/gould-bach-first-prelude.wav",
       "presets": {
         "autoPlaySynth": {
           "repeatPeriod": 1,
@@ -67,7 +32,7 @@
         "granularSynth": {
           "volume": 1,
           "releaseDuration": 3,
-          "attackDuration": 3,
+          "attackDuration": 1,
           "speed": 1,
           "positionVar": 0.003,
           "periodAbs": 0.02,
@@ -77,8 +42,8 @@
         },
         "soloistSynth": {
           "fadeInDuration": 0.05,
-          "fadeOutDuration": 24.239,
-          "decayExponent": 0.606
+          "fadeOutDuration": 8,
+          "decayExponent": 1.5
         }
       }
     }

@@ -39,6 +39,7 @@ class SoloistSynth {
     const { decayExponent } = this.params;
     const gain = Math.pow(1 - value, decayExponent);
 
+    this.env.gain.cancelScheduledValues(now);
     this.env.gain.setTargetAtTime(gain, now, 0.01);
   }
 
@@ -47,7 +48,10 @@ class SoloistSynth {
     const { fadeInDuration } = this.params;
 
     this.fade.gain.setValueAtTime(0, now);
-    this.fade.gain.linearRampToValueAtTime(1, now + fadeInDuration);
+    // Depending on your use case, getting 95% toward the target value may
+    // already be enough; in that case, you could set timeConstant to one
+    // third of the desired duration.
+    this.fade.gain.setTargetAtTime(1, now, fadeInDuration / 3);
   }
 
   release() {
