@@ -12,10 +12,10 @@
     }
   },
   "files": {
-    "gould-bach-first-prelude.wav": {
-      "name": "gould-bach-first-prelude.wav",
-      "path": "projects/default/sounds/bach/gould-bach-first-prelude.wav",
-      "url": "sounds/bach/gould-bach-first-prelude.wav",
+    "bach-prelude.mp3": {
+      "name": "bach-prelude.mp3",
+      "path": "projects/default/sounds/bach/bach-prelude.mp3",
+      "url": "sounds/bach/bach-prelude.mp3",
       "presets": {
         "autoPlaySynth": {
           "repeatPeriod": 1,
