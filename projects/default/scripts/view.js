@@ -17,7 +17,8 @@ function view(render, html, $container) {
         flashScreen,
       } = data;
 
-      const color = flashScreen ? '#ffffff' : player.color;
+      // const color = flashScreen ? '#ffffff' : player.color;
+      const color = flashScreen ? '#ffffff' : '#000000';
       const opacity = 1 - player.soloistDistance;
 
       const template = html`
