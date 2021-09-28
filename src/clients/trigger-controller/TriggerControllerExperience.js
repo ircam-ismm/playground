@@ -202,7 +202,7 @@ class TriggerControllerExperience extends AbstractExperience {
                   @update="${e => this.listeners.updateFilePreset(currentSoundBank, filename, e.detail.name, e.detail.value)}"
                 ></playground-preset>
               </header>
-              <section>
+              <section style="overflow: auto">
                 ${repeat(
                   loadedPlayers.filter(player => player.triggerConfig.name === filename),
                   player => player.id,
@@ -221,6 +221,7 @@ class TriggerControllerExperience extends AbstractExperience {
                           user-select: none;
                           text-align: center;
                           font-size: 16px;
+                          cursor: pointer;
                         ">
                         ${player.index}
                       </div>
