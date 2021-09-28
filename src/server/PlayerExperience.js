@@ -4,7 +4,7 @@ function getNormalizedDistance(center, target, radius) {
   const dx = target.x - center.x;
   const dy = target.y - center.y;
   const distance = Math.sqrt(dx * dx + dy * dy);
-  const normDistance = distance / radius;
+  const normDistance = Math.min(1, distance / radius);
 
   return normDistance;
 }
@@ -198,57 +198,48 @@ class PlayerExperience extends AbstractExperience {
     // ------------------------------------------------------------
     // soloist controller state
     // ------------------------------------------------------------
-    let radius = this.controllerStates['soloist'].getValues()['radius'];
+    let radius = this.controllerStates['soloist'].getValues('radius');
     let soloistStartTime = null;
     let triggers = null;
     const soloistActivePlayers = new Set();
 
     const soloistTrigger = () => {
       if (triggers.length === 0) {
-        soloistActivePlayers.forEach(playerState => {
-          playerState.set({ soloistDistance: 1 });
-        });
-
         soloistStartTime = null;
-        soloistActivePlayers.clear();
+
+        this.players.forEach(player => {
+          player.set({ soloistDistance: 1 });
+        })
       } else {
         if (soloistStartTime === null) {
           soloistStartTime = this.sync.getSyncTime();
         }
 
-        for (let [id, playerState] of this.players.entries()) {
-          let normDistance = +Infinity;
-          // we only consider the closer trigger
+        const radius = this.controllerStates['soloist'].get('radius');
+        const triggers = this.controllerStates['soloist'].get('triggers');
+
+        this.players.forEach(player => {
+          const position = player.get('position');
+          const currentDistance = player.get('soloistDistance');
+          let normDistance = 1;
+
           triggers.forEach(trigger => {
-            const playerPosition = this.position.states.get(id).getValues();
-            const triggerNormDistance = getNormalizedDistance(trigger, playerPosition, radius);
+            const triggerNormDistance = getNormalizedDistance(trigger, position, radius);
             normDistance = Math.min(normDistance, triggerNormDistance);
           });
 
-          const isActive = soloistActivePlayers.has(playerState);
-          const inRadius = (normDistance <= 1);
-
-          if (isActive && !inRadius) {
-            playerState.set({ soloistDistance: 1 });
-            soloistActivePlayers.delete(playerState);
+          if (normDistance < 1 && currentDistance === 1) {
+            player.set({
+              soloistDistance: normDistance,
+              soloistStartTime: soloistStartTime,
+            });
+          } else {
+            // if distance is still 1, the value won't be propagated on the network
+            player.set({
+              soloistDistance: normDistance,
+            });
           }
-
-          if (inRadius) {
-            if (!isActive) {
-              soloistActivePlayers.add(playerState);
-
-              playerState.set({
-                soloistDistance: normDistance,
-                soloistStartTime: soloistStartTime,
-              });
-            } else {
-              playerState.set({
-                soloistDistance: normDistance,
-              });
-            }
-          }
-
-        }
+        });
       }
     }
 

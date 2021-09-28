@@ -43,6 +43,7 @@ class AutoPlayControllerExperience extends AbstractExperience {
         );
       }, 50),
       toggleSynth: e => {
+        e.preventDefault();
         const enabled = !(this.autoPlayControllerState.get('enabled'));
         this.autoPlayControllerState.set({ enabled });
       },
