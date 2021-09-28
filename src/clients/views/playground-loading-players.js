@@ -1,5 +1,5 @@
 import { LitElement, html, css } from 'lit-element';
-import { repeat } from 'lit-html/directives/repeat';
+import { repeat } from 'lit-html/directives/repeat.js';
 
 class PlaygroundLoadingPlayers extends LitElement {
   static get properties() {

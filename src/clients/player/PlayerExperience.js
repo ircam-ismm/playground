@@ -49,6 +49,7 @@ class PlayerExperience extends AbstractExperience {
 
   async start() {
     super.start();
+    console.log('start');
 
     const id = this.client.id;
     const position = this.position.getPosition();
