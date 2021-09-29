@@ -4,6 +4,7 @@ const soloistSchema = {
     type: 'string',
     default: null,
     nullable: true,
+    filterChange: false,
   },
   xRange: {
     type: 'any',

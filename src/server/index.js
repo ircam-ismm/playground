@@ -48,6 +48,7 @@ const server = new Server();
 
 const projectConfig = getProjectConfig(config.app.project);
 const area = { xRange: [0, 1], yRange: [0, 1] };
+config.project = projectConfig;
 
 // html template and static files (in most case, this should not be modified)
 server.templateEngine = { compile };

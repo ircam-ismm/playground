@@ -1,20 +1,24 @@
 {
-  "name": "project name",
-  "author": "the author",
-  "randomlyAssignPosition": true,
+  name: 'project name',
+  author: 'the author',
+  randomlyAssignPosition: true,
 
-  "colors": [
-    "#a6cee3",
-    "#1f78b4",
-    "#b2df8a",
-    "#33a02c",
-    "#fb9a99",
-    "#e31a1c",
-    "#fdbf6f",
-    "#ff7f00",
-    "#cab2d6",
+  colors: [
+    '#a6cee3',
+    '#1f78b4',
+    '#b2df8a',
+    '#33a02c',
+    '#fb9a99',
+    '#e31a1c',
+    '#fdbf6f',
+    '#ff7f00',
+    '#cab2d6',
   ],
 
-  "connectionMessage": "(you are connected...)",
-  "thanksMessage": "(thanks...)",
+  connectionMessage: '(you are connected...)',
+  thanksMessage: '(thanks...)',
+
+  // way in which sound files are allocated to players: 'random' || 'even'
+  // cf. https://github.com/ircam-ismm/playground/issues/3
+  assignSoundFilesStrategy: 'random',
 }

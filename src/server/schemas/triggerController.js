@@ -4,6 +4,7 @@ export default {
     type: 'string',
     default: null,
     nullable: true,
+    filterChange: false,
   },
   triggerPlayerEvent: {
     type: 'integer',

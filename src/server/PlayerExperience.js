@@ -107,7 +107,7 @@ class PlayerExperience extends AbstractExperience {
 
           if (currentSoundBank !== null) {
             const soundBank = this.soundBankManager.getValues()[currentSoundBank];
-            await this.assignRandomFile(type, soundBank, player);
+            await this.assignSoundFile(type, soundBank, player);
 
             // if granular is enabled when the user connects
             if (type === 'granular') {
@@ -315,25 +315,27 @@ class PlayerExperience extends AbstractExperience {
       const soundBank = this.soundBankManager.getValues()[soundBankName];
       // console.time('assignFiles');
       for (let playerState of this.players.values()) {
-        await this.assignRandomFile(type, soundBank, playerState);
+        await this.assignSoundFile(type, soundBank, playerState);
       }
       // console.timeEnd('assignFiles');
     }
   }
 
-  async assignRandomFile(type, soundBank, playerState) {
+  async assignSoundFile(type, soundBank, playerState) {
     const synthConfigKey = `${type}Config`;
     const synthFileKey = `${type}File`;
 
     let filename;
     const filenames = Object.keys(soundBank.files);
 
-    const strategy = 'even';
-    // evenly distribute soundfiles between all clients
-    // @todo - make that more efficient, this is very brut force but ok for now
-    // ~20ms for 100 clients
-    // ~40ms for 200 clients
+    // pick strategy from config file
+    const strategy = this.server.config.project.assignSoundFilesStrategy;
+
     if (strategy === 'even') {
+      // evenly distribute soundfiles between all clients
+      // @todo - make that more efficient, this is very brut force but ok for now
+      // ~20ms for 100 clients
+      // ~40ms for 200 clients
       const numPlayersPerFile = {};
 
       filenames.forEach(filename => {
@@ -357,6 +359,8 @@ class PlayerExperience extends AbstractExperience {
 
       filename = filenames[index];
     } else {
+      // defaults to random strategy
+      // cf. https://github.com/ircam-ismm/playground/issues/3
       filename = filenames[Math.floor(Math.random() * filenames.length)];
     }
 
