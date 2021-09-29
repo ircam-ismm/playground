@@ -4,13 +4,13 @@
 		"appversion" : 		{
 			"major" : 8,
 			"minor" : 1,
-			"revision" : 11,
+			"revision" : 6,
 			"architecture" : "x64",
 			"modernui" : 1
 		}
 ,
 		"classnamespace" : "box",
-		"rect" : [ 396.0, 87.0, 1329.0, 883.0 ],
+		"rect" : [ 678.0, 87.0, 1062.0, 997.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -40,6 +40,52 @@
 		"assistshowspatchername" : 0,
 		"boxes" : [ 			{
 				"box" : 				{
+					"id" : "obj-55",
+					"maxclass" : "newobj",
+					"numinlets" : 1,
+					"numoutlets" : 2,
+					"outlettype" : [ "", "" ],
+					"patching_rect" : [ 674.0, 235.0, 183.0, 22.0 ],
+					"text" : "sw.shared-state soloist-controller"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-41",
+					"maxclass" : "message",
+					"numinlets" : 2,
+					"numoutlets" : 1,
+					"outlettype" : [ "" ],
+					"patching_rect" : [ 594.0, 188.0, 61.0, 22.0 ],
+					"text" : "getValues"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-5",
+					"maxclass" : "newobj",
+					"numinlets" : 0,
+					"numoutlets" : 1,
+					"outlettype" : [ "int" ],
+					"patching_rect" : [ 660.0, 97.0, 103.0, 22.0 ],
+					"text" : "sw.state-manager"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-4",
+					"maxclass" : "dict.view",
+					"numinlets" : 1,
+					"numoutlets" : 0,
+					"patching_rect" : [ 904.0, 268.0, 100.0, 100.0 ]
+				}
+
+			}
+, 			{
+				"box" : 				{
 					"id" : "obj-70",
 					"linecount" : 4,
 					"maxclass" : "message",
@@ -47,7 +93,7 @@
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
 					"patching_rect" : [ 344.0, 828.0, 50.0, 62.0 ],
-					"text" : "dictionary u430003547"
+					"text" : "dictionary u121000504"
 				}
 
 			}
@@ -562,16 +608,16 @@
 				"box" : 				{
 					"id" : "obj-1",
 					"maxclass" : "nodes",
-					"nodenumber" : 5,
-					"nodesnames" : [ "1", "2", "3", "4", "5" ],
-					"nsize" : [ 0.125984251968504, 0.125984251968504, 0.125984251968504, 0.125984251968504, 0.125984251968504 ],
+					"nodenumber" : 3,
+					"nodesnames" : [ "1", "2", "3" ],
+					"nsize" : [ 0.133858267716535, 0.133858267716535, 0.133858267716535 ],
 					"numinlets" : 1,
 					"numoutlets" : 3,
 					"outlettype" : [ "", "", "" ],
 					"parameter_enable" : 0,
 					"patching_rect" : [ 156.0, 9.0, 254.0, 253.0 ],
-					"xplace" : [ 0.574803149606299, 0.55511811023622, 0.775590551181102, 0.452755905511811, 0.480314960629921 ],
-					"yplace" : [ 0.545454545454545, 0.201581027667984, 0.339920948616601, 0.573122529644269, 0.853754940711462 ]
+					"xplace" : [ 0.574803149606299, 0.318897637795276, 0.653543307086614 ],
+					"yplace" : [ 0.545454545454545, 0.300395256916996, 0.217391304347826 ]
 				}
 
 			}
@@ -865,6 +911,13 @@
 			}
 , 			{
 				"patchline" : 				{
+					"destination" : [ "obj-55", 0 ],
+					"source" : [ "obj-41", 0 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
 					"destination" : [ "obj-2", 2 ],
 					"source" : [ "obj-42", 0 ]
 				}
@@ -902,6 +955,13 @@
 				"patchline" : 				{
 					"destination" : [ "obj-65", 0 ],
 					"source" : [ "obj-45", 0 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"destination" : [ "obj-4", 0 ],
+					"source" : [ "obj-55", 0 ]
 				}
 
 			}
@@ -959,8 +1019,29 @@
  ],
 		"dependency_cache" : [ 			{
 				"name" : "parseInput.js",
-				"bootpath" : "~/Desktop/format-pad",
+				"bootpath" : "~/work/dev/projects/playground/max/format-pad",
 				"patcherrelativepath" : ".",
+				"type" : "TEXT",
+				"implicit" : 1
+			}
+, 			{
+				"name" : "sw.state-manager.maxpat",
+				"bootpath" : "~/work/dev/libs/soundworks/soundworks-state-manager-osc/max/SoundworksAPI/patchers",
+				"patcherrelativepath" : "../../../../libs/soundworks/soundworks-state-manager-osc/max/SoundworksAPI/patchers",
+				"type" : "JSON",
+				"implicit" : 1
+			}
+, 			{
+				"name" : "sw.shared-state.maxpat",
+				"bootpath" : "~/work/dev/libs/soundworks/soundworks-state-manager-osc/max/SoundworksAPI/patchers",
+				"patcherrelativepath" : "../../../../libs/soundworks/soundworks-state-manager-osc/max/SoundworksAPI/patchers",
+				"type" : "JSON",
+				"implicit" : 1
+			}
+, 			{
+				"name" : "jscount.js",
+				"bootpath" : "~/work/dev/libs/soundworks/soundworks-state-manager-osc/max/SoundworksAPI/code",
+				"patcherrelativepath" : "../../../../libs/soundworks/soundworks-state-manager-osc/max/SoundworksAPI/code",
 				"type" : "TEXT",
 				"implicit" : 1
 			}
