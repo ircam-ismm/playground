@@ -15,10 +15,13 @@
     '#cab2d6',
   ],
 
-  connectionMessage: '(you are connected...)',
-  thanksMessage: '(thanks...)',
-
   // way in which sound files are allocated to players: 'random' || 'even'
   // cf. https://github.com/ircam-ismm/playground/issues/3
   assignSoundFilesStrategy: 'random',
+  // override fadeout time defined per file
+  // cf. https://github.com/ircam-ismm/playground/issues/4
+  soloistGlobalFadeOutDuration: true,
+
+  connectionMessage: '(you are connected...)',
+  thanksMessage: '(thanks...)',
 }

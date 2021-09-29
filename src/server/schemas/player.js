@@ -90,6 +90,11 @@ export default {
     type: 'float',
     default: 0,
   },
+  soloistGlobalFadeOutDuration: {
+    type: 'float',
+    default: null,
+    nullable: true,
+  },
 
   // auto play params
   autoPlayFile: {

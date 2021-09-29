@@ -127,6 +127,15 @@ class PlayerExperience extends AbstractExperience {
               player.set({ autoPlayEnabled: autoPlayEnabled });
             }
           }
+
+          // if soloist and config.project.soloistGlobalFadeOutDuration is true
+          // assign current value to player.soloistGlobalFadeOutTime
+          if (type === 'soloist') {
+            if (this.server.config.project.soloistGlobalFadeOutDuration === true) {
+              const currentValue = this.controllerStates['soloist'].get('globalFadeOutDuration');
+              player.set({ soloistGlobalFadeOutDuration: currentValue });
+            }
+          }
         });
 
         this.players.set(nodeId, player);
@@ -261,6 +270,16 @@ class PlayerExperience extends AbstractExperience {
           case 'triggers': {
             triggers = updates[key]
             soloistTrigger();
+            break;
+          }
+          case 'globalFadeOutDuration': {
+            if (this.server.config.project.soloistGlobalFadeOutDuration === true) {
+              const value = updates[key];
+              this.players.forEach(player => {
+                console.log(value);
+                player.set({ soloistGlobalFadeOutDuration: value });
+              });
+            }
             break;
           }
         }

@@ -117,16 +117,13 @@ server.stateManager.registerSchema('soloist-controller', soloistControllerSchema
         app: {
           name: projectConfig.name,
           author: projectConfig.author,
-          colors: projectConfig.colors,
-          randomlyAssignPosition: projectConfig.randomlyAssignPosition,
-          connectionMessage: projectConfig.connectionMessage,
-          thanksMessage: projectConfig.thanksMessage,
         },
         env: {
           type: config.env.type,
           websockets: config.env.websockets,
           assetsDomain: config.env.assetsDomain,
-        }
+        },
+        project: projectConfig,
       };
     });
 
@@ -213,9 +210,9 @@ server.stateManager.registerSchema('soloist-controller', soloistControllerSchema
     // const archivesTree = fileSystem.get('archives');
     // console.log(archivesTree);
 
-    soloistControllerState.subscribe(values => {
-      console.log(values);
-    });
+    // soloistControllerState.subscribe(values => {
+    //   console.log(values);
+    // });
 
     // initialize the StateManagerOsc component
     const oscConfig = { // these are the defaults
@@ -227,44 +224,6 @@ server.stateManager.registerSchema('soloist-controller', soloistControllerSchema
 
     const oscStateManager = new StateManagerOsc(server.stateManager, oscConfig);
     await oscStateManager.init();
-
-    // ------------------------------------------------------------------
-    // OSC controls for /soloist-controller
-    // @todo - create an abstraction able to communicate with states
-    // ------------------------------------------------------------------
-    // create an osc.js UDP port listening on port 57121.
-    // config shoud come from env config file...
-    // ------------------------------------------------------------------
-    // const udpPort = new osc.UDPPort({
-    //   localAddress: '127.0.0.1',
-    //   localPort: 57121,
-    //   metadata: true
-    // });
-
-    // udpPort.on('message', msg => {
-    //   switch (msg.address) {
-    //     case '/soloist-controller/triggers': {
-    //       if (msg.args.length === 2) {
-    //         const position = {
-    //           x: msg.args[0].value,
-    //           y: msg.args[1].value,
-    //         }
-
-    //         soloistControllerState.set({ triggers: [position] });
-    //       } else {
-    //         soloistControllerState.set({ triggers: [] });
-    //       }
-    //       break;
-    //     }
-    //     case '/soloist-controller/radius': {
-    //       const radius = msg.args[0].value;
-    //       soloistControllerState.set({ radius });
-    //       break;
-    //     }
-    //   }
-    // });
-
-    // udpPort.open();
 
   } catch (err) {
     console.error(err);

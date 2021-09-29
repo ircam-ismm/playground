@@ -35,7 +35,7 @@ class PlayerExperience extends AbstractExperience {
 
     // assign random position
     // @todo - add something in url
-    if (config.app.randomlyAssignPosition) {
+    if (config.project.randomlyAssignPosition) {
       const unsubscribe = this.client.pluginManager.observe(pluginsState => {
         if (pluginsState.position === 'started') {
           this.position.setNormalizedPosition(Math.random(), Math.random());
@@ -49,12 +49,11 @@ class PlayerExperience extends AbstractExperience {
 
   async start() {
     super.start();
-    console.log('start');
 
     const id = this.client.id;
     const position = this.position.getPosition();
     const index = this.checkin.get('index');
-    const color = this.config.app.colors[index % this.config.app.colors.length];
+    const color = this.config.project.colors[index % this.config.project.colors.length];
 
     this.playerState = await this.client.stateManager.create('player', {
       id, position, index, color
@@ -163,6 +162,12 @@ class PlayerExperience extends AbstractExperience {
           case 'soloistConfig': {
             if (this.soloistSynth) {
               const params = updates[name].presets['soloistSynth'];
+
+              // use global fadeout duration if configured like that
+              if (this.config.project.soloistGlobalFadeOutDuration) {
+                params.fadeOutDuration = this.playerState.get('soloistGlobalFadeOutDuration');
+              }
+
               this.soloistSynth.updateParams(params);
             }
             break;
@@ -181,6 +186,11 @@ class PlayerExperience extends AbstractExperience {
                   const localStartTime = this.sync.getLocalTime(syncStartTime);
                   const params = soloistSynthConfig.presets['soloistSynth'];
 
+                  // use global fadeout duration if configured like that
+                  if (this.config.project.soloistGlobalFadeOutDuration) {
+                    params.fadeOutDuration = this.playerState.get('soloistGlobalFadeOutDuration');
+                  }
+
                   this.soloistSynth = new SoloistSynth(this.audioContext, buffer, localStartTime);
                   this.soloistSynth.connect(this.master.input);
                   this.soloistSynth.updateParams(params);
@@ -196,6 +206,13 @@ class PlayerExperience extends AbstractExperience {
                 this.soloistSynth.release();
                 this.soloistSynth = null;
               }
+            }
+            break;
+          }
+          case 'soloistGlobalFadeOutDuration': {
+            if (this.soloistSynth && this.config.project.soloistGlobalFadeOutDuration) {
+              // use global fadeout duration if configured like that
+              this.soloistSynth.params.fadeOutDuration = updates[name];
             }
             break;
           }

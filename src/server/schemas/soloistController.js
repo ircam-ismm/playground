@@ -24,7 +24,13 @@ const soloistSchema = {
     max: 1,
     default: 0.3,
   },
+  // override fadeout time define per file
+  // cf. https://github.com/ircam-ismm/playground/issues/4
+  globalFadeOutDuration: {
+    type: 'float',
+    min: 0,
+    default: 8,
+  },
 };
 
 export default soloistSchema;
-

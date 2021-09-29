@@ -1,5 +1,5 @@
 import { AbstractExperience } from '@soundworks/core/client';
-import { render, html } from 'lit-html';
+import { render, html, nothing } from 'lit-html';
 import renderInitializationScreens from '@soundworks/template-helpers/client/render-initialization-screens.js';
 
 import '@ircam/simple-components/sc-slider.js';
@@ -36,6 +36,9 @@ class SoloistControllerExperience extends AbstractExperience {
       }, 50),
       updateRadius: value => {
         this.soloistState.set({ radius: value });
+      },
+      updateFadeOutDuration: value => {
+        this.soloistState.set({ globalFadeOutDuration: value });
       },
       updateSoundBank: soundBankName => {
         this.soloistState.set({ currentSoundBank: soundBankName });
@@ -129,10 +132,29 @@ class SoloistControllerExperience extends AbstractExperience {
               min="0"
               max="1"
               step="0.01"
-              label="radius"
               @input=${e => this.listeners.updateRadius(e.detail.value)}
             ></sc-slider>
           </div>
+          ${this.config.project.soloistGlobalFadeOutDuration === true ?
+            html`
+              <div style="margin-top: 4px">
+                <sc-text
+                  value="fadeout time"
+                  width="100"
+                  readonly
+                ></sc-text>
+                <sc-slider
+                  display-number
+                  width="280"
+                  value="${soloistState.globalFadeOutDuration}"
+                  min="0"
+                  max="12"
+                  step="0.001"
+                  @input=${e => this.listeners.updateFadeOutDuration(e.detail.value)}
+                ></sc-slider>
+              </div>
+            ` : nothing
+          }
           <div style="margin-top: 4px">
             <sc-text
               value="rotate map"

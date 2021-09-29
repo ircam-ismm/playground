@@ -52,7 +52,7 @@ function view(render, html, $container) {
                   line-height: 20px;
                 "
               >
-                ${config.app.thanksMessage}
+                ${config.project.thanksMessage}
               </p>
             </div>
             `
@@ -76,7 +76,7 @@ function view(render, html, $container) {
                     line-height: 20px;
                   "
                 >
-                  ${config.app.connectionMessage}
+                  ${config.project.connectionMessage}
                 </p>
             </div>
             `
