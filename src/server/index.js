@@ -76,7 +76,10 @@ server.pluginManager.register('platform', pluginPlatformFactory, {}, []);
 server.pluginManager.register('sync', pluginSyncFactory, {}, []);
 server.pluginManager.register('checkin', pluginCheckinFactory, {}, []);
 server.pluginManager.register('audio-buffer-loader', pluginAudioBufferLoaderFactory, {}, []);
-server.pluginManager.register('position', pluginPositionFactory, { area }, []);
+server.pluginManager.register('position', pluginPositionFactory, {
+  area,
+  backgroundImage: projectConfig.positionBackgroundImage || '',
+}, []);
 server.pluginManager.register('filesystem', pluginFileSystemFactory, {
   directories: [
     {
