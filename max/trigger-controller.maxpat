@@ -45,7 +45,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 466.0, 335.5, 150.0, 47.0 ],
+					"patching_rect" : [ 466.0, 335.5, 151.0, 47.0 ],
 					"text" : "<--- uID of cellphones are unique and can't be acces from Max"
 				}
 
@@ -69,8 +69,8 @@
 					"numinlets" : 1,
 					"numoutlets" : 2,
 					"outlettype" : [ "", "dictionary" ],
-					"patching_rect" : [ 413.0, 486.0, 196.0, 22.0 ],
-					"text" : "sw.shared-statev2 trigger-controller"
+					"patching_rect" : [ 413.0, 486.0, 183.0, 22.0 ],
+					"text" : "sw.shared-state trigger-controller"
 				}
 
 			}
@@ -177,8 +177,8 @@
 					"numinlets" : 1,
 					"numoutlets" : 2,
 					"outlettype" : [ "", "dictionary" ],
-					"patching_rect" : [ 454.0, 112.0, 147.0, 22.0 ],
-					"text" : "sw.shared-statev2 globals"
+					"patching_rect" : [ 454.0, 112.0, 134.0, 22.0 ],
+					"text" : "sw.shared-state globals"
 				}
 
 			}
@@ -189,8 +189,8 @@
 					"numinlets" : 1,
 					"numoutlets" : 2,
 					"outlettype" : [ "", "dictionary" ],
-					"patching_rect" : [ 10.0, 250.0, 196.0, 22.0 ],
-					"text" : "sw.shared-statev2 trigger-controller"
+					"patching_rect" : [ 10.0, 250.0, 183.0, 22.0 ],
+					"text" : "sw.shared-state trigger-controller"
 				}
 
 			}
@@ -279,8 +279,8 @@
 					"numinlets" : 1,
 					"numoutlets" : 2,
 					"outlettype" : [ "", "dictionary" ],
-					"patching_rect" : [ 110.0, 113.0, 196.0, 22.0 ],
-					"text" : "sw.shared-statev2 trigger-controller"
+					"patching_rect" : [ 110.0, 113.0, 183.0, 22.0 ],
+					"text" : "sw.shared-state trigger-controller"
 				}
 
 			}
@@ -404,30 +404,37 @@
 		}
 ,
 		"dependency_cache" : [ 			{
-				"name" : "sw.shared-statev2.maxpat",
+				"name" : "sw.shared-state.maxpat",
 				"bootpath" : "~/Documents/Github/soundworks-state-manager-osc/max/SoundworksAPI/patchers",
-				"patcherrelativepath" : "../../../soundworks-state-manager-osc/max/SoundworksAPI/patchers",
+				"patcherrelativepath" : "../../soundworks-state-manager-osc/max/SoundworksAPI/patchers",
 				"type" : "JSON",
 				"implicit" : 1
 			}
 , 			{
-				"name" : "jscountv2.js",
+				"name" : "jscount.js",
 				"bootpath" : "~/Documents/Github/soundworks-state-manager-osc/max/SoundworksAPI/code",
-				"patcherrelativepath" : "../../../soundworks-state-manager-osc/max/SoundworksAPI/code",
+				"patcherrelativepath" : "../../soundworks-state-manager-osc/max/SoundworksAPI/code",
 				"type" : "TEXT",
 				"implicit" : 1
 			}
 , 			{
 				"name" : "indict.js",
 				"bootpath" : "~/Documents/Github/soundworks-state-manager-osc/max/SoundworksAPI/code",
-				"patcherrelativepath" : "../../../soundworks-state-manager-osc/max/SoundworksAPI/code",
+				"patcherrelativepath" : "../../soundworks-state-manager-osc/max/SoundworksAPI/code",
 				"type" : "TEXT",
 				"implicit" : 1
 			}
 , 			{
-				"name" : "parseUpdates.js",
+				"name" : "mergeUpdates.js",
 				"bootpath" : "~/Documents/Github/soundworks-state-manager-osc/max/SoundworksAPI/code",
-				"patcherrelativepath" : "../../../soundworks-state-manager-osc/max/SoundworksAPI/code",
+				"patcherrelativepath" : "../../soundworks-state-manager-osc/max/SoundworksAPI/code",
+				"type" : "TEXT",
+				"implicit" : 1
+			}
+, 			{
+				"name" : "indict_response.js",
+				"bootpath" : "~/Documents/Github/soundworks-state-manager-osc/max/SoundworksAPI/code",
+				"patcherrelativepath" : "../../soundworks-state-manager-osc/max/SoundworksAPI/code",
 				"type" : "TEXT",
 				"implicit" : 1
 			}

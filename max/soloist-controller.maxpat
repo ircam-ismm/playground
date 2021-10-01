@@ -40,17 +40,6 @@
 		"assistshowspatchername" : 0,
 		"boxes" : [ 			{
 				"box" : 				{
-					"id" : "obj-91",
-					"maxclass" : "comment",
-					"numinlets" : 1,
-					"numoutlets" : 0,
-					"patching_rect" : [ 1007.0, 11.5, 89.0, 20.0 ],
-					"text" : "rotateMap ? :'("
-				}
-
-			}
-, 			{
-				"box" : 				{
 					"id" : "obj-82",
 					"maxclass" : "newobj",
 					"numinlets" : 6,
@@ -69,7 +58,6 @@
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
 					"patching_rect" : [ 857.0, 77.0, 156.0, 22.0 ],
-					"presentation_linecount" : 3,
 					"text" : "globalFadeOutDuration : $1"
 				}
 
@@ -93,8 +81,8 @@
 					"numinlets" : 1,
 					"numoutlets" : 2,
 					"outlettype" : [ "", "dictionary" ],
-					"patching_rect" : [ 857.0, 105.0, 196.0, 22.0 ],
-					"text" : "sw.shared-statev2 soloist-controller"
+					"patching_rect" : [ 857.0, 105.0, 183.0, 22.0 ],
+					"text" : "sw.shared-state soloist-controller"
 				}
 
 			}
@@ -145,8 +133,8 @@
 					"numinlets" : 1,
 					"numoutlets" : 2,
 					"outlettype" : [ "", "dictionary" ],
-					"patching_rect" : [ 735.0, 271.0, 196.0, 22.0 ],
-					"text" : "sw.shared-statev2 soloist-controller"
+					"patching_rect" : [ 735.0, 271.0, 183.0, 22.0 ],
+					"text" : "sw.shared-state soloist-controller"
 				}
 
 			}
@@ -179,7 +167,7 @@
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 0.0, 0.0, 640.0, 480.0 ],
+						"rect" : [ 84.0, 131.0, 640.0, 480.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -346,13 +334,13 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 317.0, 538.0, 89.0, 22.0 ],
+									"patching_rect" : [ 317.0, 538.0, 127.0, 22.0 ],
 									"saved_object_attributes" : 									{
-										"filename" : "parseInput.js",
+										"filename" : "soloist-parseInput.js",
 										"parameter_enable" : 0
 									}
 ,
-									"text" : "js parseInput.js"
+									"text" : "js soloist-parseInput.js"
 								}
 
 							}
@@ -1151,8 +1139,8 @@
 					"numinlets" : 1,
 					"numoutlets" : 2,
 					"outlettype" : [ "", "dictionary" ],
-					"patching_rect" : [ 273.5, 304.0, 196.0, 22.0 ],
-					"text" : "sw.shared-statev2 soloist-controller"
+					"patching_rect" : [ 273.5, 304.0, 183.0, 22.0 ],
+					"text" : "sw.shared-state soloist-controller"
 				}
 
 			}
@@ -1163,8 +1151,8 @@
 					"numinlets" : 1,
 					"numoutlets" : 2,
 					"outlettype" : [ "", "dictionary" ],
-					"patching_rect" : [ 14.0, 354.0, 196.0, 22.0 ],
-					"text" : "sw.shared-statev2 soloist-controller"
+					"patching_rect" : [ 14.0, 354.0, 183.0, 22.0 ],
+					"text" : "sw.shared-state soloist-controller"
 				}
 
 			}
@@ -1211,8 +1199,8 @@
 					"numinlets" : 1,
 					"numoutlets" : 2,
 					"outlettype" : [ "", "dictionary" ],
-					"patching_rect" : [ 653.0, 105.0, 147.0, 22.0 ],
-					"text" : "sw.shared-statev2 globals"
+					"patching_rect" : [ 653.0, 105.0, 134.0, 22.0 ],
+					"text" : "sw.shared-state globals"
 				}
 
 			}
@@ -1469,37 +1457,44 @@
 		}
 ,
 		"dependency_cache" : [ 			{
-				"name" : "sw.shared-statev2.maxpat",
+				"name" : "sw.shared-state.maxpat",
 				"bootpath" : "~/Documents/Github/soundworks-state-manager-osc/max/SoundworksAPI/patchers",
-				"patcherrelativepath" : "../../../soundworks-state-manager-osc/max/SoundworksAPI/patchers",
+				"patcherrelativepath" : "../../soundworks-state-manager-osc/max/SoundworksAPI/patchers",
 				"type" : "JSON",
 				"implicit" : 1
 			}
 , 			{
-				"name" : "jscountv2.js",
+				"name" : "jscount.js",
 				"bootpath" : "~/Documents/Github/soundworks-state-manager-osc/max/SoundworksAPI/code",
-				"patcherrelativepath" : "../../../soundworks-state-manager-osc/max/SoundworksAPI/code",
+				"patcherrelativepath" : "../../soundworks-state-manager-osc/max/SoundworksAPI/code",
 				"type" : "TEXT",
 				"implicit" : 1
 			}
 , 			{
 				"name" : "indict.js",
 				"bootpath" : "~/Documents/Github/soundworks-state-manager-osc/max/SoundworksAPI/code",
-				"patcherrelativepath" : "../../../soundworks-state-manager-osc/max/SoundworksAPI/code",
+				"patcherrelativepath" : "../../soundworks-state-manager-osc/max/SoundworksAPI/code",
 				"type" : "TEXT",
 				"implicit" : 1
 			}
 , 			{
-				"name" : "parseUpdates.js",
+				"name" : "mergeUpdates.js",
 				"bootpath" : "~/Documents/Github/soundworks-state-manager-osc/max/SoundworksAPI/code",
-				"patcherrelativepath" : "../../../soundworks-state-manager-osc/max/SoundworksAPI/code",
+				"patcherrelativepath" : "../../soundworks-state-manager-osc/max/SoundworksAPI/code",
 				"type" : "TEXT",
 				"implicit" : 1
 			}
 , 			{
-				"name" : "parseInput.js",
+				"name" : "indict_response.js",
 				"bootpath" : "~/Documents/Github/soundworks-state-manager-osc/max/SoundworksAPI/code",
-				"patcherrelativepath" : "../../../soundworks-state-manager-osc/max/SoundworksAPI/code",
+				"patcherrelativepath" : "../../soundworks-state-manager-osc/max/SoundworksAPI/code",
+				"type" : "TEXT",
+				"implicit" : 1
+			}
+, 			{
+				"name" : "soloist-parseInput.js",
+				"bootpath" : "~/Documents/Github/playground/max",
+				"patcherrelativepath" : ".",
 				"type" : "TEXT",
 				"implicit" : 1
 			}

@@ -10,7 +10,7 @@
 		}
 ,
 		"classnamespace" : "box",
-		"rect" : [ 1161.0, 293.0, 640.0, 480.0 ],
+		"rect" : [ 1118.0, 293.0, 640.0, 480.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -55,8 +55,8 @@
 					"numinlets" : 1,
 					"numoutlets" : 2,
 					"outlettype" : [ "", "dictionary" ],
-					"patching_rect" : [ 408.0, 188.0, 206.0, 22.0 ],
-					"text" : "sw.shared-statev2 granular-controller"
+					"patching_rect" : [ 408.0, 188.0, 193.0, 22.0 ],
+					"text" : "sw.shared-state granular-controller"
 				}
 
 			}
@@ -168,8 +168,8 @@
 					"numinlets" : 1,
 					"numoutlets" : 2,
 					"outlettype" : [ "", "dictionary" ],
-					"patching_rect" : [ 110.0, 113.0, 206.0, 22.0 ],
-					"text" : "sw.shared-statev2 granular-controller"
+					"patching_rect" : [ 110.0, 113.0, 193.0, 22.0 ],
+					"text" : "sw.shared-state granular-controller"
 				}
 
 			}
@@ -241,30 +241,37 @@
 		}
 ,
 		"dependency_cache" : [ 			{
-				"name" : "sw.shared-statev2.maxpat",
+				"name" : "sw.shared-state.maxpat",
 				"bootpath" : "~/Documents/Github/soundworks-state-manager-osc/max/SoundworksAPI/patchers",
-				"patcherrelativepath" : "../../../soundworks-state-manager-osc/max/SoundworksAPI/patchers",
+				"patcherrelativepath" : "../../soundworks-state-manager-osc/max/SoundworksAPI/patchers",
 				"type" : "JSON",
 				"implicit" : 1
 			}
 , 			{
-				"name" : "jscountv2.js",
+				"name" : "jscount.js",
 				"bootpath" : "~/Documents/Github/soundworks-state-manager-osc/max/SoundworksAPI/code",
-				"patcherrelativepath" : "../../../soundworks-state-manager-osc/max/SoundworksAPI/code",
+				"patcherrelativepath" : "../../soundworks-state-manager-osc/max/SoundworksAPI/code",
 				"type" : "TEXT",
 				"implicit" : 1
 			}
 , 			{
 				"name" : "indict.js",
 				"bootpath" : "~/Documents/Github/soundworks-state-manager-osc/max/SoundworksAPI/code",
-				"patcherrelativepath" : "../../../soundworks-state-manager-osc/max/SoundworksAPI/code",
+				"patcherrelativepath" : "../../soundworks-state-manager-osc/max/SoundworksAPI/code",
 				"type" : "TEXT",
 				"implicit" : 1
 			}
 , 			{
-				"name" : "parseUpdates.js",
+				"name" : "mergeUpdates.js",
 				"bootpath" : "~/Documents/Github/soundworks-state-manager-osc/max/SoundworksAPI/code",
-				"patcherrelativepath" : "../../../soundworks-state-manager-osc/max/SoundworksAPI/code",
+				"patcherrelativepath" : "../../soundworks-state-manager-osc/max/SoundworksAPI/code",
+				"type" : "TEXT",
+				"implicit" : 1
+			}
+, 			{
+				"name" : "indict_response.js",
+				"bootpath" : "~/Documents/Github/soundworks-state-manager-osc/max/SoundworksAPI/code",
+				"patcherrelativepath" : "../../soundworks-state-manager-osc/max/SoundworksAPI/code",
 				"type" : "TEXT",
 				"implicit" : 1
 			}
