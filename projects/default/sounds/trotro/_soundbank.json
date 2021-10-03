@@ -1,0 +1,51 @@
+{
+  "name": "trotro",
+  "url": "sounds/trotro/",
+  "path": "projects/default/sounds/trotro",
+  "version": "0.0.0",
+  "presets": {
+    "activated": {
+      "autoPlaySynth": true,
+      "triggerSynth": true,
+      "soloistSynth": true,
+      "granularSynth": true
+    }
+  },
+  "files": {
+    "trotro.mp3": {
+      "name": "trotro.mp3",
+      "path": "projects/default/sounds/trotro/trotro.mp3",
+      "url": "sounds/trotro/trotro.mp3",
+      "presets": {
+        "autoPlaySynth": {
+          "repeatPeriod": 1,
+          "maxReleaseOffset": 1,
+          "attackDuration": 1,
+          "releaseDuration": 1
+        },
+        "triggerSynth": {
+          "repeat": 1,
+          "period": 0,
+          "jitter": 0,
+          "releaseDuration": 1
+        },
+        "granularSynth": {
+          "volume": 1,
+          "releaseDuration": 3,
+          "attackDuration": 1,
+          "speed": 1,
+          "positionVar": 0.003,
+          "periodAbs": 0.02,
+          "durationAbs": 0.1,
+          "resampling": 0,
+          "resamplingVar": 0
+        },
+        "soloistSynth": {
+          "fadeInDuration": 0.05,
+          "fadeOutDuration": 8,
+          "decayExponent": 1.5
+        }
+      }
+    }
+  }
+}
