@@ -115,7 +115,6 @@ class PlayerExperience extends AbstractExperience {
 
               startedGranularSynths.forEach(file => {
                 if (file === player.get('granularFile')) {
-                  console.log('start', player.get('id'));
                   player.set({ granularState: 'start' });
                 }
               });
