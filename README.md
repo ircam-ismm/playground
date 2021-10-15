@@ -62,7 +62,9 @@ The file `project/my-project/config.json` allows to configure the name of the pr
 
 ## Credits
 
-@todo
+The `playground` application have been developed in collaboration with Garth Paine ([http://www.activatedspace.com/](http://www.activatedspace.com/)) during his Ircam's Articistic Research Residency in 2017-18.
+
+The audio files provided in the `default` project of the application have been created and thankfully shared by Garth Paine.
 
 ## License
 

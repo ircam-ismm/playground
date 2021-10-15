@@ -1,0 +1,156 @@
+{
+  "name": "footsteps",
+  "url": "sounds/footsteps/",
+  "path": "projects/default/sounds/footsteps",
+  "version": "0.0.0",
+  "presets": {
+    "activated": {
+      "autoPlaySynth": true,
+      "triggerSynth": true,
+      "soloistSynth": true,
+      "granularSynth": true
+    }
+  },
+  "files": {
+    "Paris_Footsteps.mp3": {
+      "name": "Paris_Footsteps.mp3",
+      "path": "projects/default/sounds/footsteps/Paris_Footsteps.mp3",
+      "url": "sounds/footsteps/Paris_Footsteps.mp3",
+      "presets": {
+        "autoPlaySynth": {
+          "repeatPeriod": 1,
+          "maxReleaseOffset": 1,
+          "attackDuration": 1,
+          "releaseDuration": 1
+        },
+        "triggerSynth": {
+          "repeat": 1,
+          "period": 0,
+          "jitter": 0,
+          "releaseDuration": 1
+        },
+        "granularSynth": {
+          "volume": 1,
+          "releaseDuration": 3,
+          "attackDuration": 1,
+          "speed": 1,
+          "positionVar": 0.003,
+          "periodAbs": 0.02,
+          "durationAbs": 0.1,
+          "resampling": 0,
+          "resamplingVar": 0
+        },
+        "soloistSynth": {
+          "fadeInDuration": 0.05,
+          "fadeOutDuration": 8,
+          "decayExponent": 1.5
+        }
+      }
+    },
+    "Paris_Footsteps_Short.mp3": {
+      "name": "Paris_Footsteps_Short.mp3",
+      "path": "projects/default/sounds/footsteps/Paris_Footsteps_Short.mp3",
+      "url": "sounds/footsteps/Paris_Footsteps_Short.mp3",
+      "presets": {
+        "autoPlaySynth": {
+          "repeatPeriod": 1,
+          "maxReleaseOffset": 1,
+          "attackDuration": 1,
+          "releaseDuration": 1
+        },
+        "triggerSynth": {
+          "repeat": 1,
+          "period": 0,
+          "jitter": 0,
+          "releaseDuration": 1
+        },
+        "granularSynth": {
+          "volume": 1,
+          "releaseDuration": 3,
+          "attackDuration": 1,
+          "speed": 1,
+          "positionVar": 0.003,
+          "periodAbs": 0.02,
+          "durationAbs": 0.1,
+          "resampling": 0,
+          "resamplingVar": 0
+        },
+        "soloistSynth": {
+          "fadeInDuration": 0.05,
+          "fadeOutDuration": 8,
+          "decayExponent": 1.5
+        }
+      }
+    },
+    "Paris_Footsteps_Short2.mp3": {
+      "name": "Paris_Footsteps_Short2.mp3",
+      "path": "projects/default/sounds/footsteps/Paris_Footsteps_Short2.mp3",
+      "url": "sounds/footsteps/Paris_Footsteps_Short2.mp3",
+      "presets": {
+        "autoPlaySynth": {
+          "repeatPeriod": 1,
+          "maxReleaseOffset": 1,
+          "attackDuration": 1,
+          "releaseDuration": 1
+        },
+        "triggerSynth": {
+          "repeat": 1,
+          "period": 0,
+          "jitter": 0,
+          "releaseDuration": 1
+        },
+        "granularSynth": {
+          "volume": 1,
+          "releaseDuration": 3,
+          "attackDuration": 1,
+          "speed": 1,
+          "positionVar": 0.003,
+          "periodAbs": 0.02,
+          "durationAbs": 0.1,
+          "resampling": 0,
+          "resamplingVar": 0
+        },
+        "soloistSynth": {
+          "fadeInDuration": 0.05,
+          "fadeOutDuration": 8,
+          "decayExponent": 1.5
+        }
+      }
+    },
+    "Paris_Footsteps_Short3.mp3": {
+      "name": "Paris_Footsteps_Short3.mp3",
+      "path": "projects/default/sounds/footsteps/Paris_Footsteps_Short3.mp3",
+      "url": "sounds/footsteps/Paris_Footsteps_Short3.mp3",
+      "presets": {
+        "autoPlaySynth": {
+          "repeatPeriod": 1,
+          "maxReleaseOffset": 1,
+          "attackDuration": 1,
+          "releaseDuration": 1
+        },
+        "triggerSynth": {
+          "repeat": 1,
+          "period": 0,
+          "jitter": 0,
+          "releaseDuration": 1
+        },
+        "granularSynth": {
+          "volume": 1,
+          "releaseDuration": 3,
+          "attackDuration": 1,
+          "speed": 1,
+          "positionVar": 0.003,
+          "periodAbs": 0.02,
+          "durationAbs": 0.1,
+          "resampling": 0,
+          "resamplingVar": 0
+        },
+        "soloistSynth": {
+          "fadeInDuration": 0.05,
+          "fadeOutDuration": 8,
+          "decayExponent": 1.5
+        }
+      }
+    }
+  }
+}

@@ -1,161 +1,21 @@
 {
-  "name": "test",
-  "url": "sounds/test",
-  "path": "public/sounds/test",
+  "name": "vocals",
+  "url": "sounds/vocals/",
+  "path": "projects/default/sounds/vocals",
   "version": "0.0.0",
   "presets": {
     "activated": {
       "autoPlaySynth": true,
-      "triggerSynth": false,
+      "triggerSynth": true,
       "soloistSynth": true,
       "granularSynth": true
     }
   },
   "files": {
-    "click.wav": {
-      "name": "click.wav",
-      "path": "public/sounds/test/click.wav",
-      "url": "sounds/test/click.wav",
-      "presets": {
-        "autoPlaySynth": {
-          "repeatPeriod": 0.413,
-          "maxReleaseOffset": 0.799,
-          "attackDuration": 1,
-          "releaseDuration": 5.271
-        },
-        "triggerSynth": {
-          "repeat": 17,
-          "period": 0.075,
-          "jitter": 0.009,
-          "releaseDuration": 1
-        },
-        "granularSynth": {
-          "volume": 0.024,
-          "releaseDuration": 3,
-          "attackDuration": 3,
-          "speed": 1,
-          "positionVar": 0.003,
-          "periodAbs": 0.02,
-          "durationAbs": 0.1,
-          "resampling": -807,
-          "resamplingVar": 0
-        },
-        "soloistSynth": {
-          "fadeInDuration": 1,
-          "fadeOutDuration": 8,
-          "decayExponent": 1.5
-        }
-      }
-    },
-    "cluck.wav": {
-      "name": "cluck.wav",
-      "path": "public/sounds/test/cluck.wav",
-      "url": "sounds/test/cluck.wav",
-      "presets": {
-        "autoPlaySynth": {
-          "repeatPeriod": 0.518,
-          "maxReleaseOffset": 2.236,
-          "attackDuration": 1,
-          "releaseDuration": 8.801
-        },
-        "triggerSynth": {
-          "repeat": 16,
-          "period": 0.57,
-          "jitter": 0,
-          "releaseDuration": 2.66
-        },
-        "granularSynth": {
-          "volume": 0.085,
-          "releaseDuration": 3,
-          "attackDuration": 3,
-          "speed": 1,
-          "positionVar": 0.003,
-          "periodAbs": 0.02,
-          "durationAbs": 0.1,
-          "resampling": -17,
-          "resamplingVar": 7
-        },
-        "soloistSynth": {
-          "fadeInDuration": 1,
-          "fadeOutDuration": 8,
-          "decayExponent": 1.5
-        }
-      }
-    },
-    "detendstoi.mp3": {
-      "name": "detendstoi.mp3",
-      "path": "public/sounds/test/detendstoi.mp3",
-      "url": "sounds/test/detendstoi.mp3",
-      "presets": {
-        "autoPlaySynth": {
-          "repeatPeriod": 0.429,
-          "maxReleaseOffset": 1.459,
-          "attackDuration": 1,
-          "releaseDuration": 5.592
-        },
-        "triggerSynth": {
-          "repeat": 2,
-          "period": 0.095,
-          "jitter": 0,
-          "releaseDuration": 1
-        },
-        "granularSynth": {
-          "volume": 0.182,
-          "releaseDuration": 3,
-          "attackDuration": 3,
-          "speed": -0.13,
-          "positionVar": 0.003,
-          "periodAbs": 0.037,
-          "durationAbs": 0.024,
-          "resampling": -450,
-          "resamplingVar": 52
-        },
-        "soloistSynth": {
-          "fadeInDuration": 1,
-          "fadeOutDuration": 8,
-          "decayExponent": 1.5
-        }
-      }
-    },
-    "drum-loop.mp3": {
-      "name": "drum-loop.mp3",
-      "path": "public/sounds/test/drum-loop.mp3",
-      "url": "sounds/test/drum-loop.mp3",
-      "presets": {
-        "autoPlaySynth": {
-          "repeatPeriod": 1.316,
-          "maxReleaseOffset": 2.029,
-          "attackDuration": 1,
-          "releaseDuration": 5.808
-        },
-        "triggerSynth": {
-          "repeat": 1,
-          "period": 0,
-          "jitter": 0,
-          "releaseDuration": 1
-        },
-        "granularSynth": {
-          "volume": 0.133,
-          "releaseDuration": 3,
-          "attackDuration": 3,
-          "speed": -0.93,
-          "positionVar": 0.003,
-          "periodAbs": 0.02,
-          "durationAbs": 0.1,
-          "resampling": 0,
-          "resamplingVar": 0
-        },
-        "soloistSynth": {
-          "fadeInDuration": 1,
-          "fadeOutDuration": 8,
-          "decayExponent": 1.5
-        }
-      }
-    },
-    "clack.wav": {
-      "name": "clack.wav",
-      "path": "projects/default/sounds/test/clack.wav",
-      "url": "sounds/test/clack.wav",
+    "Gordon_Stretch++Wisper.mp3": {
+      "name": "Gordon_Stretch++Wisper.mp3",
+      "path": "projects/default/sounds/vocals/Gordon_Stretch++Wisper.mp3",
+      "url": "sounds/vocals/Gordon_Stretch++Wisper.mp3",
       "presets": {
         "autoPlaySynth": {
           "repeatPeriod": 1,
@@ -170,14 +30,14 @@
           "releaseDuration": 1
         },
         "granularSynth": {
-          "volume": 0.248,
-          "releaseDuration": 5.3,
-          "attackDuration": 3,
+          "volume": 1,
+          "releaseDuration": 3,
+          "attackDuration": 1,
           "speed": 1,
-          "positionVar": 0.004,
-          "periodAbs": 0.026,
-          "durationAbs": 0.105,
-          "resampling": -80,
+          "positionVar": 0.003,
+          "periodAbs": 0.02,
+          "durationAbs": 0.1,
+          "resampling": 0,
           "resamplingVar": 0
         },
         "soloistSynth": {
@@ -187,10 +47,10 @@
         }
       }
     },
-    "sine.mp3": {
-      "name": "sine.mp3",
-      "path": "projects/default/sounds/test/sine.mp3",
-      "url": "sounds/test/sine.mp3",
+    "Gordon_Stretch+2+Wisper.mp3": {
+      "name": "Gordon_Stretch+2+Wisper.mp3",
+      "path": "projects/default/sounds/vocals/Gordon_Stretch+2+Wisper.mp3",
+      "url": "sounds/vocals/Gordon_Stretch+2+Wisper.mp3",
       "presets": {
         "autoPlaySynth": {
           "repeatPeriod": 1,
@@ -205,9 +65,114 @@
           "releaseDuration": 1
         },
         "granularSynth": {
-          "volume": 0.03,
+          "volume": 1,
           "releaseDuration": 3,
-          "attackDuration": 3,
+          "attackDuration": 1,
+          "speed": 1,
+          "positionVar": 0.003,
+          "periodAbs": 0.02,
+          "durationAbs": 0.1,
+          "resampling": 0,
+          "resamplingVar": 0
+        },
+        "soloistSynth": {
+          "fadeInDuration": 0.05,
+          "fadeOutDuration": 8,
+          "decayExponent": 1.5
+        }
+      }
+    },
+    "VoxChatter_C2.mp3": {
+      "name": "VoxChatter_C2.mp3",
+      "path": "projects/default/sounds/vocals/VoxChatter_C2.mp3",
+      "url": "sounds/vocals/VoxChatter_C2.mp3",
+      "presets": {
+        "autoPlaySynth": {
+          "repeatPeriod": 1,
+          "maxReleaseOffset": 1,
+          "attackDuration": 1,
+          "releaseDuration": 1
+        },
+        "triggerSynth": {
+          "repeat": 1,
+          "period": 0,
+          "jitter": 0,
+          "releaseDuration": 1
+        },
+        "granularSynth": {
+          "volume": 1,
+          "releaseDuration": 3,
+          "attackDuration": 1,
+          "speed": 1,
+          "positionVar": 0.003,
+          "periodAbs": 0.02,
+          "durationAbs": 0.1,
+          "resampling": 0,
+          "resamplingVar": 0
+        },
+        "soloistSynth": {
+          "fadeInDuration": 0.05,
+          "fadeOutDuration": 8,
+          "decayExponent": 1.5
+        }
+      }
+    },
+    "VoxChatter_L.mp3": {
+      "name": "VoxChatter_L.mp3",
+      "path": "projects/default/sounds/vocals/VoxChatter_L.mp3",
+      "url": "sounds/vocals/VoxChatter_L.mp3",
+      "presets": {
+        "autoPlaySynth": {
+          "repeatPeriod": 1,
+          "maxReleaseOffset": 1,
+          "attackDuration": 1,
+          "releaseDuration": 1
+        },
+        "triggerSynth": {
+          "repeat": 1,
+          "period": 0,
+          "jitter": 0,
+          "releaseDuration": 1
+        },
+        "granularSynth": {
+          "volume": 1,
+          "releaseDuration": 3,
+          "attackDuration": 1,
+          "speed": 1,
+          "positionVar": 0.003,
+          "periodAbs": 0.02,
+          "durationAbs": 0.1,
+          "resampling": 0,
+          "resamplingVar": 0
+        },
+        "soloistSynth": {
+          "fadeInDuration": 0.05,
+          "fadeOutDuration": 8,
+          "decayExponent": 1.5
+        }
+      }
+    },
+    "VoxChatter_L4.mp3": {
+      "name": "VoxChatter_L4.mp3",
+      "path": "projects/default/sounds/vocals/VoxChatter_L4.mp3",
+      "url": "sounds/vocals/VoxChatter_L4.mp3",
+      "presets": {
+        "autoPlaySynth": {
+          "repeatPeriod": 1,
+          "maxReleaseOffset": 1,
+          "attackDuration": 1,
+          "releaseDuration": 1
+        },
+        "triggerSynth": {
+          "repeat": 1,
+          "period": 0,
+          "jitter": 0,
+          "releaseDuration": 1
+        },
+        "granularSynth": {
+          "volume": 1,
+          "releaseDuration": 3,
+          "attackDuration": 1,
           "speed": 1,
           "positionVar": 0.003,
           "periodAbs": 0.02,

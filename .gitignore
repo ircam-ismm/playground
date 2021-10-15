@@ -19,7 +19,7 @@ Thumbs.db
 
 _misc
 
-/projects
+/projects/*
 !/projects/default
 
 network
