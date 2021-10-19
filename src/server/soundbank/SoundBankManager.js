@@ -140,7 +140,7 @@ class SoundBankManager {
 
       this.soundBanks[soundBankName] = soundBank;
 
-      dirty = (dirty || soundBank.dirty);
+      dirty = (dirty || soundBank.dirty);
     });
 
     // some banks have been removed

@@ -1,6 +1,6 @@
 {
   "name": "crickets",
-  "url": "sounds/crickets/",
+  "url": "/sounds/crickets/",
   "path": "projects/default/sounds/crickets",
   "version": "0.0.0",
   "presets": {
@@ -15,7 +15,7 @@
     "Crickets.mp3": {
       "name": "Crickets.mp3",
       "path": "projects/default/sounds/crickets/Crickets.mp3",
-      "url": "sounds/crickets/Crickets.mp3",
+      "url": "/sounds/crickets/Crickets.mp3",
       "presets": {
         "autoPlaySynth": {
           "repeatPeriod": 1,
@@ -50,7 +50,7 @@
     "Crickets_Short.mp3": {
       "name": "Crickets_Short.mp3",
       "path": "projects/default/sounds/crickets/Crickets_Short.mp3",
-      "url": "sounds/crickets/Crickets_Short.mp3",
+      "url": "/sounds/crickets/Crickets_Short.mp3",
       "presets": {
         "autoPlaySynth": {
           "repeatPeriod": 1,

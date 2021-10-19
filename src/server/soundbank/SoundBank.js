@@ -171,11 +171,11 @@ class SoundBank {
 
     for (let presetName in this._defaultPresets) {
       const defaults = this._defaultPresets[presetName];
-      const values = (json.presets && json.presets[presetName]) || {};
+      const values = (json.presets && json.presets[presetName]) || {};
       const preset = new Preset(defaults, values);
       this.values.presets[presetName] = preset;
 
-      dirty = (dirty || preset.dirty);
+      dirty = (dirty || preset.dirty);
     }
 
     for (let filename in json.files) {
@@ -184,7 +184,7 @@ class SoundBank {
 
       this.values.files[filename] = soundFile;
 
-      dirty = (dirty || soundFile.dirty);
+      dirty = (dirty || soundFile.dirty);
     }
 
     if (dirty === true) {
@@ -236,6 +236,7 @@ class SoundBank {
       if (!this.values.files[filename]) {
         // new sound file added, create SoundFile from defaults
         const { name, path, url } = desc;
+        console.log(name, path, url);
         const presets = {};
         const soundFile = new SoundFile({ name, path, url, presets }, this._fileDefaultPresets);
         this.values.files[name] = soundFile;

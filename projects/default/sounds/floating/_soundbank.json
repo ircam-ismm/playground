@@ -1,6 +1,6 @@
 {
   "name": "floating",
-  "url": "sounds/floating/",
+  "url": "/sounds/floating/",
   "path": "projects/default/sounds/floating",
   "version": "0.0.0",
   "presets": {
@@ -15,7 +15,7 @@
     "FTPhase01.mp3": {
       "name": "FTPhase01.mp3",
       "path": "projects/default/sounds/floating/FTPhase01.mp3",
-      "url": "sounds/floating/FTPhase01.mp3",
+      "url": "/sounds/floating/FTPhase01.mp3",
       "presets": {
         "autoPlaySynth": {
           "repeatPeriod": 1,
@@ -50,7 +50,7 @@
     "FTPhase02.mp3": {
       "name": "FTPhase02.mp3",
       "path": "projects/default/sounds/floating/FTPhase02.mp3",
-      "url": "sounds/floating/FTPhase02.mp3",
+      "url": "/sounds/floating/FTPhase02.mp3",
       "presets": {
         "autoPlaySynth": {
           "repeatPeriod": 1,

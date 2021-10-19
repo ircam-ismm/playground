@@ -1,6 +1,6 @@
 {
   "name": "footsteps",
-  "url": "sounds/footsteps/",
+  "url": "/sounds/footsteps/",
   "path": "projects/default/sounds/footsteps",
   "version": "0.0.0",
   "presets": {
@@ -15,7 +15,7 @@
     "Paris_Footsteps.mp3": {
       "name": "Paris_Footsteps.mp3",
       "path": "projects/default/sounds/footsteps/Paris_Footsteps.mp3",
-      "url": "sounds/footsteps/Paris_Footsteps.mp3",
+      "url": "/sounds/footsteps/Paris_Footsteps.mp3",
       "presets": {
         "autoPlaySynth": {
           "repeatPeriod": 1,
@@ -50,7 +50,7 @@
     "Paris_Footsteps_Short.mp3": {
       "name": "Paris_Footsteps_Short.mp3",
       "path": "projects/default/sounds/footsteps/Paris_Footsteps_Short.mp3",
-      "url": "sounds/footsteps/Paris_Footsteps_Short.mp3",
+      "url": "/sounds/footsteps/Paris_Footsteps_Short.mp3",
       "presets": {
         "autoPlaySynth": {
           "repeatPeriod": 1,
@@ -85,7 +85,7 @@
     "Paris_Footsteps_Short2.mp3": {
       "name": "Paris_Footsteps_Short2.mp3",
       "path": "projects/default/sounds/footsteps/Paris_Footsteps_Short2.mp3",
-      "url": "sounds/footsteps/Paris_Footsteps_Short2.mp3",
+      "url": "/sounds/footsteps/Paris_Footsteps_Short2.mp3",
       "presets": {
         "autoPlaySynth": {
           "repeatPeriod": 1,
@@ -120,7 +120,7 @@
     "Paris_Footsteps_Short3.mp3": {
       "name": "Paris_Footsteps_Short3.mp3",
       "path": "projects/default/sounds/footsteps/Paris_Footsteps_Short3.mp3",
-      "url": "sounds/footsteps/Paris_Footsteps_Short3.mp3",
+      "url": "/sounds/footsteps/Paris_Footsteps_Short3.mp3",
       "presets": {
         "autoPlaySynth": {
           "repeatPeriod": 1,

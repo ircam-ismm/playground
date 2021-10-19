@@ -1,6 +1,6 @@
 {
   "name": "vocals",
-  "url": "sounds/vocals/",
+  "url": "/sounds/vocals/",
   "path": "projects/default/sounds/vocals",
   "version": "0.0.0",
   "presets": {
@@ -15,7 +15,7 @@
     "Gordon_Stretch++Wisper.mp3": {
       "name": "Gordon_Stretch++Wisper.mp3",
       "path": "projects/default/sounds/vocals/Gordon_Stretch++Wisper.mp3",
-      "url": "sounds/vocals/Gordon_Stretch++Wisper.mp3",
+      "url": "/sounds/vocals/Gordon_Stretch++Wisper.mp3",
       "presets": {
         "autoPlaySynth": {
           "repeatPeriod": 1,
@@ -50,7 +50,7 @@
     "Gordon_Stretch+2+Wisper.mp3": {
       "name": "Gordon_Stretch+2+Wisper.mp3",
       "path": "projects/default/sounds/vocals/Gordon_Stretch+2+Wisper.mp3",
-      "url": "sounds/vocals/Gordon_Stretch+2+Wisper.mp3",
+      "url": "/sounds/vocals/Gordon_Stretch+2+Wisper.mp3",
       "presets": {
         "autoPlaySynth": {
           "repeatPeriod": 1,
@@ -85,7 +85,7 @@
     "VoxChatter_C2.mp3": {
       "name": "VoxChatter_C2.mp3",
       "path": "projects/default/sounds/vocals/VoxChatter_C2.mp3",
-      "url": "sounds/vocals/VoxChatter_C2.mp3",
+      "url": "/sounds/vocals/VoxChatter_C2.mp3",
       "presets": {
         "autoPlaySynth": {
           "repeatPeriod": 1,
@@ -120,7 +120,7 @@
     "VoxChatter_L.mp3": {
       "name": "VoxChatter_L.mp3",
       "path": "projects/default/sounds/vocals/VoxChatter_L.mp3",
-      "url": "sounds/vocals/VoxChatter_L.mp3",
+      "url": "/sounds/vocals/VoxChatter_L.mp3",
       "presets": {
         "autoPlaySynth": {
           "repeatPeriod": 1,
@@ -155,7 +155,7 @@
     "VoxChatter_L4.mp3": {
       "name": "VoxChatter_L4.mp3",
       "path": "projects/default/sounds/vocals/VoxChatter_L4.mp3",
-      "url": "sounds/vocals/VoxChatter_L4.mp3",
+      "url": "/sounds/vocals/VoxChatter_L4.mp3",
       "presets": {
         "autoPlaySynth": {
           "repeatPeriod": 1,
