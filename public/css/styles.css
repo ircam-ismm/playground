@@ -5,6 +5,7 @@ html, body {
   min-height: 100%;
   background-color: #000000;
   color: #ffffff;
+  user-select: none;
 }
 
 html {
@@ -52,4 +53,12 @@ body.loading {
   line-height: 400px;
   text-align: center;
   font-size: 4rem;
+}
+
+button {
+  cursor: pointer;
+}
+
+button:active {
+  background-color: #ffffff !important;
 }

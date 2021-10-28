@@ -187,15 +187,17 @@ class PlayerExperience extends AbstractExperience {
             break;
           }
           case 'toggleSynthEvent': {
-            const { action, filename } = updates[name];
+            updates[name].forEach(event => {
+              const { action, filename } = event;
 
-            for (let [id, playerState] of this.players.entries()) {
-              const playerFile = playerState.get('granularFile');
+              for (let [id, playerState] of this.players.entries()) {
+                const playerFile = playerState.get('granularFile');
 
-              if (playerFile === filename) {
-                playerState.set({ granularState: action });
+                if (playerFile === filename) {
+                  playerState.set({ granularState: action });
+                }
               }
-            }
+            });
 
             break;
           }

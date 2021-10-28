@@ -30,31 +30,61 @@ class GranularControllerExperience extends AbstractExperience {
       soundBankValues: null,
       soundBankDefaultPresets: null,
       soundFileDefaultPresets: null,
+      // show an immediate feedback of the action
+      // https://github.com/ircam-ismm/playground/issues/8
+      startingSynths: new Set(),
     };
 
-    this.eventListeners = {
+    this.listeners = {
       updateSoundBank: e => {
-        const soundBankName = e.target.value || null;
+        const soundBankName = e.target.value || null;
 
         this.granularControllerState.set({
           currentSoundBank: soundBankName,
           startedSynths: [],
         });
       },
-      toggleSynth: filename => {
-        const startedSynths = this.granularControllerState.getValues()['startedSynths'];
-        const index = startedSynths.indexOf(filename);
+      toggleSynth: url => {
+        const startedSynths = this.granularControllerState.get('startedSynths');
+        const index = startedSynths.indexOf(url);
         let toggleSynthEvent;
 
         if (index === -1) {
-          startedSynths.push(filename);
-          toggleSynthEvent = { action: 'start', filename };
+          startedSynths.push(url);
+          toggleSynthEvent = [{ action: 'start', filename: url }];
+          this.localState.startingSynths.add(url);
         } else {
           startedSynths.splice(index, 1);
-          toggleSynthEvent = { action: 'stop', filename };
+          toggleSynthEvent = [{ action: 'stop', filename: url }];
+          this.localState.startingSynths.delete(url);
         }
 
         this.granularControllerState.set({ startedSynths, toggleSynthEvent });
+        this.render();
+      },
+      toggleAllSynths: action => {
+        const toggleSynthEvent = [];
+        const { currentSoundBank, startedSynths } = this.granularControllerState.getValues();
+        const soundfiles = this.localState.soundBankValues[currentSoundBank].files;
+
+        for (let name in soundfiles) {
+          const { url } = soundfiles[name];
+          const startedIndex = startedSynths.indexOf(url);
+          const started = (startedIndex !== -1);
+
+          if (action === 'start' && started === false) {
+            toggleSynthEvent.push({ action: 'start', filename: url });
+            startedSynths.push(url);
+            this.localState.startingSynths.add(url);
+          } else if (action === 'stop' && started === true) {
+            toggleSynthEvent.push({ action: 'stop', filename: url });
+            startedSynths.splice(startedIndex, 1);
+            this.localState.startingSynths.delete(url);
+          }
+        }
+
+        this.granularControllerState.set({ startedSynths, toggleSynthEvent });
+        this.render();
       },
       updateFilePreset: throttle((soundbank, filename, param, value) => {
         this.client.socket.send('soundBanks:updateSoundFilePreset',
@@ -68,11 +98,11 @@ class GranularControllerExperience extends AbstractExperience {
       // local stuff
       addToEditedFile: filename => {
         this.localState.editedFiles.add(filename);
-        this.renderApp();
+        this.render();
       },
       removeFromEditedFile: filename => {
         this.localState.editedFiles.delete(filename);
-        this.renderApp();
+        this.render();
       },
     };
 
@@ -81,9 +111,18 @@ class GranularControllerExperience extends AbstractExperience {
     this.granularControllerState.subscribe(updates => {
       if ('currentSoundBank' in updates) {
         this.localState.editedFiles.clear();
+        this.localState.startingSynths.clear();
       }
 
-      this.renderApp();
+      if ('startedSynths' in updates) {
+        const { startedSynths } = updates;
+
+        startedSynths.forEach(filename => {
+          this.localState.startingSynths.delete(filename);
+        });
+      }
+
+      this.render();
     });
 
     this.client.stateManager.observe(async (schemaName, stateId, nodeId) => {
@@ -92,7 +131,7 @@ class GranularControllerExperience extends AbstractExperience {
 
         playerState.onDetach(() => {
           this.playerStates.delete(nodeId);
-          this.renderApp();
+          this.render();
         });
 
         playerState.subscribe(updates => {
@@ -100,14 +139,14 @@ class GranularControllerExperience extends AbstractExperience {
             switch (name) {
               case 'granularConfig':
               case 'granularLoading':
-                this.renderApp();
+                this.render();
                 break;
             }
           }
         });
 
         this.playerStates.set(nodeId, playerState);
-        this.renderApp();
+        this.render();
       }
     });
 
@@ -120,15 +159,15 @@ class GranularControllerExperience extends AbstractExperience {
       this.localState.soundBankValues = values;
       this.localState.soundBankDefaultPresets = soundBankDefaultPresets;
       this.localState.soundFileDefaultPresets = soundFileDefaultPresets;
-      this.renderApp();
+      this.render();
     });
 
-    window.addEventListener('resize', () => this.renderApp());
+    window.addEventListener('resize', () => this.render());
 
     super.start();
   }
 
-  renderApp() {
+  render() {
     const filteredSoundBankNames = Object.keys(this.localState.soundBankValues)
       .sort()
       .filter((name) => {
@@ -140,7 +179,7 @@ class GranularControllerExperience extends AbstractExperience {
     const loadingPlayers = playerStates.filter(s => s.granularLoading === true);
     const loadedPlayers = playerStates.filter(s => s.granularConfig !== null && s.granularLoading === false);
 
-    const currentSoundBank = this.granularControllerState.getValues()['currentSoundBank'];
+    const currentSoundBank = this.granularControllerState.get('currentSoundBank');
     let soundBankFiles = {}
 
     if (currentSoundBank !== null) {
@@ -155,45 +194,63 @@ class GranularControllerExperience extends AbstractExperience {
         style="min-height: 75px"
         list="${JSON.stringify(filteredSoundBankNames)}"
         value="${currentSoundBank ? currentSoundBank : ''}"
-        @change="${this.eventListeners.updateSoundBank}"
+        @change="${this.listeners.updateSoundBank}"
       ></playground-header>
 
-      <section style="width: ${width - 121}px; float: left; box-sizing: border-box; padding: 0 0 10px 10px">
+      <section style="
+        width: ${width - 121}px;
+        float: left;
+        box-sizing: border-box;
+        padding: 0 0 10px 10px
+      ">
+        <div style="clear:left; position: relative; margin-top: 20px; margin-bottom: 40px;">
+          <button
+            style="
+              ${btn}
+              width: 45%;
+              position: relative;
+            "
+            @touchstart="${e => this.listeners.toggleAllSynths('start')}"
+            @mousedown="${e => this.listeners.toggleAllSynths('start')}"
+          >START ALL</button>
+          <button
+            style="
+              ${btn}
+              width: 45%;
+              position: absolute;
+              right: 20px;
+            "
+            @touchstart="${e => this.listeners.toggleAllSynths('stop')}"
+            @mousedown="${e => this.listeners.toggleAllSynths('stop')}"
+          >STOP ALL</button>
+        </div>
+
         ${Object.keys(soundBankFiles).map((filename) => {
           const url = soundBankFiles[filename].url;
+          const starting = this.localState.startingSynths.has(url);
           const started = (granularState.startedSynths.indexOf(url) !== -1);
           const numPlayers = loadedPlayers.filter(p => p.granularFile === url).length;
 
           return html`
             <div style="clear:left; position: relative; margin-top: 20px;">
-              <h2 style="height: 30px; line-height: 30px; font-size: 14px;">
-                > ${filename}
-                <span style="display: inline-block; font-size: 10px;">
-                  (# players: ${numPlayers})
-                </span>
-              </h2>
               <button
                 style="
                   ${btn}
-                  ${started ? btnActive : ''}
-                  width: 400px;
-                  position: absolute;
-                  right: 160px;
-                  top: 0;
+                  ${(starting || started) ? btnActive : ''}
+                  width: 80%;
                 "
-                data-filename="${url}"
-                @touchstart="${e => this.eventListeners.toggleSynth(url)}"
-                @mousedown="${e => this.eventListeners.toggleSynth(url)}"
-              >${started ? 'stop' : 'start'}</button>
+                @touchstart="${e => this.listeners.toggleSynth(url)}"
+                @mousedown="${e => this.listeners.toggleSynth(url)}"
+              >${filename} - #players: ${numPlayers} -------- ${started ? 'STOP' : 'START'}</button>
               <playground-preset
                 style="position: absolute; top: 0; right: 0"
                 width="400"
                 expanded="${ifDefined(this.localState.editedFiles.has(filename) ? true : undefined)}"
                 definitions="${JSON.stringify(this.localState.soundFileDefaultPresets.granularSynth)}"
                 values="${JSON.stringify(soundBankFiles[filename].presets.granularSynth)}"
-                @open="${e => this.eventListeners.addToEditedFile(filename)}"
-                @close="${e => this.eventListeners.removeFromEditedFile(filename)}"
-                @update="${e => this.eventListeners.updateFilePreset(currentSoundBank, filename, e.detail.name, e.detail.value)}"
+                @open="${e => this.listeners.addToEditedFile(filename)}"
+                @close="${e => this.listeners.removeFromEditedFile(filename)}"
+                @update="${e => this.listeners.updateFilePreset(currentSoundBank, filename, e.detail.name, e.detail.value)}"
               ></playground-preset>
             </div>
           `;
