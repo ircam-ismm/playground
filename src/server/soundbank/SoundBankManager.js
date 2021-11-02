@@ -1,6 +1,6 @@
 import JSON5 from 'json5';
-import { writeFileSync } from 'fs';
-import { join } from 'path';
+import fs from 'fs';
+import path from 'path';
 import SoundBank from './SoundBank';
 
 /**
@@ -52,6 +52,7 @@ class SoundBankManager {
 
   getValues() {
     const values = {};
+
     for (let name in this.soundBanks) {
       values[name] = JSON.parse(JSON.stringify(this.soundBanks[name]));
     }
@@ -104,15 +105,32 @@ class SoundBankManager {
       }
 
       const soundBankName = dir.name;
-      const soundBankDataFile = join(dir.path, SOUND_BANK_DATA_BASENAME);
-      const soundBankDataLeaf = dir.children.find(f => f.path === soundBankDataFile);
+      const soundBankDataFile = path.join(dir.path, SOUND_BANK_DATA_BASENAME);
+      // if the soundfile does not exists, thats a new soundbank
+      let soundBankDataLeaf = dir.children.find(f => f.path === soundBankDataFile);
+
+      // if the file exists, it may be outdated (e.g. in case the directory
+      // has been renamed, in this case just remove it)
+      // cf. https://github.com/ircam-ismm/playground/issues/9
+      if (soundBankDataLeaf) {
+        const data = fs.readFileSync(soundBankDataFile, { encoding: 'utf-8' });
+        const { name } = JSON5.parse(data);
+        // the name is outdated, so the whle soundbank file is
+        if (name !== soundBankName) {
+          fs.unlinkSync(soundBankDataFile);
+          soundBankDataLeaf = false;
+        }
+      }
+
       let soundBank;
 
+      // if the soundbank file does not exists, create it
       if (!soundBankDataLeaf) {
         const { name, path, url } = dir;
         const data = { name, path, url, version: SOUND_BANK_DATA_VERSION };
         const json = JSON.stringify(data, null, 2);
-        writeFileSync(soundBankDataFile, json, { encoding: 'utf8' });
+        fs.writeFileSync(soundBankDataFile, json, { encoding: 'utf8' });
+
         // if only the `_soundbank.json` file has been deleted,
         // we wan't to recreate the whole `SoundBank`
         if (this.soundBanks[soundBankName]) {
@@ -136,7 +154,7 @@ class SoundBankManager {
         dirty = true;
       }
 
-      soundBank.updateFromTree(dir.children);
+      soundBank.updateFromTree(dir);
 
       this.soundBanks[soundBankName] = soundBank;
 

@@ -209,11 +209,12 @@ class SoundBank {
     }
   }
 
-  updateFromTree(tree) {
+  updateFromTree(dir) {
     const existingFiles = Object.keys(this.values.files);
     let dirty;
 
-    tree.forEach(desc => {
+    dir.children.forEach(desc => {
+      // in which case do we need this ? this is fucking weird...
       if (desc.path === this._fileStorage) {
         const data = fs.readFileSync(desc.path, { encoding: 'utf8' });
         const json = JSON5.parse(data);
@@ -236,7 +237,6 @@ class SoundBank {
       if (!this.values.files[filename]) {
         // new sound file added, create SoundFile from defaults
         const { name, path, url } = desc;
-        console.log(name, path, url);
         const presets = {};
         const soundFile = new SoundFile({ name, path, url, presets }, this._fileDefaultPresets);
         this.values.files[name] = soundFile;
