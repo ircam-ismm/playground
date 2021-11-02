@@ -1,5 +1,5 @@
 import { AbstractExperience } from '@soundworks/core/client';
-import { render, html } from 'lit-html';
+import { render, html, nothing } from 'lit-html';
 import renderInitializationScreens from '@soundworks/template-helpers/client/render-initialization-screens.js';
 
 import { ifDefined } from 'lit-html/directives/if-defined.js';
@@ -203,27 +203,30 @@ class GranularControllerExperience extends AbstractExperience {
         box-sizing: border-box;
         padding: 0 0 10px 10px
       ">
-        <div style="clear:left; position: relative; margin-top: 20px; margin-bottom: 40px;">
-          <button
-            style="
-              ${btn}
-              width: 45%;
-              position: relative;
-            "
-            @touchstart="${e => this.listeners.toggleAllSynths('start')}"
-            @mousedown="${e => this.listeners.toggleAllSynths('start')}"
-          >START ALL</button>
-          <button
-            style="
-              ${btn}
-              width: 45%;
-              position: absolute;
-              right: 20px;
-            "
-            @touchstart="${e => this.listeners.toggleAllSynths('stop')}"
-            @mousedown="${e => this.listeners.toggleAllSynths('stop')}"
-          >STOP ALL</button>
-        </div>
+        ${currentSoundBank !== null ?
+          html`
+            <div style="clear:left; position: relative; margin-top: 20px; margin-bottom: 40px;">
+              <button
+                style="
+                  ${btn}
+                  width: 45%;
+                  position: relative;
+                "
+                @touchstart="${e => this.listeners.toggleAllSynths('start')}"
+                @mousedown="${e => this.listeners.toggleAllSynths('start')}"
+              >START ALL</button>
+              <button
+                style="
+                  ${btn}
+                  width: 45%;
+                  position: absolute;
+                  right: 20px;
+                "
+                @touchstart="${e => this.listeners.toggleAllSynths('stop')}"
+                @mousedown="${e => this.listeners.toggleAllSynths('stop')}"
+              >STOP ALL</button>
+            </div>
+          ` : nothing}
 
         ${Object.keys(soundBankFiles).map((filename) => {
           const url = soundBankFiles[filename].url;

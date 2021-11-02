@@ -37,6 +37,7 @@ export const btn = css`
   line-height: 36px;
   padding: 0;
   outline: none;
+  user-select: none;
 `;
 
 export const btnActive = css`
