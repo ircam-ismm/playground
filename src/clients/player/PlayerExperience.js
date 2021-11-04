@@ -125,7 +125,7 @@ class PlayerExperience extends AbstractExperience {
       for (let name in updates) {
         switch (name) {
           case 'triggerFile': {
-            this.loadFile('trigger', updates[name]);
+            this.loadFile('trigger');
             break;
           }
           case 'triggerConfig': {
@@ -156,7 +156,7 @@ class PlayerExperience extends AbstractExperience {
 
           // soloist
           case 'soloistFile': {
-            this.loadFile('soloist', updates[name]);
+            this.loadFile('soloist');
             break;
           }
           case 'soloistConfig': {
@@ -218,7 +218,7 @@ class PlayerExperience extends AbstractExperience {
           }
           // granular
           case 'granularFile': {
-            this.loadFile('granular', updates[name]);
+            this.loadFile('granular');
             break;
           }
           case 'granularConfig': {
@@ -235,7 +235,7 @@ class PlayerExperience extends AbstractExperience {
           }
           // auto synth
           case 'autoPlayFile': {
-            await this.loadFile('autoPlay', updates[name]);
+            await this.loadFile('autoPlay');
             // if the synth is enabled we only change the buffer
             if (this.autoPlaySynth !== null) {
               const buffer = this.bufferCache.get('autoPlay');
@@ -279,7 +279,7 @@ class PlayerExperience extends AbstractExperience {
       this.granularSynth = null;
     } else if (this.granularSynth === null && action === 'start') {
       if (!this.bufferCache.get('granular')) {
-        await this.loadFile('granular', this.playerState.get('granularFile'));
+        await this.loadFile('granular');
       }
 
       const buffer = this.bufferCache.get('granular');
@@ -302,7 +302,7 @@ class PlayerExperience extends AbstractExperience {
       this.autoPlaySynth = null;
     } else if (this.autoPlaySynth === null && enabled) {
       if (!this.bufferCache.get('autoPlay')) {
-        await this.loadFile('autoPlay', this.playerState.get('autoPlayFile'));
+        await this.loadFile('autoPlay');
       }
 
       const buffer = this.bufferCache.get('autoPlay');
@@ -319,15 +319,27 @@ class PlayerExperience extends AbstractExperience {
     }
   }
 
-  async loadFile(type, url) {
+  async loadFile(type) {
+    const fileKey = `${type}File`;
     const loadingKey = `${type}Loading`;
 
     this.bufferCache.delete(type);
 
+    const url = this.playerState.get(fileKey);
+
     if (url !== null) {
       this.playerState.set({ [loadingKey]: true });
       const result = await this.audioBufferLoader.load({ [type]: url });
-      this.bufferCache.set(type, result[type]);
+      // we need to check that the required file is still the same one
+      // after loading, to avoid concurrencies
+      // e.g. selection         "long file"   ->  "short file"
+      // vs. order of arrival   "short file"  ->  "long file"
+      const currentUrl = this.playerState.get(fileKey);
+
+      if (url === currentUrl) {
+        this.bufferCache.set(type, result[type]);
+      }
+
       this.playerState.set({ [loadingKey]: false });
     } else {
       this.playerState.set({ [loadingKey]: false });

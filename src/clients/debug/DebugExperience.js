@@ -8,13 +8,15 @@ import throttle from 'lodash.throttle';
 
 import '@ircam/simple-components/sc-slider.js';
 import '@ircam/simple-components/sc-text.js';
+import '@ircam/simple-components/sc-dot-map.js';
+import '@ircam/simple-components/sc-button.js';
 
 import '../views/playground-preset';
 import '../views/playground-header';
 import '../views/playground-loading-players';
 import { btn, btnActive } from '../views/defaultStyles.js';
 
-class TriggerControllerExperience extends AbstractExperience {
+class DebugExperience extends AbstractExperience {
   constructor(client, config, $container) {
     super(client);
 
@@ -182,6 +184,20 @@ class TriggerControllerExperience extends AbstractExperience {
           >trigger all</button>
         </div>
 
+        <div style="margin-top: 20px">
+          <sc-button
+            value="long -> short"
+            @input="${e => {
+              console.log('long');
+              this.listeners.updateSoundBank('long')
+              setTimeout(() => {
+                console.log('short');
+                this.listeners.updateSoundBank('short')
+              }, 50);
+            }}"
+          ></sc-button>
+        </div>
+
         ${Object.keys(soundBankFiles).map((filename) => {
           return html`
             <div style="position: relative; margin-top: 20px;">
@@ -246,4 +262,4 @@ class TriggerControllerExperience extends AbstractExperience {
   }
 }
 
-export default TriggerControllerExperience;
+export default DebugExperience;

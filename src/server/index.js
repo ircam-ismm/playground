@@ -25,6 +25,7 @@ import SoundBankManagerExperience from './SoundBankManagerExperience.js';
 
 import InstructionsViewerExperience from './InstructionsViewerExperience.js';
 import ControllerExperience from './ControllerExperience.js';
+import DebugExperience from './DebugExperience.js';
 
 // schemas
 import globalsSchema from './schemas/globals.js';
@@ -184,6 +185,11 @@ server.stateManager.registerSchema('soloist-controller', soloistControllerSchema
     const instructionsViewerExperience = new InstructionsViewerExperience(server, 'instructions-viewer');
     const mainControllerExperience = new ControllerExperience(server, 'controller');
 
+    const debugExperience = new DebugExperience(server,
+      'debug',
+      soundBankManager
+    );
+
     await server.start();
 
     autoPlayControllerExperience.start();
@@ -193,8 +199,9 @@ server.stateManager.registerSchema('soloist-controller', soloistControllerSchema
 
     instructionsViewerExperience.start();
     mainControllerExperience.start();
-
     soundbankManagerExperience.start();
+
+    debugExperience.start();
 
     playerExperience.start();
 
