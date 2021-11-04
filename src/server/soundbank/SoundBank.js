@@ -63,7 +63,7 @@ class SoundFile {
 
     for (let name in defaultPresets) {
       const defaults = defaultPresets[name];
-      const storedValues = (values.presets && values.presets[name]) || {};
+      const storedValues = (values.presets && values.presets[name]) || {};
       const preset = new Preset(defaults, storedValues);
 
       this.values.presets[name] = preset;
