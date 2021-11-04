@@ -1,9 +1,5 @@
 export default {
   autoPlaySynth: {
-    // randomizeBuffer: {
-    //   type: 'boolean',
-    //   default: true,
-    // },
     repeatPeriod: {
       type: 'float',
       min: 0,

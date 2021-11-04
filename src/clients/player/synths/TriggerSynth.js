@@ -30,8 +30,9 @@ class TriggerSynth {
       src.connect(env);
       src.buffer = this.buffer;
 
-      if (i > 0)
+      if (i > 0) {
         startTime = now + (i * this.period) + ((Math.random() * 2 - 1)  * this.jitter);
+      }
 
       src.start(startTime);
     }

@@ -155,48 +155,23 @@ class DebugExperience extends AbstractExperience {
         @change="${e => this.listeners.updateSoundBank(e.detail.value)}"
       ></playground-header>
 
-      <section style="width: ${width - 120}px; float: left; box-sizing: border-box; padding: 0 0 10px 10px">
-        <div style="margin-top: 10px">
-          <sc-text
-            value="pad size"
-            width="100"
-            readonly
-          ></sc-text>
-          <sc-slider
-            width="300"
-            min="20"
-            max="100"
-            step="1"
-            value="${this.localState.padSize}"
-            @input="${e => this.listeners.updatePadSize(e.detail.value)}"
-          ></sc-slider>
-        </div>
-
-        <div style="margin-top: 20px">
-          <button
-            style="
-              ${btn}
-              ${btnActive}
-              width: 406px;
-            "
-            @mouseup="${e => this.listeners.triggerAllPlayers()}"
-            @touchend="${e => this.listeners.triggerAllPlayers()}"
-          >trigger all</button>
-        </div>
-
-        <div style="margin-top: 20px">
-          <sc-button
-            value="long -> short"
-            @input="${e => {
-              console.log('long');
-              this.listeners.updateSoundBank('long')
-              setTimeout(() => {
-                console.log('short');
-                this.listeners.updateSoundBank('short')
-              }, 50);
-            }}"
-          ></sc-button>
-        </div>
+      <div style="margin-top: 20px">
+        <sc-text
+          value="fast soundbanks update (50ms)"
+          readonly
+        ></sc-text>
+        <sc-button
+          value="long -> short"
+          @input="${e => {
+            console.log('long');
+            this.listeners.updateSoundBank('long')
+            setTimeout(() => {
+              console.log('short');
+              this.listeners.updateSoundBank('short')
+            }, 50);
+          }}"
+        ></sc-button>
+      </div>
 
         ${Object.keys(soundBankFiles).map((filename) => {
           return html`

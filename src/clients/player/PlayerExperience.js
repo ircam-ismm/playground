@@ -330,12 +330,12 @@ class PlayerExperience extends AbstractExperience {
     if (url !== null) {
       this.playerState.set({ [loadingKey]: true });
       const result = await this.audioBufferLoader.load({ [type]: url });
-      // we need to check that the required file is still the same one
-      // after loading, to avoid concurrencies
-      // e.g. selection         "long file"   ->  "short file"
-      // vs. order of arrival   "short file"  ->  "long file"
+      // @note - we need to check that the required file is still the
+      // same one after loading, to avoid concurrencies, e.g.:
+      // selection is         "long file"   ->  "short file"
+      // order of arrival is   "short file"  ->  "long file"
       const currentUrl = this.playerState.get(fileKey);
-
+      // so if some file arrived too late, we just ignore it
       if (url === currentUrl) {
         this.bufferCache.set(type, result[type]);
       }

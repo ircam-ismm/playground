@@ -3,6 +3,30 @@ import fs from 'fs';
 import path from 'path';
 import SoundBank from './SoundBank';
 
+/*
+  // v0.1.0
+  const soundbank = soundbanks.get('vocals')
+  ==> soundbank is a POJO
+  sounbank.presets.autoPlaySynth.get('activated');
+  sounbank.presets.autoPlaySynth.subscribe(updates => {})
+  ==> soundank.presets is a {} of states
+
+  const file = soundbank.getFile(filename);
+  ==> file is a POJO
+  const autoPlayPreset = file.presets.autoPlaySynth;
+  autoplayPreset.get('repeatPeriod');
+  autoplayPreset.set({ repeatPeriod: 2 });
+
+  autoplayPreset.dirty : Boolean
+  autoplayPreset.save() : undefined
+  autoplayPreset.reset() : undefined
+  ===> file.presets.autoPlaySynth is a state
+
+  we can save from whatever level
+
+
+*/
+
 /**
  * SOUND_BANK_DATA_BASENAME structure
   {
@@ -10,7 +34,7 @@ import SoundBank from './SoundBank';
     path: '',
     url: '',
     version: '0.0.0',
-    presets: {
+    presets: Map{
       [preset-name-1]: {},
       [preset-name-2]: {},
     },

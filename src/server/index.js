@@ -4,7 +4,6 @@ import { StateManagerOsc } from '@soundworks/state-manager-osc';
 import path from 'path';
 import serveStatic from 'serve-static';
 import compile from 'template-literal';
-import osc from 'osc';
 
 // import plugins
 import pluginPlatformFactory from '@soundworks/plugin-platform/server';
