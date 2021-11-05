@@ -213,8 +213,12 @@ class SoundBank {
     const existingFiles = Object.keys(this.values.files);
     let dirty;
 
+    let renamedDir = false;
+
+    // check if a _soundbank file exists first
     dir.children.forEach(desc => {
       // in which case do we need this ? this is fucking weird...
+      // if we update the file manually ?
       if (desc.path === this._fileStorage) {
         const data = fs.readFileSync(desc.path, { encoding: 'utf8' });
         const json = JSON5.parse(data);
@@ -223,7 +227,24 @@ class SoundBank {
           this.updateFromFile(json);
         }
 
-        return; // goto next
+        // the directory has been renamed
+        if (dir.name !== this.values.name) {
+          const { name, path, url } = dir;
+          this.values.name = name;
+          this.values.path = path;
+          this.values.url = url;
+
+          renamedDir = true;
+          dirty = true;
+        }
+      }
+    });
+
+
+    dir.children.forEach(desc => {
+      // ignore soundbank file
+      if (desc.path === this._fileStorage) {
+        return;
       }
 
       const ext = desc.extension.toLowerCase();
@@ -246,6 +267,12 @@ class SoundBank {
         // no change, remove from existing files
         const index = existingFiles.indexOf(filename);
         existingFiles.splice(index, 1);
+      }
+
+      if (renamedDir) {
+        const { path, url } = desc;
+        this.values.files[filename].values.path = path;
+        this.values.files[filename].values.url = url;
       }
     });
 

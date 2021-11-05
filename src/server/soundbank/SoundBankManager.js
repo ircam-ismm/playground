@@ -13,13 +13,13 @@ import SoundBank from './SoundBank';
 
   const file = soundbank.getFile(filename);
   ==> file is a POJO
-  const autoPlayPreset = file.presets.autoPlaySynth;
-  autoplayPreset.get('repeatPeriod');
-  autoplayPreset.set({ repeatPeriod: 2 });
+  const autoplayFilePreset = file.presets.autoPlaySynth;
+  autoplayFilePreset.get('repeatPeriod');
+  autoplayFilePreset.set({ repeatPeriod: 2 });
 
-  autoplayPreset.dirty : Boolean
-  autoplayPreset.save() : undefined
-  autoplayPreset.reset() : undefined
+  autoplayFilePreset.dirty : Boolean
+  autoplayFilePreset.save() : undefined
+  autoplayFilePreset.reset() : undefined
   ===> file.presets.autoPlaySynth is a state
 
   we can save from whatever level
@@ -132,20 +132,6 @@ class SoundBankManager {
       const soundBankDataFile = path.join(dir.path, SOUND_BANK_DATA_BASENAME);
       // if the soundfile does not exists, thats a new soundbank
       let soundBankDataLeaf = dir.children.find(f => f.path === soundBankDataFile);
-
-      // if the file exists, it may be outdated (e.g. in case the directory
-      // has been renamed, in this case just remove it)
-      // cf. https://github.com/ircam-ismm/playground/issues/9
-      if (soundBankDataLeaf) {
-        const data = fs.readFileSync(soundBankDataFile, { encoding: 'utf-8' });
-        const { name } = JSON5.parse(data);
-        // the name is outdated, so the whle soundbank file is
-        if (name !== soundBankName) {
-          fs.unlinkSync(soundBankDataFile);
-          soundBankDataLeaf = false;
-        }
-      }
-
       let soundBank;
 
       // if the soundbank file does not exists, create it
