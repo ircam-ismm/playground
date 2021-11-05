@@ -15,9 +15,6 @@ class AutoPlayControllerExperience extends AbstractExperience {
 
     this.config = config;
     this.$container = $container;
-
-    // require services
-
     this.playerStates = new Map();
 
     renderInitializationScreens(client, config, $container);
@@ -45,7 +42,7 @@ class AutoPlayControllerExperience extends AbstractExperience {
       toggleSynth: e => {
         e.preventDefault();
         const enabled = !(this.autoPlayControllerState.get('enabled'));
-        this.autoPlayControllerState.set({ enabled });
+        this.autoPlayControllerState.set({ enabled });
       },
     };
 

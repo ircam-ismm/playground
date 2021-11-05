@@ -115,7 +115,7 @@ class PlaygroundPreset extends LitElement {
                       max="${def.max}"
                       step="${def.step}"
                       .value="${value}"
-                      @input="${(e) => this.propagateValue(name, e.detail.value)}"
+                      @change="${(e) => this.propagateValue(name, e.detail.value)}"
                     ></sc-slider>
                   </div>
                 `;

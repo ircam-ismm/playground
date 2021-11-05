@@ -177,8 +177,8 @@ class TriggerControllerExperience extends AbstractExperience {
               ${btnActive}
               width: 406px;
             "
-            @mouseup="${e => this.listeners.triggerAllPlayers()}"
-            @touchend="${e => this.listeners.triggerAllPlayers()}"
+            @mouseup="${e => { e.preventDefault(); this.listeners.triggerAllPlayers(); }}"
+            @touchend="${e => { e.preventDefault(); this.listeners.triggerAllPlayers(); }}"
           >trigger all</button>
         </div>
 
@@ -208,8 +208,8 @@ class TriggerControllerExperience extends AbstractExperience {
                   player => {
                     return html`
                       <div
-                        @mousedown="${e => this.listeners.triggerPlayer(player.id)}"
-                        @touchstart="${e => this.listeners.triggerPlayer(player.id)}"
+                        @mousedown="${e => { preventDefault(); this.listeners.triggerPlayer(player.id); }}"
+                        @touchstart="${e => { preventDefault(); this.listeners.triggerPlayer(player.id); }}"
                         style="
                           background-color: ${player.color};
                           width: ${this.localState.padSize}px;

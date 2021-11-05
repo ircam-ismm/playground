@@ -205,15 +205,15 @@ class GranularControllerExperience extends AbstractExperience {
       ">
         ${currentSoundBank !== null ?
           html`
-            <div style="clear:left; position: relative; margin-top: 20px; margin-bottom: 40px;">
+            <div style="position: relative; margin-top: 20px; margin-bottom: 40px;">
               <button
                 style="
                   ${btn}
                   width: 45%;
                   position: relative;
                 "
-                @touchstart="${e => this.listeners.toggleAllSynths('start')}"
-                @mousedown="${e => this.listeners.toggleAllSynths('start')}"
+                @touchstart="${e => { e.preventDefault(); this.listeners.toggleAllSynths('start'); }}"
+                @mousedown="${e => { e.preventDefault(); this.listeners.toggleAllSynths('start'); }}"
               >START ALL</button>
               <button
                 style="
@@ -222,8 +222,8 @@ class GranularControllerExperience extends AbstractExperience {
                   position: absolute;
                   right: 20px;
                 "
-                @touchstart="${e => this.listeners.toggleAllSynths('stop')}"
-                @mousedown="${e => this.listeners.toggleAllSynths('stop')}"
+                @touchstart="${e => { e.preventDefault(); this.listeners.toggleAllSynths('stop'); }}"
+                @mousedown="${e => { e.preventDefault(); this.listeners.toggleAllSynths('stop'); }}"
               >STOP ALL</button>
             </div>
           ` : nothing}
@@ -235,15 +235,15 @@ class GranularControllerExperience extends AbstractExperience {
           const numPlayers = loadedPlayers.filter(p => p.granularFile === url).length;
 
           return html`
-            <div style="clear:left; position: relative; margin-top: 20px;">
+            <div style="position: relative; margin-top: 20px;">
               <button
                 style="
                   ${btn}
                   ${(starting || started) ? btnActive : ''}
                   width: 80%;
                 "
-                @touchstart="${e => this.listeners.toggleSynth(url)}"
-                @mousedown="${e => this.listeners.toggleSynth(url)}"
+                @touchstart="${e => { e.preventDefault(); this.listeners.toggleSynth(url); }}"
+                @mousedown="${e => { e.preventDefault(); this.listeners.toggleSynth(url); }}"
               >${filename} - #players: ${numPlayers} -------- ${started ? 'STOP' : 'START'}</button>
               <playground-preset
                 style="position: absolute; top: 0; right: 0"
