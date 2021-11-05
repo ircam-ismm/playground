@@ -127,7 +127,7 @@ class AutoPlayControllerExperience extends AbstractExperience {
         width: ${width - 121}px;
         float: left;
         box-sizing: border-box;
-        padding: 0 0 10px 10px
+        padding: 0 0 10px 10px;
       ">
 
         <button

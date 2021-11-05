@@ -153,7 +153,12 @@ class TriggerControllerExperience extends AbstractExperience {
         @change="${e => this.listeners.updateSoundBank(e.detail.value)}"
       ></playground-header>
 
-      <section style="width: ${width - 120}px; float: left; box-sizing: border-box; padding: 0 0 10px 10px">
+      <section style="
+        width: ${width - 120}px;
+        float: left;
+        box-sizing: border-box;
+        padding: 0 0 10px 10px;
+      ">
         <div style="margin-top: 10px">
           <sc-text
             value="pad size"
@@ -190,7 +195,7 @@ class TriggerControllerExperience extends AbstractExperience {
                   > ${filename}
                 </h2>
                 <playground-preset
-                  style="position: absolute; top: 0; right: 0"
+                  style="position: absolute; top: 0; right: 0;"
                   label="edit file params"
                   width="500"
                   expanded="${ifDefined(this.localState.editedFiles.has(filename) ? true : undefined)}"

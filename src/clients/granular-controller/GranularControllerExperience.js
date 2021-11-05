@@ -3,8 +3,6 @@ import { render, html, nothing } from 'lit-html';
 import renderInitializationScreens from '@soundworks/template-helpers/client/render-initialization-screens.js';
 
 import { ifDefined } from 'lit-html/directives/if-defined.js';
-import throttle from 'lodash.throttle';
-
 import '../views/playground-preset.js';
 import '../views/playground-header.js';
 import '../views/playground-loading-players.js';
@@ -86,14 +84,14 @@ class GranularControllerExperience extends AbstractExperience {
         this.granularControllerState.set({ startedSynths, toggleSynthEvent });
         this.render();
       },
-      updateFilePreset: throttle((soundbank, filename, param, value) => {
+      updateFilePreset: (soundbank, filename, param, value) => {
         this.client.socket.send('soundBanks:updateSoundFilePreset',
           soundbank,
           filename,
           'granularSynth',
           { [param]: value }
         );
-      }, 50),
+      },
 
       // local stuff
       addToEditedFile: filename => {
@@ -244,9 +242,12 @@ class GranularControllerExperience extends AbstractExperience {
                 "
                 @touchstart="${e => { e.preventDefault(); this.listeners.toggleSynth(url); }}"
                 @mousedown="${e => { e.preventDefault(); this.listeners.toggleSynth(url); }}"
-              >${filename} - #players: ${numPlayers} -------- ${started ? 'STOP' : 'START'}</button>
+              >
+                ${filename} - #players: ${numPlayers} -------- ${started ? 'STOP' : 'START'}
+              </button>
+
               <playground-preset
-                style="position: absolute; top: 0; right: 0"
+                style="position: absolute; top: 0; right: 0;"
                 width="400"
                 expanded="${ifDefined(this.localState.editedFiles.has(filename) ? true : undefined)}"
                 definitions="${JSON.stringify(this.localState.soundFileDefaultPresets.granularSynth)}"

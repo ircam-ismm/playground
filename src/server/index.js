@@ -87,10 +87,10 @@ server.pluginManager.register('filesystem', pluginFileSystemFactory, {
       path: path.join('projects', config.app.project, 'sounds'),
       publicDirectory: 'sounds',
     },
-    {
-      name: 'archives',
-      path: path.join('.archives', config.app.project),
-    },
+    // {
+    //   name: 'archives',
+    //   path: path.join('.archives', config.app.project),
+    // },
   ]
 }, []);
 
@@ -215,13 +215,6 @@ server.stateManager.registerSchema('soloist-controller', soloistControllerSchema
 
     const soundsTree = fileSystem.get('sounds');
     soundBankManager.updateFromFileTree(soundsTree);
-
-    // const archivesTree = fileSystem.get('archives');
-    // console.log(archivesTree);
-
-    // soloistControllerState.subscribe(values => {
-    //   console.log(values);
-    // });
 
     // initialize the StateManagerOsc component
     const oscConfig = { // these are the defaults

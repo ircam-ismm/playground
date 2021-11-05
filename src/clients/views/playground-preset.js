@@ -100,7 +100,7 @@ class PlaygroundPreset extends LitElement {
               const def = this.definitions[name];
               const value = this.values[name];
 
-              if (def.type === 'integer' || def.type === 'float') {
+              if (def.type === 'integer' || def.type === 'float') {
                 return html`
                   <div style="margin-bottom: 4px">
                     <sc-text
