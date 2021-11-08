@@ -48,7 +48,7 @@ class AutoPlayControllerExperience extends AbstractExperience {
 
     // listen all interesting states
     this.autoPlayControllerState = await this.client.stateManager.attach('autoplay-controller');
-    this.autoPlayControllerState.subscribe(updates => this.renderApp());
+    this.autoPlayControllerState.subscribe(updates => this.render());
 
     this.client.stateManager.observe(async (schemaName, stateId, nodeId) => {
       if (schemaName === 'player') {
@@ -56,7 +56,7 @@ class AutoPlayControllerExperience extends AbstractExperience {
 
         playerState.onDetach(() => {
           this.playerStates.delete(nodeId);
-          this.renderApp();
+          this.render();
         });
 
         playerState.subscribe(updates => {
@@ -64,14 +64,14 @@ class AutoPlayControllerExperience extends AbstractExperience {
             switch (name) {
               case 'autoPlayConfig':
               case 'autoPlayLoading':
-                this.renderApp();
+                this.render();
                 break;
             }
           }
         });
 
         this.playerStates.set(nodeId, playerState);
-        this.renderApp();
+        this.render();
       }
     });
 
@@ -84,31 +84,28 @@ class AutoPlayControllerExperience extends AbstractExperience {
       this.localState.soundBankValues = values;
       this.localState.soundBankDefaultPresets = soundBankDefaultPresets;
       this.localState.soundFileDefaultPresets = soundFileDefaultPresets;
-      this.renderApp();
+      this.render();
     });
 
-    window.addEventListener('resize', () => this.renderApp());
+    window.addEventListener('resize', () => this.render());
 
     super.start();
   }
 
-  renderApp() {
-    const filteredSoundBankNames = Object.keys(this.localState.soundBankValues)
-      .sort()
-      .filter((name) => {
-        return this.localState.soundBankValues[name].presets.activated.autoPlaySynth;
-      });
-
+  render() {
     const playerStates = Array.from(this.playerStates.values()).map(s => s.getValues());
     const loadingPlayers = playerStates.filter(s => s.autoPlayLoading === true);
     const loadedPlayers = playerStates.filter(s => s.autoPlayConfig !== null && s.autoPlayLoading === false);
 
-    const currentSoundBank = this.autoPlayControllerState.getValues()['currentSoundBank'];
-    let soundBankFiles = {}
+    const {
+      activeSoundbanks,
+      currentSoundBank,
+      enabled,
+    } = this.autoPlayControllerState.getValues();
 
-    if (currentSoundBank !== null) {
-      soundBankFiles = this.localState.soundBankValues[currentSoundBank].files;
-    }
+
+    const soundBankFiles = currentSoundBank ?
+      this.localState.soundBankValues[currentSoundBank].files : {};
 
     const autoPlayState = this.autoPlayControllerState.getValues();
 
@@ -118,7 +115,7 @@ class AutoPlayControllerExperience extends AbstractExperience {
     render(html`
       <playground-header
         style="min-height: 75px"
-        list="${JSON.stringify(filteredSoundBankNames)}"
+        list="${JSON.stringify(activeSoundbanks)}"
         value="${currentSoundBank ? currentSoundBank : ''}"
         @change="${e => this.eventListeners.updateSoundBank(e.detail.value)}"
       ></playground-header>
@@ -133,13 +130,13 @@ class AutoPlayControllerExperience extends AbstractExperience {
         <button
           style="
             ${btn}
-            ${autoPlayState.enabled ? btnActive : ''}
+            ${enabled ? btnActive : ''}
             margin-top: 20px;
             width: 50%;
           "
           @touchstart="${this.eventListeners.toggleSynth}"
           @mousedown="${this.eventListeners.toggleSynth}"
-        >${autoPlayState.enabled ? 'stop' : 'start'}</button>
+        >${enabled ? 'stop' : 'start'}</button>
 
 
         ${Object.keys(soundBankFiles).map((filename) => {

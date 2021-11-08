@@ -87,13 +87,6 @@ class SoloistControllerExperience extends AbstractExperience {
     const soloistState = this.soloistState.getValues();
     const playerStates = Array.from(this.playerStates.values()).map(s => s.getValues());
 
-    const currentSoundBank = soloistState.currentSoundBank;
-    const filteredSoundBankNames = Object.keys(this.localState.soundBankValues)
-      .sort()
-      .filter((name) => {
-        return this.localState.soundBankValues[name].presets.activated.soloistSynth;
-      });
-
     const positions = playerStates.filter(p => p.position !== null).map(p => p.position);
     const loadingPlayers = playerStates.filter(s => s.soloistLoading === true);
 
@@ -113,8 +106,8 @@ class SoloistControllerExperience extends AbstractExperience {
       html`
         <playground-header
           style="min-height: 75px; max-width: calc(100vw - 400px);"
-          list="${JSON.stringify(filteredSoundBankNames)}"
-          value="${currentSoundBank ? currentSoundBank : ''}"
+          list="${JSON.stringify(soloistState.activeSoundbanks)}"
+          value="${soloistState.currentSoundBank ? soloistState.currentSoundBank : ''}"
           @change="${e => this.listeners.updateSoundBank(e.detail.value)}"
         ></playground-header>
 

@@ -1,5 +1,9 @@
 
 const soloistSchema = {
+  activeSoundbanks: {
+    type: 'any',
+    default: [],
+  },
   currentSoundBank: {
     type: 'string',
     default: null,

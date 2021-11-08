@@ -77,8 +77,9 @@ class TriggerControllerExperience extends AbstractExperience {
     this.triggerControllerState.subscribe(updates => {
       if ('currentSoundBank' in updates) {
         this.localState.editedFiles.clear();
-        this.render();
       }
+
+      this.render();
     });
 
     this.client.stateManager.observe(async (schemaName, stateId, nodeId) => {
@@ -125,22 +126,19 @@ class TriggerControllerExperience extends AbstractExperience {
   }
 
   render() {
-    const filteredSoundBankNames = Object.keys(this.localState.soundBankValues)
-      .sort()
-      .filter((name) => {
-        return this.localState.soundBankValues[name].presets.activated.triggerSynth;
-      });
-
     const playerStates = Array.from(this.playerStates.values()).map(s => s.getValues());
     const loadingPlayers = playerStates.filter(s => s.triggerLoading === true);
     const loadedPlayers = playerStates.filter(s => s.triggerConfig !== null && s.triggerLoading === false);
 
-    const currentSoundBank = this.triggerControllerState.getValues()['currentSoundBank'];
-    let soundBankFiles = {};
+    const {
+      activeSoundbanks,
+      currentSoundBank,
+    } = this.triggerControllerState.getValues();
 
-    if (currentSoundBank !== null) {
-      soundBankFiles = this.localState.soundBankValues[currentSoundBank].files;
-    }
+    console.log(activeSoundbanks)
+
+    const soundBankFiles = currentSoundBank ?
+      this.localState.soundBankValues[currentSoundBank].files : {};
 
     const width = window.innerWidth;
     const height = window.innerHeight;
@@ -148,7 +146,7 @@ class TriggerControllerExperience extends AbstractExperience {
     render(html`
       <playground-header
         style="min-height: 75px"
-        list="${JSON.stringify(filteredSoundBankNames)}"
+        list="${JSON.stringify(activeSoundbanks)}"
         value="${currentSoundBank ? currentSoundBank : ''}"
         @change="${e => this.listeners.updateSoundBank(e.detail.value)}"
       ></playground-header>

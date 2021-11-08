@@ -1,4 +1,8 @@
 export default {
+  activeSoundbanks: {
+    type: 'any',
+    default: [],
+  },
   currentSoundBank: {
     type: 'string',
     default: null,

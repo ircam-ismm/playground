@@ -166,23 +166,18 @@ class GranularControllerExperience extends AbstractExperience {
   }
 
   render() {
-    const filteredSoundBankNames = Object.keys(this.localState.soundBankValues)
-      .sort()
-      .filter((name) => {
-        return this.localState.soundBankValues[name].presets.activated.granularSynth;
-      });
-
-    const granularState = this.granularControllerState.getValues();
     const playerStates = Array.from(this.playerStates.values()).map(s => s.getValues());
     const loadingPlayers = playerStates.filter(s => s.granularLoading === true);
     const loadedPlayers = playerStates.filter(s => s.granularConfig !== null && s.granularLoading === false);
 
-    const currentSoundBank = this.granularControllerState.get('currentSoundBank');
-    let soundBankFiles = {}
+    const {
+      activeSoundbanks,
+      currentSoundBank,
+      startedSynths,
+    } = this.granularControllerState.getValues();
 
-    if (currentSoundBank !== null) {
-      soundBankFiles = this.localState.soundBankValues[currentSoundBank].files;
-    }
+    const soundBankFiles = currentSoundBank ?
+      this.localState.soundBankValues[currentSoundBank].files : {};
 
     const width = window.innerWidth;
     const height = window.innerHeight;
@@ -190,7 +185,7 @@ class GranularControllerExperience extends AbstractExperience {
     render(html`
       <playground-header
         style="min-height: 75px"
-        list="${JSON.stringify(filteredSoundBankNames)}"
+        list="${JSON.stringify(activeSoundbanks)}"
         value="${currentSoundBank ? currentSoundBank : ''}"
         @change="${this.listeners.updateSoundBank}"
       ></playground-header>
@@ -229,7 +224,7 @@ class GranularControllerExperience extends AbstractExperience {
         ${Object.keys(soundBankFiles).map((filename) => {
           const url = soundBankFiles[filename].url;
           const starting = this.localState.startingSynths.has(url);
-          const started = (granularState.startedSynths.indexOf(url) !== -1);
+          const started = (startedSynths.indexOf(url) !== -1);
           const numPlayers = loadedPlayers.filter(p => p.granularFile === url).length;
 
           return html`

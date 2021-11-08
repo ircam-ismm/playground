@@ -195,14 +195,39 @@ server.stateManager.registerSchema('soloist-controller', soloistControllerSchema
     soloistControllerExperience.start();
     triggerControllerExperience.start();
     granularControllerExperience.start();
-
     instructionsViewerExperience.start();
     mainControllerExperience.start();
     soundbankManagerExperience.start();
-
     debugExperience.start();
-
     playerExperience.start();
+
+    soundBankManager.subscribe((oldValues, newValues) => {
+      const soundbanks = Object.values(newValues);
+
+      const autoPlaySoundbanks = soundbanks
+        .filter(s => s.presets.activated.autoPlaySynth)
+        .map(s => s.name)
+        .sort();
+      autoPlayControllerState.set({ activeSoundbanks: autoPlaySoundbanks });
+
+      const granularSoundbanks = soundbanks
+        .filter(s => s.presets.activated.granularSynth)
+        .map(s => s.name)
+        .sort();
+      granularControllerState.set({ activeSoundbanks: granularSoundbanks });
+
+      const soloistSoundbanks = soundbanks
+        .filter(s => s.presets.activated.soloistSynth)
+        .map(s => s.name)
+        .sort();
+      soloistControllerState.set({ activeSoundbanks: soloistSoundbanks });
+
+      const triggerSoundbanks = soundbanks
+        .filter(s => s.presets.activated.triggerSynth)
+        .map(s => s.name)
+        .sort();
+      triggerControllerState.set({ activeSoundbanks: triggerSoundbanks });
+    });
 
     // bind filesystem plugin and soundBankManager together
     fileSystem.state.subscribe(updates => {
