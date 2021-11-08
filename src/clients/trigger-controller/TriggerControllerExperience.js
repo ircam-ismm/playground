@@ -213,8 +213,8 @@ class TriggerControllerExperience extends AbstractExperience {
                   player => {
                     return html`
                       <div
-                        @mousedown="${e => { preventDefault(); this.listeners.triggerPlayer(player.id); }}"
-                        @touchstart="${e => { preventDefault(); this.listeners.triggerPlayer(player.id); }}"
+                        @mousedown="${e => { e.preventDefault(); this.listeners.triggerPlayer(player.id); }}"
+                        @touchstart="${e => { e.preventDefault(); this.listeners.triggerPlayer(player.id); }}"
                         style="
                           background-color: ${player.color};
                           width: ${this.localState.padSize}px;
