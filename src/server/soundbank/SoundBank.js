@@ -264,13 +264,22 @@ class SoundBank {
         // mark as dirty
         dirty = true;
       } else {
-        // no change, remove from existing files
+        // @note - fixed bug introduced to fixed #5, where name of the file
+        // where not saved back in the _soundbank file
+        if (!this.values.files[filename].values.name) {
+          const { name, path, url } = desc;
+          this.values.files[filename].values.name = name;
+          dirty = true;
+        }
+        // no change,
+        // remove from existing files, so we have the deleted files at the end
         const index = existingFiles.indexOf(filename);
         existingFiles.splice(index, 1);
       }
 
       if (renamedDir) {
-        const { path, url } = desc;
+        const { name, path, url } = desc;
+        this.values.files[filename].values.name = name;
         this.values.files[filename].values.path = path;
         this.values.files[filename].values.url = url;
       }
