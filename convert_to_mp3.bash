@@ -1,11 +1,15 @@
 #!/bin/bash
 
-dir="$(cd $1 && pwd)"
+dir="$(cd "${1}" && pwd)"
 
-for i in ${dir}/*.wav
+echo ">> ${dir}"
+echo ""
+
+for i in "${dir}"/*.wav
 do
   echo ""
   echo "> ${i}"
+  echo "> ${i%.*}.mp3"
   echo ""
 
   ffmpeg -y -i "$i" "${i%.*}.mp3"
