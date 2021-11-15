@@ -84,11 +84,16 @@ class PlayerExperience extends AbstractExperience {
         switch (name) {
           case 'instructionsState': {
             if (value === 'thanks') {
+              const {
+                thanksFadeOutDuration = 10,
+                thanksFadeOutSpread = 5,
+              } = this.config.project;
+
               this.thanksTimeout = setTimeout(() => {
-                this.master.fadeTo(0, 10);
+                this.master.fadeTo(0, thanksFadeOutDuration);
                 this.showConnectedScreen = false;
                 this.render();
-              }, Math.random() * 5000);
+              }, Math.random() * thanksFadeOutSpread);
             } else {
               clearTimeout(this.thanksTimeout);
               // back to full

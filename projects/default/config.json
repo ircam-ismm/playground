@@ -26,4 +26,11 @@
 
   connectionMessage: '(you are connected...)',
   thanksMessage: '(thanks...)',
+  // duration in seconds of the fadeout when the thanks state is triggered
+  thanksFadeOutDuration: 8,
+  // maximum time between the reception of the message the time at which the
+  // fadeout is triggered. The fade out starts at `rand() * thanksFadeOutDuration`,
+  // therefore all phone will be faded out between:
+  // `thanksFadeOutDuration` and `thanksFadeOutSpread + thanksFadeOutDuration`
+  thanksFadeOutSpread: 3,
 }
