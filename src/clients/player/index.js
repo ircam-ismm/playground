@@ -15,12 +15,46 @@ import pluginScriptingFactory from '@soundworks/plugin-scripting/client';
 import PlayerExperience from './PlayerExperience.js';
 import * as audio from 'waves-audio';
 
-const AudioContext = window.AudioContext || window.webkitAudioContext;
+const AudioContext = window.AudioContext || window.webkitAudioContext;
 const audioContext = new AudioContext;
 
 const config = window.soundworksConfig;
 // initalize all clients at once for emulated clients
 const experiences = new Set();
+
+let _initQoS = initQoS;
+
+if (window.location.hash === '#debug') {
+    // minimalistic, non subtle QoS
+  // to be improved little by little...
+  _initQoS = function(client, {
+    // allow clients to choose which QoS strategy is applied
+    visibilityChange = true,
+  } = {}) {
+    console.log('DEBUG MODE');
+    // we don't want to disable this one
+    client.socket.addListener('close', () => {
+      setTimeout(() => window.location.reload(true), 2000);
+    });
+
+    // this is particularly boring with controllers
+    if (visibilityChange) {
+      let timeoutId = null;
+
+      document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'hidden') {
+          // @note - has the tab is in background the timeout will take more
+          // time to trigger (e.g. ~1sec on chrome desktop)
+          timeoutId = setTimeout(() => {
+            window.location.reload(true);
+          }, 20);
+        } else {
+          clearTimeout(timeoutId);
+        }
+      }, false);
+    }
+  }
+}
 
 async function launch($container, index) {
   try {
@@ -48,8 +82,8 @@ async function launch($container, index) {
     // -------------------------------------------------------------------
     // launch application
     // -------------------------------------------------------------------
-        await client.init(config);
-    initQoS(client);
+    await client.init(config);
+    _initQoS(client);
 
     const experience = new PlayerExperience(client, config, $container, audioContext, index);
     // store exprience for emulated clients
