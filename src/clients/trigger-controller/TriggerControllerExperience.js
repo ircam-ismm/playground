@@ -1,5 +1,5 @@
 import { AbstractExperience } from '@soundworks/core/client';
-import { render, html } from 'lit-html';
+import { render, html, nothing } from 'lit-html';
 import renderInitializationScreens from '@soundworks/template-helpers/client/render-initialization-screens.js';
 
 import { ifDefined } from 'lit-html/directives/if-defined.js';
@@ -135,8 +135,6 @@ class TriggerControllerExperience extends AbstractExperience {
       currentSoundBank,
     } = this.triggerControllerState.getValues();
 
-    console.log(activeSoundbanks)
-
     const soundBankFiles = currentSoundBank ?
       this.localState.soundBankValues[currentSoundBank].files : {};
 
@@ -157,14 +155,21 @@ class TriggerControllerExperience extends AbstractExperience {
         box-sizing: border-box;
         padding: 0 0 10px 10px;
       ">
-        <div style="margin-top: 10px">
+        <div
+          style="
+            margin-top: 4px;
+            margin-right: 4px;
+            width: 200px;
+            float: right;
+          ">
           <sc-text
             value="pad size"
-            width="100"
+            width="200"
+            style="display: block; margin-bottom: 4px;"
             readonly
           ></sc-text>
           <sc-slider
-            width="300"
+            width="200"
             min="20"
             max="100"
             step="1"
@@ -172,18 +177,21 @@ class TriggerControllerExperience extends AbstractExperience {
             @input="${e => this.listeners.updatePadSize(e.detail.value)}"
           ></sc-slider>
         </div>
-
-        <div style="margin-top: 20px">
-          <button
-            style="
-              ${btn}
-              ${btnActive}
-              width: 406px;
-            "
-            @mouseup="${e => { e.preventDefault(); this.listeners.triggerAllPlayers(); }}"
-            @touchend="${e => { e.preventDefault(); this.listeners.triggerAllPlayers(); }}"
-          >trigger all</button>
-        </div>
+        ${currentSoundBank !== null ?
+          html`
+            <button
+              style="
+                ${btn}
+                ${btnActive}
+                width: ${width - 120 - 200 - 30}px;
+                height: 64px;
+                margin-top: 4px;
+              "
+              @mouseup="${e => { e.preventDefault(); this.listeners.triggerAllPlayers(); }}"
+              @touchend="${e => { e.preventDefault(); this.listeners.triggerAllPlayers(); }}"
+            >trigger all</button>
+          `
+        : nothing }
 
         ${Object.keys(soundBankFiles).map((filename) => {
           return html`
