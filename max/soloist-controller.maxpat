@@ -3,14 +3,14 @@
 		"fileversion" : 1,
 		"appversion" : 		{
 			"major" : 8,
-			"minor" : 2,
+			"minor" : 3,
 			"revision" : 1,
 			"architecture" : "x64",
 			"modernui" : 1
 		}
 ,
 		"classnamespace" : "box",
-		"rect" : [ 141.0, 118.0, 1079.0, 695.0 ],
+		"rect" : [ 888.0, 338.0, 1079.0, 695.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -39,6 +39,72 @@
 		"subpatcher_template" : "",
 		"assistshowspatchername" : 0,
 		"boxes" : [ 			{
+				"box" : 				{
+					"bubble" : 1,
+					"id" : "obj-6",
+					"linecount" : 3,
+					"maxclass" : "comment",
+					"numinlets" : 1,
+					"numoutlets" : 0,
+					"patching_rect" : [ 414.0, 218.0, 126.0, 51.0 ],
+					"presentation_linecount" : 3,
+					"text" : "4. Command + double clic to desactivate a node"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"bubble" : 1,
+					"id" : "obj-14",
+					"linecount" : 4,
+					"maxclass" : "comment",
+					"numinlets" : 1,
+					"numoutlets" : 0,
+					"patching_rect" : [ 36.0, 97.5, 95.0, 64.0 ],
+					"text" : "4. You can set the size to trigger more agents"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"bubble" : 1,
+					"id" : "obj-11",
+					"linecount" : 3,
+					"maxclass" : "comment",
+					"numinlets" : 1,
+					"numoutlets" : 0,
+					"patching_rect" : [ 414.0, 156.0, 147.0, 51.0 ],
+					"text" : "3. Move the node and ear the sound on agents"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"bubble" : 1,
+					"id" : "obj-10",
+					"linecount" : 3,
+					"maxclass" : "comment",
+					"numinlets" : 1,
+					"numoutlets" : 0,
+					"patching_rect" : [ 414.0, 58.0, 134.0, 51.0 ],
+					"text" : "2. Command + double clic to active a node"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"bubble" : 1,
+					"id" : "obj-9",
+					"linecount" : 2,
+					"maxclass" : "comment",
+					"numinlets" : 1,
+					"numoutlets" : 0,
+					"patching_rect" : [ 736.0, 170.0, 150.0, 37.0 ],
+					"text" : "1. Choose a soundbank"
+				}
+
+			}
+, 			{
 				"box" : 				{
 					"id" : "obj-22",
 					"maxclass" : "newobj",
@@ -127,8 +193,8 @@
 					"id" : "obj-81",
 					"maxclass" : "newobj",
 					"numinlets" : 1,
-					"numoutlets" : 2,
-					"outlettype" : [ "", "dictionary" ],
+					"numoutlets" : 3,
+					"outlettype" : [ "", "dictionary", "dictionary" ],
 					"patching_rect" : [ 857.0, 105.0, 183.0, 22.0 ],
 					"text" : "sw.shared-state soloist-controller"
 				}
@@ -141,7 +207,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 735.0, 241.0, 131.0, 22.0 ],
+					"patching_rect" : [ 736.0, 221.5, 131.0, 22.0 ],
 					"text" : "currentSoundBank : $1"
 				}
 
@@ -151,7 +217,7 @@
 					"fontsize" : 14.0,
 					"id" : "obj-5",
 					"maxclass" : "live.tab",
-					"num_lines_patching" : 7,
+					"num_lines_patching" : 5,
 					"num_lines_presentation" : 0,
 					"numinlets" : 1,
 					"numoutlets" : 3,
@@ -160,9 +226,9 @@
 					"patching_rect" : [ 635.0, 170.0, 87.0, 185.0 ],
 					"saved_attribute_attributes" : 					{
 						"valueof" : 						{
-							"parameter_enum" : [ "none", "air copy", "crickets", "floating", "footsteps", "trotro", "vocals" ],
+							"parameter_enum" : [ "none", "crickets", "floating", "footsteps", "vocals" ],
 							"parameter_longname" : "live.tab",
-							"parameter_mmax" : 6,
+							"parameter_mmax" : 4,
 							"parameter_shortname" : "live.tab",
 							"parameter_type" : 2,
 							"parameter_unitstyle" : 9
@@ -179,21 +245,10 @@
 					"id" : "obj-76",
 					"maxclass" : "newobj",
 					"numinlets" : 1,
-					"numoutlets" : 2,
-					"outlettype" : [ "", "dictionary" ],
-					"patching_rect" : [ 735.0, 271.0, 183.0, 22.0 ],
+					"numoutlets" : 3,
+					"outlettype" : [ "", "dictionary", "dictionary" ],
+					"patching_rect" : [ 736.0, 251.5, 183.0, 22.0 ],
 					"text" : "sw.shared-state soloist-controller"
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"id" : "obj-67",
-					"maxclass" : "comment",
-					"numinlets" : 1,
-					"numoutlets" : 0,
-					"patching_rect" : [ 362.0, 273.0, 150.0, 20.0 ],
-					"text" : "open me ;)"
 				}
 
 			}
@@ -208,7 +263,7 @@
 						"fileversion" : 1,
 						"appversion" : 						{
 							"major" : 8,
-							"minor" : 2,
+							"minor" : 3,
 							"revision" : 1,
 							"architecture" : "x64",
 							"modernui" : 1
@@ -1583,8 +1638,8 @@
 					"id" : "obj-62",
 					"maxclass" : "newobj",
 					"numinlets" : 1,
-					"numoutlets" : 2,
-					"outlettype" : [ "", "dictionary" ],
+					"numoutlets" : 3,
+					"outlettype" : [ "", "dictionary", "dictionary" ],
 					"patching_rect" : [ 273.5, 343.0, 183.0, 22.0 ],
 					"text" : "sw.shared-state soloist-controller"
 				}
@@ -1595,8 +1650,8 @@
 					"id" : "obj-60",
 					"maxclass" : "newobj",
 					"numinlets" : 1,
-					"numoutlets" : 2,
-					"outlettype" : [ "", "dictionary" ],
+					"numoutlets" : 3,
+					"outlettype" : [ "", "dictionary", "dictionary" ],
 					"patching_rect" : [ 14.0, 354.0, 183.0, 22.0 ],
 					"text" : "sw.shared-state soloist-controller"
 				}
@@ -1643,8 +1698,8 @@
 					"id" : "obj-47",
 					"maxclass" : "newobj",
 					"numinlets" : 1,
-					"numoutlets" : 2,
-					"outlettype" : [ "", "dictionary" ],
+					"numoutlets" : 3,
+					"outlettype" : [ "", "dictionary", "dictionary" ],
 					"patching_rect" : [ 653.0, 105.0, 134.0, 22.0 ],
 					"text" : "sw.shared-state globals"
 				}
@@ -1705,7 +1760,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 44.0, 148.0, 77.0, 22.0 ],
+					"patching_rect" : [ 45.0, 177.5, 77.0, 22.0 ],
 					"text" : "setsize -1 $1"
 				}
 
@@ -1719,18 +1774,6 @@
 					"outlettype" : [ "bang" ],
 					"patching_rect" : [ 14.0, 17.0, 58.0, 22.0 ],
 					"text" : "loadbang"
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"id" : "obj-7",
-					"linecount" : 2,
-					"maxclass" : "comment",
-					"numinlets" : 1,
-					"numoutlets" : 0,
-					"patching_rect" : [ 414.0, 11.5, 150.0, 33.0 ],
-					"text" : "CMD+double click to active / desactive a node"
 				}
 
 			}
@@ -1752,14 +1795,14 @@
 					"maxclass" : "nodes",
 					"nodenumber" : 6,
 					"nodesnames" : [ "1", "2", "3", "4", "5", "6" ],
-					"nsize" : [ 0.094488188976378, 0.094488188976378, 0.094488188976378, 0.094488188976378, 0.094488188976378, 0.094488188976378 ],
+					"nsize" : [ 0.464566929133858, 0.464566929133858, 0.464566929133858, 0.464566929133858, 0.464566929133858, 0.464566929133858 ],
 					"numinlets" : 1,
 					"numoutlets" : 3,
 					"outlettype" : [ "", "", "" ],
 					"parameter_enable" : 0,
-					"patching_rect" : [ 156.0, 9.0, 254.0, 253.0 ],
-					"xplace" : [ 0.437007874015748, 0.362204724409449, 0.645669291338583, 0.31496062992126, 0.416666666666667, 0.55511811023622 ],
-					"yplace" : [ 0.533596837944664, 0.320158102766798, 0.25296442687747, 0.565217391304348, 0.416666666666667, 0.569169960474308 ]
+					"patching_rect" : [ 156.0, 3.0, 254.0, 253.0 ],
+					"xplace" : [ 0.708661417322835, 0.362204724409449, 0.602362204724409, 0.31496062992126, 0.416666666666667, 0.299212598425197 ],
+					"yplace" : [ 0.703557312252964, 0.320158102766798, 0.50197628458498, 0.565217391304348, 0.416666666666667, 0.015810276679842 ]
 				}
 
 			}
@@ -1902,7 +1945,7 @@
 , 			{
 				"patchline" : 				{
 					"destination" : [ "obj-4", 0 ],
-					"source" : [ "obj-76", 0 ]
+					"source" : [ "obj-76", 1 ]
 				}
 
 			}
@@ -1945,21 +1988,14 @@
 		}
 ,
 		"dependency_cache" : [ 			{
-				"name" : "sw.shared-state.maxpat",
-				"bootpath" : "~/Documents/Github/soundworks-state-manager-osc/max/SoundworksAPI/patchers",
-				"patcherrelativepath" : "../../soundworks-state-manager-osc/max/SoundworksAPI/patchers",
-				"type" : "JSON",
-				"implicit" : 1
-			}
-, 			{
-				"name" : "jscount.js",
+				"name" : "indict.js",
 				"bootpath" : "~/Documents/Github/soundworks-state-manager-osc/max/SoundworksAPI/javascript",
 				"patcherrelativepath" : "../../soundworks-state-manager-osc/max/SoundworksAPI/javascript",
 				"type" : "TEXT",
 				"implicit" : 1
 			}
 , 			{
-				"name" : "indict.js",
+				"name" : "jscount.js",
 				"bootpath" : "~/Documents/Github/soundworks-state-manager-osc/max/SoundworksAPI/javascript",
 				"patcherrelativepath" : "../../soundworks-state-manager-osc/max/SoundworksAPI/javascript",
 				"type" : "TEXT",
@@ -1973,17 +2009,17 @@
 				"implicit" : 1
 			}
 , 			{
-				"name" : "indict_response.js",
-				"bootpath" : "~/Documents/Github/soundworks-state-manager-osc/max/SoundworksAPI/javascript",
-				"patcherrelativepath" : "../../soundworks-state-manager-osc/max/SoundworksAPI/javascript",
-				"type" : "TEXT",
-				"implicit" : 1
-			}
-, 			{
 				"name" : "soloist-parseInput.js",
 				"bootpath" : "~/Documents/Github/playground/max",
 				"patcherrelativepath" : ".",
 				"type" : "TEXT",
+				"implicit" : 1
+			}
+, 			{
+				"name" : "sw.shared-state.maxpat",
+				"bootpath" : "~/Documents/Github/soundworks-state-manager-osc/max/SoundworksAPI/patchers",
+				"patcherrelativepath" : "../../soundworks-state-manager-osc/max/SoundworksAPI/patchers",
+				"type" : "JSON",
 				"implicit" : 1
 			}
  ],

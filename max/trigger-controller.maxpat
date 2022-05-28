@@ -3,14 +3,14 @@
 		"fileversion" : 1,
 		"appversion" : 		{
 			"major" : 8,
-			"minor" : 2,
+			"minor" : 3,
 			"revision" : 1,
 			"architecture" : "x64",
 			"modernui" : 1
 		}
 ,
 		"classnamespace" : "box",
-		"rect" : [ 19.0, 416.0, 983.0, 544.0 ],
+		"rect" : [ 1031.0, 591.0, 983.0, 544.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -115,8 +115,8 @@
 					"id" : "obj-44",
 					"maxclass" : "newobj",
 					"numinlets" : 1,
-					"numoutlets" : 2,
-					"outlettype" : [ "", "dictionary" ],
+					"numoutlets" : 3,
+					"outlettype" : [ "", "dictionary", "dictionary" ],
 					"patching_rect" : [ 413.0, 486.0, 183.0, 22.0 ],
 					"text" : "sw.shared-state trigger-controller"
 				}
@@ -223,8 +223,8 @@
 					"id" : "obj-22",
 					"maxclass" : "newobj",
 					"numinlets" : 1,
-					"numoutlets" : 2,
-					"outlettype" : [ "", "dictionary" ],
+					"numoutlets" : 3,
+					"outlettype" : [ "", "dictionary", "dictionary" ],
 					"patching_rect" : [ 454.0, 112.0, 134.0, 22.0 ],
 					"text" : "sw.shared-state globals"
 				}
@@ -235,8 +235,8 @@
 					"id" : "obj-20",
 					"maxclass" : "newobj",
 					"numinlets" : 1,
-					"numoutlets" : 2,
-					"outlettype" : [ "", "dictionary" ],
+					"numoutlets" : 3,
+					"outlettype" : [ "", "dictionary", "dictionary" ],
 					"patching_rect" : [ 18.0, 105.0, 183.0, 22.0 ],
 					"text" : "sw.shared-state trigger-controller"
 				}
@@ -297,18 +297,18 @@
 					"fontsize" : 14.0,
 					"id" : "obj-5",
 					"maxclass" : "live.tab",
-					"num_lines_patching" : 4,
+					"num_lines_patching" : 5,
 					"num_lines_presentation" : 0,
 					"numinlets" : 1,
 					"numoutlets" : 3,
 					"outlettype" : [ "", "", "float" ],
 					"parameter_enable" : 1,
-					"patching_rect" : [ 28.0, 214.0, 270.0, 108.0 ],
+					"patching_rect" : [ 103.0, 194.0, 69.0, 129.0 ],
 					"saved_attribute_attributes" : 					{
 						"valueof" : 						{
-							"parameter_enum" : [ "none", "air copy", "crickets", "floating", "footsteps", "trotro", "vocals" ],
+							"parameter_enum" : [ "none", "crickets", "floating", "footsteps", "vocals" ],
 							"parameter_longname" : "live.tab",
-							"parameter_mmax" : 6,
+							"parameter_mmax" : 4,
 							"parameter_shortname" : "live.tab",
 							"parameter_type" : 2,
 							"parameter_unitstyle" : 9
@@ -325,8 +325,8 @@
 					"id" : "obj-1",
 					"maxclass" : "newobj",
 					"numinlets" : 1,
-					"numoutlets" : 2,
-					"outlettype" : [ "", "dictionary" ],
+					"numoutlets" : 3,
+					"outlettype" : [ "", "dictionary", "dictionary" ],
 					"patching_rect" : [ 128.0, 375.0, 183.0, 22.0 ],
 					"text" : "sw.shared-state trigger-controller"
 				}
@@ -336,7 +336,7 @@
 		"lines" : [ 			{
 				"patchline" : 				{
 					"destination" : [ "obj-6", 0 ],
-					"source" : [ "obj-1", 0 ]
+					"source" : [ "obj-1", 1 ]
 				}
 
 			}
@@ -494,21 +494,14 @@
 		}
 ,
 		"dependency_cache" : [ 			{
-				"name" : "sw.shared-state.maxpat",
-				"bootpath" : "~/Documents/Github/soundworks-state-manager-osc/max/SoundworksAPI/patchers",
-				"patcherrelativepath" : "../../soundworks-state-manager-osc/max/SoundworksAPI/patchers",
-				"type" : "JSON",
-				"implicit" : 1
-			}
-, 			{
-				"name" : "jscount.js",
+				"name" : "indict.js",
 				"bootpath" : "~/Documents/Github/soundworks-state-manager-osc/max/SoundworksAPI/javascript",
 				"patcherrelativepath" : "../../soundworks-state-manager-osc/max/SoundworksAPI/javascript",
 				"type" : "TEXT",
 				"implicit" : 1
 			}
 , 			{
-				"name" : "indict.js",
+				"name" : "jscount.js",
 				"bootpath" : "~/Documents/Github/soundworks-state-manager-osc/max/SoundworksAPI/javascript",
 				"patcherrelativepath" : "../../soundworks-state-manager-osc/max/SoundworksAPI/javascript",
 				"type" : "TEXT",
@@ -522,10 +515,10 @@
 				"implicit" : 1
 			}
 , 			{
-				"name" : "indict_response.js",
-				"bootpath" : "~/Documents/Github/soundworks-state-manager-osc/max/SoundworksAPI/javascript",
-				"patcherrelativepath" : "../../soundworks-state-manager-osc/max/SoundworksAPI/javascript",
-				"type" : "TEXT",
+				"name" : "sw.shared-state.maxpat",
+				"bootpath" : "~/Documents/Github/soundworks-state-manager-osc/max/SoundworksAPI/patchers",
+				"patcherrelativepath" : "../../soundworks-state-manager-osc/max/SoundworksAPI/patchers",
+				"type" : "JSON",
 				"implicit" : 1
 			}
  ],

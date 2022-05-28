@@ -3,14 +3,14 @@
 		"fileversion" : 1,
 		"appversion" : 		{
 			"major" : 8,
-			"minor" : 2,
+			"minor" : 3,
 			"revision" : 1,
 			"architecture" : "x64",
 			"modernui" : 1
 		}
 ,
 		"classnamespace" : "box",
-		"rect" : [ 224.0, 587.0, 640.0, 480.0 ],
+		"rect" : [ 1115.0, 576.0, 640.0, 480.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -39,6 +39,51 @@
 		"subpatcher_template" : "",
 		"assistshowspatchername" : 0,
 		"boxes" : [ 			{
+				"box" : 				{
+					"fontsize" : 46.658438194587411,
+					"id" : "obj-18",
+					"maxclass" : "comment",
+					"numinlets" : 1,
+					"numoutlets" : 0,
+					"patching_rect" : [ 143.0, 12.0, 247.0, 59.0 ],
+					"text" : "BROKEN..."
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-10",
+					"maxclass" : "dict.view",
+					"numinlets" : 1,
+					"numoutlets" : 0,
+					"patching_rect" : [ 457.0, 237.0, 179.0, 98.0 ]
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-9",
+					"maxclass" : "dict.view",
+					"numinlets" : 1,
+					"numoutlets" : 0,
+					"patching_rect" : [ 130.0, 237.0, 316.0, 232.0 ]
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-4",
+					"linecount" : 2,
+					"maxclass" : "message",
+					"numinlets" : 2,
+					"numoutlets" : 1,
+					"outlettype" : [ "" ],
+					"patching_rect" : [ 467.0, 36.0, 173.0, 35.0 ],
+					"text" : "/sounds/footsteps/Paris_Footsteps.mp3"
+				}
+
+			}
+, 			{
 				"box" : 				{
 					"id" : "obj-22",
 					"maxclass" : "newobj",
@@ -91,8 +136,8 @@
 					"id" : "obj-21",
 					"maxclass" : "newobj",
 					"numinlets" : 1,
-					"numoutlets" : 2,
-					"outlettype" : [ "", "dictionary" ],
+					"numoutlets" : 3,
+					"outlettype" : [ "", "dictionary", "dictionary" ],
 					"patching_rect" : [ 408.0, 188.0, 193.0, 22.0 ],
 					"text" : "sw.shared-state granular-controller"
 				}
@@ -176,7 +221,7 @@
 					"fontsize" : 14.0,
 					"id" : "obj-5",
 					"maxclass" : "live.tab",
-					"num_lines_patching" : 7,
+					"num_lines_patching" : 5,
 					"num_lines_presentation" : 0,
 					"numinlets" : 1,
 					"numoutlets" : 3,
@@ -185,9 +230,9 @@
 					"patching_rect" : [ 10.0, 12.0, 89.0, 173.0 ],
 					"saved_attribute_attributes" : 					{
 						"valueof" : 						{
-							"parameter_enum" : [ "none", "air copy", "crickets", "floating", "footsteps", "trotro", "vocals" ],
+							"parameter_enum" : [ "none", "crickets", "floating", "footsteps", "vocals" ],
 							"parameter_longname" : "live.tab",
-							"parameter_mmax" : 6,
+							"parameter_mmax" : 4,
 							"parameter_shortname" : "live.tab",
 							"parameter_type" : 2,
 							"parameter_unitstyle" : 9
@@ -204,8 +249,8 @@
 					"id" : "obj-1",
 					"maxclass" : "newobj",
 					"numinlets" : 1,
-					"numoutlets" : 2,
-					"outlettype" : [ "", "dictionary" ],
+					"numoutlets" : 3,
+					"outlettype" : [ "", "dictionary", "dictionary" ],
 					"patching_rect" : [ 110.0, 113.0, 193.0, 22.0 ],
 					"text" : "sw.shared-state granular-controller"
 				}
@@ -215,13 +260,22 @@
 		"lines" : [ 			{
 				"patchline" : 				{
 					"destination" : [ "obj-3", 0 ],
-					"source" : [ "obj-1", 0 ]
+					"source" : [ "obj-1", 1 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"destination" : [ "obj-10", 0 ],
+					"order" : 0,
+					"source" : [ "obj-11", 0 ]
 				}
 
 			}
 , 			{
 				"patchline" : 				{
 					"destination" : [ "obj-21", 0 ],
+					"order" : 1,
 					"source" : [ "obj-11", 0 ]
 				}
 
@@ -270,6 +324,13 @@
 			}
 , 			{
 				"patchline" : 				{
+					"destination" : [ "obj-9", 0 ],
+					"source" : [ "obj-21", 1 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
 					"destination" : [ "obj-5", 0 ],
 					"source" : [ "obj-22", 0 ]
 				}
@@ -286,6 +347,13 @@
 				"patchline" : 				{
 					"destination" : [ "obj-22", 0 ],
 					"source" : [ "obj-3", 1 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"destination" : [ "obj-12", 1 ],
+					"source" : [ "obj-4", 0 ]
 				}
 
 			}
@@ -314,21 +382,14 @@
 		}
 ,
 		"dependency_cache" : [ 			{
-				"name" : "sw.shared-state.maxpat",
-				"bootpath" : "~/Documents/Github/soundworks-state-manager-osc/max/SoundworksAPI/patchers",
-				"patcherrelativepath" : "../../soundworks-state-manager-osc/max/SoundworksAPI/patchers",
-				"type" : "JSON",
-				"implicit" : 1
-			}
-, 			{
-				"name" : "jscount.js",
+				"name" : "indict.js",
 				"bootpath" : "~/Documents/Github/soundworks-state-manager-osc/max/SoundworksAPI/javascript",
 				"patcherrelativepath" : "../../soundworks-state-manager-osc/max/SoundworksAPI/javascript",
 				"type" : "TEXT",
 				"implicit" : 1
 			}
 , 			{
-				"name" : "indict.js",
+				"name" : "jscount.js",
 				"bootpath" : "~/Documents/Github/soundworks-state-manager-osc/max/SoundworksAPI/javascript",
 				"patcherrelativepath" : "../../soundworks-state-manager-osc/max/SoundworksAPI/javascript",
 				"type" : "TEXT",
@@ -342,10 +403,10 @@
 				"implicit" : 1
 			}
 , 			{
-				"name" : "indict_response.js",
-				"bootpath" : "~/Documents/Github/soundworks-state-manager-osc/max/SoundworksAPI/javascript",
-				"patcherrelativepath" : "../../soundworks-state-manager-osc/max/SoundworksAPI/javascript",
-				"type" : "TEXT",
+				"name" : "sw.shared-state.maxpat",
+				"bootpath" : "~/Documents/Github/soundworks-state-manager-osc/max/SoundworksAPI/patchers",
+				"patcherrelativepath" : "../../soundworks-state-manager-osc/max/SoundworksAPI/patchers",
+				"type" : "JSON",
 				"implicit" : 1
 			}
  ],

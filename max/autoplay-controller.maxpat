@@ -3,14 +3,14 @@
 		"fileversion" : 1,
 		"appversion" : 		{
 			"major" : 8,
-			"minor" : 2,
+			"minor" : 3,
 			"revision" : 1,
 			"architecture" : "x64",
 			"modernui" : 1
 		}
 ,
 		"classnamespace" : "box",
-		"rect" : [ 299.0, 203.0, 640.0, 480.0 ],
+		"rect" : [ 967.0, 420.0, 640.0, 480.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -179,9 +179,9 @@
 					"id" : "obj-1",
 					"maxclass" : "newobj",
 					"numinlets" : 1,
-					"numoutlets" : 2,
-					"outlettype" : [ "", "dictionary" ],
-					"patching_rect" : [ 130.0, 147.0, 195.0, 22.0 ],
+					"numoutlets" : 3,
+					"outlettype" : [ "", "dictionary", "dictionary" ],
+					"patching_rect" : [ 130.0, 139.0, 195.0, 22.0 ],
 					"text" : "sw.shared-state autoplay-controller"
 				}
 
@@ -190,7 +190,7 @@
 		"lines" : [ 			{
 				"patchline" : 				{
 					"destination" : [ "obj-3", 0 ],
-					"source" : [ "obj-1", 0 ]
+					"source" : [ "obj-1", 1 ]
 				}
 
 			}
@@ -285,21 +285,14 @@
 		}
 ,
 		"dependency_cache" : [ 			{
-				"name" : "sw.shared-state.maxpat",
-				"bootpath" : "~/Documents/Github/soundworks-state-manager-osc/max/SoundworksAPI/patchers",
-				"patcherrelativepath" : "../../soundworks-state-manager-osc/max/SoundworksAPI/patchers",
-				"type" : "JSON",
-				"implicit" : 1
-			}
-, 			{
-				"name" : "jscount.js",
+				"name" : "indict.js",
 				"bootpath" : "~/Documents/Github/soundworks-state-manager-osc/max/SoundworksAPI/javascript",
 				"patcherrelativepath" : "../../soundworks-state-manager-osc/max/SoundworksAPI/javascript",
 				"type" : "TEXT",
 				"implicit" : 1
 			}
 , 			{
-				"name" : "indict.js",
+				"name" : "jscount.js",
 				"bootpath" : "~/Documents/Github/soundworks-state-manager-osc/max/SoundworksAPI/javascript",
 				"patcherrelativepath" : "../../soundworks-state-manager-osc/max/SoundworksAPI/javascript",
 				"type" : "TEXT",
@@ -313,10 +306,10 @@
 				"implicit" : 1
 			}
 , 			{
-				"name" : "indict_response.js",
-				"bootpath" : "~/Documents/Github/soundworks-state-manager-osc/max/SoundworksAPI/javascript",
-				"patcherrelativepath" : "../../soundworks-state-manager-osc/max/SoundworksAPI/javascript",
-				"type" : "TEXT",
+				"name" : "sw.shared-state.maxpat",
+				"bootpath" : "~/Documents/Github/soundworks-state-manager-osc/max/SoundworksAPI/patchers",
+				"patcherrelativepath" : "../../soundworks-state-manager-osc/max/SoundworksAPI/patchers",
+				"type" : "JSON",
 				"implicit" : 1
 			}
  ],

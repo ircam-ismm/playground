@@ -3,8 +3,8 @@
 		"fileversion" : 1,
 		"appversion" : 		{
 			"major" : 8,
-			"minor" : 1,
-			"revision" : 11,
+			"minor" : 3,
+			"revision" : 1,
 			"architecture" : "x64",
 			"modernui" : 1
 		}
@@ -40,11 +40,59 @@
 		"assistshowspatchername" : 0,
 		"boxes" : [ 			{
 				"box" : 				{
+					"id" : "obj-7",
+					"maxclass" : "message",
+					"numinlets" : 2,
+					"numoutlets" : 1,
+					"outlettype" : [ "" ],
+					"patching_rect" : [ 624.5, 108.0, 41.0, 22.0 ],
+					"text" : "set $1"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-6",
+					"maxclass" : "message",
+					"numinlets" : 2,
+					"numoutlets" : 1,
+					"outlettype" : [ "" ],
+					"patching_rect" : [ 549.5, 108.0, 41.0, 22.0 ],
+					"text" : "set $1"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-4",
+					"maxclass" : "comment",
+					"numinlets" : 1,
+					"numoutlets" : 0,
+					"patching_rect" : [ 230.5, 55.0, 90.0, 20.0 ],
+					"text" : "projectAuthor"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"fontsize" : 32.525683556722058,
+					"id" : "obj-5",
+					"maxclass" : "comment",
+					"numinlets" : 1,
+					"numoutlets" : 0,
+					"patching_rect" : [ 230.5, 10.0, 147.0, 43.0 ],
+					"presentation_linecount" : 2,
+					"text" : "monProj"
+				}
+
+			}
+, 			{
+				"box" : 				{
 					"id" : "obj-67",
 					"maxclass" : "newobj",
 					"numinlets" : 1,
-					"numoutlets" : 2,
-					"outlettype" : [ "", "dictionary" ],
+					"numoutlets" : 3,
+					"outlettype" : [ "", "dictionary", "dictionary" ],
 					"patching_rect" : [ 395.5, 413.0, 134.0, 22.0 ],
 					"text" : "sw.shared-state globals"
 				}
@@ -108,7 +156,7 @@
 					"orientation" : 0,
 					"outlettype" : [ "", "" ],
 					"parameter_enable" : 0,
-					"patching_rect" : [ 50.5, 326.0, 206.5, 22.0 ],
+					"patching_rect" : [ 50.5, 326.0, 207.0, 22.0 ],
 					"setminmax" : [ 50.0, 20000.0 ],
 					"setstyle" : 1
 				}
@@ -124,7 +172,7 @@
 					"orientation" : 0,
 					"outlettype" : [ "", "" ],
 					"parameter_enable" : 0,
-					"patching_rect" : [ 50.5, 267.0, 206.5, 22.0 ],
+					"patching_rect" : [ 50.5, 267.0, 207.0, 22.0 ],
 					"setminmax" : [ -80.0, 6.0 ],
 					"setstyle" : 1
 				}
@@ -317,8 +365,8 @@
 						"fileversion" : 1,
 						"appversion" : 						{
 							"major" : 8,
-							"minor" : 1,
-							"revision" : 11,
+							"minor" : 3,
+							"revision" : 1,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
@@ -534,8 +582,8 @@
 						"fileversion" : 1,
 						"appversion" : 						{
 							"major" : 8,
-							"minor" : 1,
-							"revision" : 11,
+							"minor" : 3,
+							"revision" : 1,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
@@ -746,10 +794,10 @@
 					"id" : "obj-8",
 					"maxclass" : "newobj",
 					"numinlets" : 1,
-					"numoutlets" : 5,
-					"outlettype" : [ "", "", "", "", "" ],
-					"patching_rect" : [ 50.5, 74.5, 470.0, 22.0 ],
-					"text" : "dict.unpack master: mute: cutoffFrequency: numConnectedPlayers: instructionsState:"
+					"numoutlets" : 7,
+					"outlettype" : [ "", "", "", "", "", "", "" ],
+					"patching_rect" : [ 50.5, 74.5, 615.0, 22.0 ],
+					"text" : "dict.unpack master: mute: cutoffFrequency: numConnectedPlayers: instructionsState: projectName: projectAuthor:"
 				}
 
 			}
@@ -770,8 +818,8 @@
 					"id" : "obj-2",
 					"maxclass" : "newobj",
 					"numinlets" : 1,
-					"numoutlets" : 2,
-					"outlettype" : [ "", "dictionary" ],
+					"numoutlets" : 3,
+					"outlettype" : [ "", "dictionary", "dictionary" ],
 					"patching_rect" : [ 50.5, 39.0, 134.0, 22.0 ],
 					"text" : "sw.shared-state globals"
 				}
@@ -913,6 +961,14 @@
 			}
 , 			{
 				"patchline" : 				{
+					"destination" : [ "obj-5", 0 ],
+					"hidden" : 1,
+					"source" : [ "obj-6", 0 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
 					"destination" : [ "obj-53", 0 ],
 					"source" : [ "obj-60", 0 ]
 				}
@@ -941,6 +997,14 @@
 			}
 , 			{
 				"patchline" : 				{
+					"destination" : [ "obj-4", 0 ],
+					"hidden" : 1,
+					"source" : [ "obj-7", 0 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
 					"destination" : [ "obj-51", 0 ],
 					"source" : [ "obj-8", 4 ]
 				}
@@ -950,6 +1014,13 @@
 				"patchline" : 				{
 					"destination" : [ "obj-52", 0 ],
 					"source" : [ "obj-8", 3 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"destination" : [ "obj-6", 0 ],
+					"source" : [ "obj-8", 5 ]
 				}
 
 			}
@@ -974,40 +1045,40 @@
 				}
 
 			}
+, 			{
+				"patchline" : 				{
+					"destination" : [ "obj-7", 0 ],
+					"source" : [ "obj-8", 6 ]
+				}
+
+			}
  ],
 		"dependency_cache" : [ 			{
-				"name" : "sw.shared-state.maxpat",
-				"bootpath" : "~/Documents/Github/soundworks-state-manager-osc/max/SoundworksAPI/patchers",
-				"patcherrelativepath" : "../../soundworks-state-manager-osc/max/SoundworksAPI/patchers",
-				"type" : "JSON",
-				"implicit" : 1
-			}
-, 			{
-				"name" : "jscount.js",
-				"bootpath" : "~/Documents/Github/soundworks-state-manager-osc/max/SoundworksAPI/code",
-				"patcherrelativepath" : "../../soundworks-state-manager-osc/max/SoundworksAPI/code",
+				"name" : "indict.js",
+				"bootpath" : "~/Documents/Github/soundworks-state-manager-osc/max/SoundworksAPI/javascript",
+				"patcherrelativepath" : "../../soundworks-state-manager-osc/max/SoundworksAPI/javascript",
 				"type" : "TEXT",
 				"implicit" : 1
 			}
 , 			{
-				"name" : "indict.js",
-				"bootpath" : "~/Documents/Github/soundworks-state-manager-osc/max/SoundworksAPI/code",
-				"patcherrelativepath" : "../../soundworks-state-manager-osc/max/SoundworksAPI/code",
+				"name" : "jscount.js",
+				"bootpath" : "~/Documents/Github/soundworks-state-manager-osc/max/SoundworksAPI/javascript",
+				"patcherrelativepath" : "../../soundworks-state-manager-osc/max/SoundworksAPI/javascript",
 				"type" : "TEXT",
 				"implicit" : 1
 			}
 , 			{
 				"name" : "mergeUpdates.js",
-				"bootpath" : "~/Documents/Github/soundworks-state-manager-osc/max/SoundworksAPI/code",
-				"patcherrelativepath" : "../../soundworks-state-manager-osc/max/SoundworksAPI/code",
+				"bootpath" : "~/Documents/Github/soundworks-state-manager-osc/max/SoundworksAPI/javascript",
+				"patcherrelativepath" : "../../soundworks-state-manager-osc/max/SoundworksAPI/javascript",
 				"type" : "TEXT",
 				"implicit" : 1
 			}
 , 			{
-				"name" : "indict_response.js",
-				"bootpath" : "~/Documents/Github/soundworks-state-manager-osc/max/SoundworksAPI/code",
-				"patcherrelativepath" : "../../soundworks-state-manager-osc/max/SoundworksAPI/code",
-				"type" : "TEXT",
+				"name" : "sw.shared-state.maxpat",
+				"bootpath" : "~/Documents/Github/soundworks-state-manager-osc/max/SoundworksAPI/patchers",
+				"patcherrelativepath" : "../../soundworks-state-manager-osc/max/SoundworksAPI/patchers",
+				"type" : "JSON",
 				"implicit" : 1
 			}
  ],
