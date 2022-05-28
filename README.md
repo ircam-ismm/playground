@@ -52,29 +52,42 @@ npm run start
 
 ## Making sound
 1. Launch the server
+
 In the terminal, type the following command (press `Enter` after each line)
+
 ```
 cd /User/name/whatever/path/to/playground
 npm run start
 ```
 
 2. Launch a client
+
 A client where the sound will be heard.
+
 To access a client, type `http://127.0.0.1:8000` into your favorite browser, then press `please clic to join`.
+
 TIP: to emulate severals client in 1 browser, type `http://127.0.0.1:8000/?emulate=10`
 
+
 3. Launch the main controller
+
 To ear sound in the client, you have to access the controller.
+
 The main controller is the command board of playground.
+
 To launch the controller, in ANOTHER brower windows type `http://127.0.0.1:8000/controller`
 
+
 4. Choose a controller
+
 From the controller you can now access different synths (trigger-controller, soloist-controller, etc.). 
 
 5. Trigger it! 
+
 From trigger-controller, just press the soundbank you want (crickets, floating, footsteps) and press trigger all.
 
 ## Max/Live integration
+
 there is a way to "wireless" control playgrounds synths into Max or Ableton Live.
 
 1. Download the lastest release of `soundworkds-max` here : https://github.com/collective-soundworks/soundworks-max/releases
