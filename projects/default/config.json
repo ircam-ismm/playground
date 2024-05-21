@@ -2,7 +2,7 @@
   name: 'project name',
   author: 'the author',
 
-  randomlyAssignPosition: true,
+  randomlyAssignPosition: false,
   positionBackgroundImage: 'images/seating-map-2.png',
 
   colors: [

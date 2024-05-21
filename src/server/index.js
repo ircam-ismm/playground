@@ -46,6 +46,10 @@ const ENV = process.env.ENV || 'default';
 const config = getConfig(ENV);
 const server = new Server();
 
+if (process.env.PROJECT) {
+  config.app.project = process.env.PROJECT;
+}
+
 const projectConfig = getProjectConfig(config.app.project);
 const area = { xRange: [0, 1], yRange: [0, 1] };
 config.project = projectConfig;
