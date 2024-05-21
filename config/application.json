@@ -2,7 +2,7 @@
   "name": "playground",
   "author": "",
 
-  "project": "default",
+  "project": "demo",
 
   "clients": {
     "player": {
@@ -32,7 +32,9 @@
     "instructions-viewer": {
       "target": "browser",
     },
-  },
 
-  "htmlTemplateDirectory": ".build/server/tmpl",
+    "debug": {
+      "target": "browser",
+    },
+  },
 }
