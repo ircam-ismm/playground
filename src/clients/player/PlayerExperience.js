@@ -8,6 +8,10 @@ import TriggerSynth from './synths/TriggerSynth.js';
 import GranularSynth from './synths/GranularSynth.js';
 import SoloistSynth from './synths/SoloistSynth.js';
 
+function decibelToLinear(val) {
+  return Math.exp(0.11512925464970229 * val); // pow(10, val / 20)
+};
+
 class PlayerExperience extends AbstractExperience {
   constructor(client, config, $container, audioContext, index) {
     super(client);
@@ -66,6 +70,18 @@ class PlayerExperience extends AbstractExperience {
     this.master.mute = this.globalsState.get('mute');
     this.master.cutoffFrequency = this.globalsState.get('cutoffFrequency');
 
+    this.soloistVolume = this.audioContext.createGain();
+    this.soloistVolume.gain.value = 1;
+    this.soloistVolume.connect(this.master.input);
+
+    this.triggerVolume = this.audioContext.createGain();
+    this.triggerVolume.gain.value = 1;
+    this.triggerVolume.connect(this.master.input);
+
+    this.granularVolume = this.audioContext.createGain();
+    this.granularVolume.gain.value = 1;
+    this.granularVolume.connect(this.master.input);
+
     const script = await this.scripting.attach('view');
 
     script.subscribe(() => {
@@ -117,6 +133,28 @@ class PlayerExperience extends AbstractExperience {
             this.render();
             break;
           }
+          case 'soloistVolume': {
+            const now = this.audioContext.currentTime;
+            const gain = decibelToLinear(value);
+            console.log(gain, value);
+            this.soloistVolume.gain.setTargetAtTime(gain, now, 0.01);
+            this.render();
+            break;
+          }
+          case 'triggerVolume': {
+            const now = this.audioContext.currentTime;
+            const gain = decibelToLinear(value);
+            this.triggerVolume.gain.setTargetAtTime(gain, now, 0.01);
+            this.render();
+            break;
+          }
+          case 'granularVolume': {
+            const now = this.audioContext.currentTime;
+            const gain = decibelToLinear(value);
+            this.granularVolume.gain.setTargetAtTime(gain, now, 0.01);
+            this.render();
+            break;
+          }
         }
       }
     }
@@ -145,7 +183,7 @@ class PlayerExperience extends AbstractExperience {
               const config = triggerSynthConfig.presets['triggerSynth'];
               const synth = new TriggerSynth(this.audioContext, buffer, config);
 
-              synth.connect(this.master.input);
+              synth.connect(this.triggerVolume);
               synth.trigger();
               // flash the screen
               this.flashScreen = true;
@@ -197,7 +235,7 @@ class PlayerExperience extends AbstractExperience {
                   }
 
                   this.soloistSynth = new SoloistSynth(this.audioContext, buffer, localStartTime);
-                  this.soloistSynth.connect(this.master.input);
+                  this.soloistSynth.connect(this.soloistVolume);
                   this.soloistSynth.updateParams(params);
                   this.soloistSynth.start();
                 }
@@ -295,7 +333,7 @@ class PlayerExperience extends AbstractExperience {
 
         this.granularSynth = new GranularSynth(this.audioContext, buffer);
         this.granularSynth.updateParams(params);
-        this.granularSynth.connect(this.master.input);
+        this.granularSynth.connect(this.granularVolume);
         this.granularSynth.start();
       }
     }

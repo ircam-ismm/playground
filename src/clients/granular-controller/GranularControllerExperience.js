@@ -104,6 +104,9 @@ class GranularControllerExperience extends AbstractExperience {
       },
     };
 
+    this.globalsState = await this.client.stateManager.attach('globals');
+    this.globalsState.subscribe(() => this.render());
+
     // listen all interesting states
     this.granularControllerState = await this.client.stateManager.attach('granular-controller');
     this.granularControllerState.subscribe(updates => {
@@ -184,11 +187,30 @@ class GranularControllerExperience extends AbstractExperience {
 
     render(html`
       <playground-header
-        style="min-height: 75px"
+        style="min-height: 75px; max-width: calc(100vw - 400px);"
         list="${JSON.stringify(activeSoundbanks)}"
         value="${currentSoundBank ? currentSoundBank : ''}"
         @change="${this.listeners.updateSoundBank}"
       ></playground-header>
+
+      <div style="position: absolute; top: 6px; right: 10px; z-index: 1;">
+        <div>
+          <sc-text
+            value="volume"
+            width="100"
+            readonly
+          ></sc-text>
+          <sc-slider
+            display-number
+            width="280"
+            value="${this.globalsState.get('granularVolume')}"
+            min="-80"
+            max="6"
+            step="1"
+            @input=${e => this.globalsState.set({ granularVolume: e.detail.value })}
+          ></sc-slider>
+        </div>
+      </div>
 
       <section style="
         width: ${width - 121}px;

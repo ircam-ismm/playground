@@ -277,7 +277,6 @@ class PlayerExperience extends AbstractExperience {
             if (this.server.config.project.soloistGlobalFadeOutDuration === true) {
               const value = updates[key];
               this.players.forEach(player => {
-                console.log(value);
                 player.set({ soloistGlobalFadeOutDuration: value });
               });
             }

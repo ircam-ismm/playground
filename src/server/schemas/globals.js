@@ -29,6 +29,24 @@ export default {
     max: 20000,
     default: 16000,
   },
+  soloistVolume: {
+    type: 'integer',
+    min: -80,
+    max: 6,
+    default: 0,
+  },
+  triggerVolume: {
+    type: 'integer',
+    min: -80,
+    max: 6,
+    default: 0,
+  },
+  granularVolume: {
+    type: 'integer',
+    min: -80,
+    max: 6,
+    default: 0,
+  },
 
   numConnectedPlayers: {
     type: 'integer',

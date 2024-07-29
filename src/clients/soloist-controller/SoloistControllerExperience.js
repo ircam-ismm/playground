@@ -49,6 +49,9 @@ class SoloistControllerExperience extends AbstractExperience {
       }
     };
 
+    this.globalsState = await this.client.stateManager.attach('globals');
+    this.globalsState.subscribe(() => this.render());
+
     this.soloistState = await this.client.stateManager.attach('soloist-controller');
     this.soloistState.subscribe(updates => this.render());
 
@@ -111,8 +114,24 @@ class SoloistControllerExperience extends AbstractExperience {
           @change="${e => this.listeners.updateSoundBank(e.detail.value)}"
         ></playground-header>
 
-        <div style="position: absolute; top: 6px; right: 10px">
+        <div style="position: absolute; top: 6px; right: 10px; z-index: 1;">
           <div>
+            <sc-text
+              value="volume"
+              width="100"
+              readonly
+            ></sc-text>
+            <sc-slider
+              display-number
+              width="280"
+              value="${this.globalsState.get('soloistVolume')}"
+              min="-80"
+              max="6"
+              step="1"
+              @input=${e => this.globalsState.set({ soloistVolume: e.detail.value })}
+            ></sc-slider>
+          </div>
+          <div style="margin-top: 4px">
             <sc-text
               value="radius"
               width="100"

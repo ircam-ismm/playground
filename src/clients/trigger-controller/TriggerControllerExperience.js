@@ -72,6 +72,9 @@ class TriggerControllerExperience extends AbstractExperience {
       },
     };
 
+    this.globalsState = await this.client.stateManager.attach('globals');
+    this.globalsState.subscribe(() => this.render());
+
     // listen all interesting states
     this.triggerControllerState = await this.client.stateManager.attach('trigger-controller');
     this.triggerControllerState.subscribe(updates => {
@@ -143,11 +146,30 @@ class TriggerControllerExperience extends AbstractExperience {
 
     render(html`
       <playground-header
-        style="min-height: 75px"
+        style="min-height: 75px; max-width: calc(100vw - 400px);"
         list="${JSON.stringify(activeSoundbanks)}"
         value="${currentSoundBank ? currentSoundBank : ''}"
         @change="${e => this.listeners.updateSoundBank(e.detail.value)}"
       ></playground-header>
+
+      <div style="position: absolute; top: 6px; right: 10px; z-index: 1;">
+        <div>
+          <sc-text
+            value="volume"
+            width="100"
+            readonly
+          ></sc-text>
+          <sc-slider
+            display-number
+            width="280"
+            value="${this.globalsState.get('triggerVolume')}"
+            min="-80"
+            max="6"
+            step="1"
+            @input=${e => this.globalsState.set({ triggerVolume: e.detail.value })}
+          ></sc-slider>
+        </div>
+      </div>
 
       <section style="
         width: ${width - 120}px;
