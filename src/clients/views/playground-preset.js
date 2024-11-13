@@ -3,6 +3,7 @@ import { LitElement, html, css } from 'lit-element';
 import '@ircam/simple-components/sc-text.js';
 import '@ircam/simple-components/sc-toggle.js';
 import '@ircam/simple-components/sc-slider.js';
+import '@ircam/simple-components/sc-number.js';
 
 class PlaygroundPreset extends LitElement {
   static get properties() {
@@ -109,14 +110,24 @@ class PlaygroundPreset extends LitElement {
                       readonly
                     ></sc-text>
                     <sc-slider
-                      width="${this.width - 150}"
-                      display-number
+                      width="${this.width - 240}"
                       min="${def.min}"
                       max="${def.max}"
                       step="${def.step}"
                       .value="${value}"
+                      @input=${e => e.currentTarget.nextElementSibling.value = e.detail.value}
                       @change="${(e) => this.propagateValue(name, e.detail.value)}"
                     ></sc-slider>
+                    <sc-number
+                      width="80"
+                      min="${def.min}"
+                      max="${def.max}"
+                      step="${def.step}"
+                      ?integer=${def.step === 1}
+                      .value="${value}"
+                      @input=${e => e.currentTarget.previousElementSibling.value = e.detail.value}
+                      @change="${(e) => this.propagateValue(name, e.detail.value)}"
+                    ></sc-number>
                   </div>
                 `;
               } else if (def.type === 'boolean') {
