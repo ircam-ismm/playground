@@ -247,6 +247,10 @@ class SoundBank {
         return;
       }
 
+      if (!desc.extension) {
+        return;
+      }
+
       const ext = desc.extension.toLowerCase();
       // we only care about sound files (for now)
       if (ext !== '.wav' && ext !== '.mp3') {
