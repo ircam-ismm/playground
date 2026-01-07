@@ -1,0 +1,36 @@
+{
+  name: 'project name',
+  author: 'the author',
+
+  randomlyAssignPosition: true,
+  positionBackgroundImage: 'images/seating-map-2.png',
+
+  colors: [
+    '#a6cee3',
+    '#1f78b4',
+    '#b2df8a',
+    '#33a02c',
+    '#fb9a99',
+    '#e31a1c',
+    '#fdbf6f',
+    '#ff7f00',
+    '#cab2d6',
+  ],
+
+  // way in which sound files are allocated to players: 'random' || 'even'
+  // cf. https://github.com/ircam-ismm/playground/issues/3
+  assignSoundFilesStrategy: 'random',
+  // override fadeout time defined per file
+  // cf. https://github.com/ircam-ismm/playground/issues/4
+  soloistGlobalFadeOutDuration: true,
+
+  connectionMessage: '(you are connected...)',
+  thanksMessage: '(thanks...)',
+  // duration in seconds of the fadeout when the thanks state is triggered
+  thanksFadeOutDuration: 8,
+  // maximum time between the reception of the message the time at which the
+  // fadeout is triggered. The fade out starts at `rand() * thanksFadeOutDuration`,
+  // therefore all phone will be faded out between:
+  // `thanksFadeOutDuration` and `thanksFadeOutSpread + thanksFadeOutDuration`
+  thanksFadeOutSpread: 3,
+}

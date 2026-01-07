@@ -1,19 +1,17 @@
 import 'regenerator-runtime/runtime';
-import { Client } from '@soundworks/core/client';
+import { Client } from '@soundworks/core/client.js';
 import initQoS from '@soundworks/template-helpers/client/init-qos.js';
 
 // import plugins
-import pluginPlatformFactory from '@soundworks/plugin-platform/client';
-import pluginSyncFactory from '@soundworks/plugin-sync/client';
-import pluginFileSystemFactory from '@soundworks/plugin-filesystem/client';
-import pluginAudioBufferLoaderFactory from '@soundworks/plugin-audio-buffer-loader/client';
-import pluginCheckinFactory from '@soundworks/plugin-checkin/client';
-import pluginPositionFactory from '@soundworks/plugin-position/client';
-import pluginScriptingFactory from '@soundworks/plugin-scripting/client';
+import pluginPlatformFactory from '@soundworks/plugin-platform/client.js';
+import pluginSyncFactory from '@soundworks/plugin-sync/client.js';
+import pluginAudioBufferLoaderFactory from '@soundworks/plugin-audio-buffer-loader/client.js';
+import pluginCheckinFactory from '@soundworks/plugin-checkin/client.js';
+import pluginPositionFactory from '@soundworks/plugin-position/client.js';
+import pluginScriptingFactory from '@soundworks/plugin-scripting/client.js';
 
 // default views for plugins
 import PlayerExperience from './PlayerExperience.js';
-import * as audio from 'waves-audio';
 
 const AudioContext = window.AudioContext || window.webkitAudioContext;
 const audioContext = new AudioContext;

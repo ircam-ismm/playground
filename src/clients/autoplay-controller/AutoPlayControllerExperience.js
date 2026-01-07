@@ -28,9 +28,9 @@ class AutoPlayControllerExperience extends AbstractExperience {
     };
 
     this.eventListeners = {
-      updateSoundBank: soundBankName => {
-        this.autoPlayControllerState.set({ currentSoundBank: soundBankName });
-      },
+      // updateSoundBank: soundBankName => {
+      //   this.autoPlayControllerState.set({ currentSoundBank: soundBankName });
+      // },
       updateFilePreset: throttle((soundbank, filename, param, value) => {
         this.client.socket.send('soundBanks:updateSoundFilePreset',
           soundbank,

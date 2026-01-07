@@ -1,4 +1,4 @@
-import { AbstractExperience } from '@soundworks/core/client';
+import { AbstractExperience } from '@soundworks/core/client.js';
 import { render, html } from 'lit-html';
 import renderInitializationScreens from '@soundworks/template-helpers/client/render-initialization-screens.js';
 
@@ -277,27 +277,27 @@ class PlayerExperience extends AbstractExperience {
             break;
           }
           // auto synth
-          case 'autoPlayFile': {
-            await this.loadFile('autoPlay');
-            // if the synth is enabled we only change the buffer
-            if (this.autoPlaySynth !== null) {
-              const buffer = this.bufferCache.get('autoPlay');
-              this.autoPlaySynth.buffer = buffer;
-            }
-            break;
-          }
-          case 'autoPlayConfig': {
-            if (this.autoPlaySynth) {
-              const params = updates[name].presets['autoPlaySynth'];
-              this.autoPlaySynth.updateParams(params);
-            }
-            break;
-          }
-          case 'autoPlayEnabled': {
-            const enabled = updates[name];
-            this.handleAutoPlaySynth(enabled);
-            break;
-          }
+          // case 'autoPlayFile': {
+          //   await this.loadFile('autoPlay');
+          //   // if the synth is enabled we only change the buffer
+          //   if (this.autoPlaySynth !== null) {
+          //     const buffer = this.bufferCache.get('autoPlay');
+          //     this.autoPlaySynth.buffer = buffer;
+          //   }
+          //   break;
+          // }
+          // case 'autoPlayConfig': {
+          //   if (this.autoPlaySynth) {
+          //     const params = updates[name].presets['autoPlaySynth'];
+          //     this.autoPlaySynth.updateParams(params);
+          //   }
+          //   break;
+          // }
+          // case 'autoPlayEnabled': {
+          //   const enabled = updates[name];
+          //   this.handleAutoPlaySynth(enabled);
+          //   break;
+          // }
         }
       }
 
@@ -339,29 +339,33 @@ class PlayerExperience extends AbstractExperience {
     }
   }
 
-  async handleAutoPlaySynth(enabled) {
-    if (this.autoPlaySynth !== null && !enabled) {
-      this.autoPlaySynth.stop();
-      this.autoPlaySynth = null;
-    } else if (this.autoPlaySynth === null && enabled) {
-      if (!this.bufferCache.get('autoPlay')) {
-        await this.loadFile('autoPlay');
-      }
+  // async handleAutoPlaySynth(enabled) {
+  //   if (this.autoPlaySynth !== null && !enabled) {
+  //     this.autoPlaySynth.stop();
+  //     this.autoPlaySynth = null;
+  //   } else if (this.autoPlaySynth === null && enabled) {
+  //     if (!this.bufferCache.get('autoPlay')) {
+  //       await this.loadFile('autoPlay');
+  //     }
 
-      const buffer = this.bufferCache.get('autoPlay');
+  //     const buffer = this.bufferCache.get('autoPlay');
 
-      if (buffer) {
-        const autoPlaySynthConfig = this.playerState.get('autoPlayConfig');
-        const params = autoPlaySynthConfig.presets['autoPlaySynth'];
+  //     if (buffer) {
+  //       const autoPlaySynthConfig = this.playerState.get('autoPlayConfig');
+  //       const params = autoPlaySynthConfig.presets['autoPlaySynth'];
 
-        this.autoPlaySynth = new AutoPlaySynth(this.audioContext, buffer);
-        this.autoPlaySynth.updateParams(params);
-        this.autoPlaySynth.connect(this.master.input);
-        this.autoPlaySynth.start();
-      }
-    }
-  }
+  //       this.autoPlaySynth = new AutoPlaySynth(this.audioContext, buffer);
+  //       this.autoPlaySynth.updateParams(params);
+  //       this.autoPlaySynth.connect(this.master.input);
+  //       this.autoPlaySynth.start();
+  //     }
+  //   }
+  // }
 
+  // - [ ] soloist
+  // - [ ] trigger
+  // - [ ] granular
+  // - [x] autoPlay
   async loadFile(type) {
     const fileKey = `${type}File`;
     const loadingKey = `${type}Loading`;

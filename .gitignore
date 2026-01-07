@@ -1,25 +1,16 @@
-# transpiled files and dependencies
+# build files and dependencies
 /node_modules
-/public/vendors
-# ignore all config except default
-/config/env/*
-!/config/env/default.json
-
-# application instance specific
 .build
 .data
-.vendors
+
+# ignore all environment config files except default
+/config/env-*
+!/config/env-default.yaml
 
 # junk files
 package-lock.json
 .DS_Store
 Thumbs.db
 
-.archives
-
-_misc
-
-/projects/*
-!/projects/default
-
-network
+# TLS certificates
+/**/*.pem

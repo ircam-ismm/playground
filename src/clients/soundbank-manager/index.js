@@ -1,6 +1,6 @@
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
-import { Client } from '@soundworks/core/client';
+import { Client } from '@soundworks/core/client.js';
 import initQoS from '@soundworks/template-helpers/client/init-qos.js';
 
 import SoundBankManagerExperience from './SoundBankManagerExperience.js';

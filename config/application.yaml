@@ -1,0 +1,11 @@
+name: playground
+author: ""
+project: demo
+clients:
+  player:
+    default: true
+    runtime: browser
+  thing:
+    runtime: node
+  autoplay-controller:
+    runtime: browser
