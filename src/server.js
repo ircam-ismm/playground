@@ -128,6 +128,10 @@ soundbankState.onUpdate(updates => {
   }
 });
 
+filesystem.onUpdate(({ tree }) => {
+  soundBankManager.updateFromFileTree(tree);
+}, true);
+
 // fileSystem.state.subscribe(updates => {
 //   for (let key in updates) {
 //     if (key === 'sounds') {
