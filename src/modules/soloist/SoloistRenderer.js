@@ -65,6 +65,7 @@ export default class AutoPlayRenderer extends Module {
             break;
           }
           case 'globalFadeOutDurationActive': {
+            // console.log(value, this.synth)
             if (this.synth !== null) {
               const fileConfig = this.state.get('fileConfig');
               const params = fileConfig.presets[this.global.get('presetKey')];
@@ -73,6 +74,7 @@ export default class AutoPlayRenderer extends Module {
                 params.fadeOutDuration = this.global.get('globalFadeOutDuration');
               }
 
+              // console.log(params);
               this.synth.params = params;
             }
             break;

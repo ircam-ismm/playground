@@ -22,7 +22,7 @@
   assignSoundFilesStrategy: 'even',
   // override fadeout time defined per file
   // cf. https://github.com/ircam-ismm/playground/issues/4
-  soloistGlobalFadeOutDuration: true,
+  soloistGlobalFadeOutDuration: false,
 
   connectionMessage: '(you are connected...)',
   thanksMessage: '(thanks...)',
