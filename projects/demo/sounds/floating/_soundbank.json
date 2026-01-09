@@ -18,7 +18,7 @@
       "url": "/sounds/floating/FTPhase01.mp3",
       "presets": {
         "autoPlaySynth": {
-          "repeatPeriod": 2.725,
+          "repeatPeriod": 15.149,
           "maxReleaseOffset": 8.989,
           "attackDuration": 2.929,
           "releaseDuration": 6.969

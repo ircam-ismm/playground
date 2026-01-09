@@ -32,9 +32,12 @@ export default function assignSoundBank(collection, soundbank, presetKey, strate
   // ensure
   switch (strategy) {
     case 'even': {
+      // apply a random offset so that multiple call will lead to different file assignment
+      const offset = Math.floor(Math.random() * filenames.length);
+
       collection.forEach(state => {
         const clientIndex = state.get('clientIndex');
-        const filename = filenames[clientIndex % filenames.length];
+        const filename = filenames[(offset + clientIndex) % filenames.length];
         const fileConfig = soundbank.files[filename];
 
         state.set({ filename, fileConfig });

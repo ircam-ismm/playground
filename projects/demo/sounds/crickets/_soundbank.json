@@ -18,9 +18,9 @@
       "url": "/sounds/crickets/Crickets.mp3",
       "presets": {
         "autoPlaySynth": {
-          "repeatPeriod": 5,
-          "maxReleaseOffset": 0.908,
-          "attackDuration": 3.838,
+          "repeatPeriod": 26.664,
+          "maxReleaseOffset": 5.959,
+          "attackDuration": 11.009,
           "releaseDuration": 1.615
         },
         "triggerSynth": {

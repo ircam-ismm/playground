@@ -213,50 +213,50 @@ class PlayerExperience extends AbstractExperience {
     // ------------------------------------------------------------
     // soloist controller state
     // ------------------------------------------------------------
-    let radius = this.controllerStates['soloist'].getValues('radius');
-    let soloistStartTime = null;
-    let triggers = null;
-    const soloistActivePlayers = new Set();
+    // let radius = this.controllerStates['soloist'].getValues('radius');
+    // let soloistStartTime = null;
+    // let triggers = null;
+    // const soloistActivePlayers = new Set();
 
-    const soloistTrigger = () => {
-      if (triggers.length === 0) {
-        soloistStartTime = null;
+    // const soloistTrigger = () => {
+    //   if (triggers.length === 0) {
+    //     soloistStartTime = null;
 
-        this.players.forEach(player => {
-          player.set({ soloistDistance: 1 });
-        })
-      } else {
-        if (soloistStartTime === null) {
-          soloistStartTime = this.sync.getSyncTime();
-        }
+    //     this.players.forEach(player => {
+    //       player.set({ soloistDistance: 1 });
+    //     })
+    //   } else {
+    //     if (soloistStartTime === null) {
+    //       soloistStartTime = this.sync.getSyncTime();
+    //     }
 
-        const radius = this.controllerStates['soloist'].get('radius');
-        const triggers = this.controllerStates['soloist'].get('triggers');
+    //     const radius = this.controllerStates['soloist'].get('radius');
+    //     const triggers = this.controllerStates['soloist'].get('triggers');
 
-        this.players.forEach(player => {
-          const position = player.get('position');
-          const currentDistance = player.get('soloistDistance');
-          let normDistance = 1;
+    //     this.players.forEach(player => {
+    //       const position = player.get('position');
+    //       const currentDistance = player.get('soloistDistance');
+    //       let normDistance = 1;
 
-          triggers.forEach(trigger => {
-            const triggerNormDistance = getNormalizedDistance(trigger, position, radius);
-            normDistance = Math.min(normDistance, triggerNormDistance);
-          });
+    //       triggers.forEach(trigger => {
+    //         const triggerNormDistance = getNormalizedDistance(trigger, position, radius);
+    //         normDistance = Math.min(normDistance, triggerNormDistance);
+    //       });
 
-          if (normDistance < 1 && currentDistance === 1) {
-            player.set({
-              soloistDistance: normDistance,
-              soloistStartTime: soloistStartTime,
-            });
-          } else {
-            // if distance is still 1, the value won't be propagated on the network
-            player.set({
-              soloistDistance: normDistance,
-            });
-          }
-        });
-      }
-    }
+    //       if (normDistance < 1 && currentDistance === 1) {
+    //         player.set({
+    //           soloistDistance: normDistance,
+    //           soloistStartTime: soloistStartTime,
+    //         });
+    //       } else {
+    //         // if distance is still 1, the value won't be propagated on the network
+    //         player.set({
+    //           soloistDistance: normDistance,
+    //         });
+    //       }
+    //     });
+    //   }
+    // }
 
     this.controllerStates['soloist'].subscribe(updates => {
       for (let key in updates) {

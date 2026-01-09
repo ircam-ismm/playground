@@ -118,29 +118,29 @@ class PlayerExperience extends AbstractExperience {
             }
             break;
           }
-          case 'master': {
-            this.master.volume = value;
-            this.render();
-            break;
-          }
-          case 'mute': {
-            this.master.mute = value;
-            this.render();
-            break;
-          }
-          case 'cutoffFrequency': {
-            this.master.cutoffFrequency = value;
-            this.render();
-            break;
-          }
-          case 'soloistVolume': {
-            const now = this.audioContext.currentTime;
-            const gain = decibelToLinear(value);
-            console.log(gain, value);
-            this.soloistVolume.gain.setTargetAtTime(gain, now, 0.01);
-            this.render();
-            break;
-          }
+          // case 'master': {
+          //   this.master.volume = value;
+          //   this.render();
+          //   break;
+          // }
+          // case 'mute': {
+          //   this.master.mute = value;
+          //   this.render();
+          //   break;
+          // }
+          // case 'cutoffFrequency': {
+          //   this.master.cutoffFrequency = value;
+          //   this.render();
+          //   break;
+          // }
+          // case 'soloistVolume': {
+          //   const now = this.audioContext.currentTime;
+          //   const gain = decibelToLinear(value);
+          //   console.log(gain, value);
+          //   this.soloistVolume.gain.setTargetAtTime(gain, now, 0.01);
+          //   this.render();
+          //   break;
+          // }
           case 'triggerVolume': {
             const now = this.audioContext.currentTime;
             const gain = decibelToLinear(value);
@@ -198,67 +198,67 @@ class PlayerExperience extends AbstractExperience {
           }
 
           // soloist
-          case 'soloistFile': {
-            this.loadFile('soloist');
-            break;
-          }
-          case 'soloistConfig': {
-            if (this.soloistSynth) {
-              const params = updates[name].presets['soloistSynth'];
+          // case 'soloistFile': {
+          //   this.loadFile('soloist');
+          //   break;
+          // }
+          // case 'soloistConfig': {
+          //   if (this.soloistSynth) {
+          //     const params = updates[name].presets['soloistSynth'];
 
-              // use global fadeout duration if configured like that
-              if (this.config.project.soloistGlobalFadeOutDuration) {
-                params.fadeOutDuration = this.playerState.get('soloistGlobalFadeOutDuration');
-              }
+          //     // use global fadeout duration if configured like that
+          //     if (this.config.project.soloistGlobalFadeOutDuration) {
+          //       params.fadeOutDuration = this.playerState.get('soloistGlobalFadeOutDuration');
+          //     }
 
-              this.soloistSynth.updateParams(params);
-            }
-            break;
-          }
-          case 'soloistDistance': {
-            const distance = updates[name];
-            // console.log(this.checkin.get('index'), distance);
+          //     this.soloistSynth.updateParams(params);
+          //   }
+          //   break;
+          // }
+          // case 'soloistDistance': {
+          //   const distance = updates[name];
+          //   // console.log(this.checkin.get('index'), distance);
 
-            if (distance < 1) {
-              if (this.soloistSynth === null) {
-                const buffer = this.bufferCache.get('soloist');
+          //   if (distance < 1) {
+          //     if (this.soloistSynth === null) {
+          //       const buffer = this.bufferCache.get('soloist');
 
-                if (buffer) {
-                  const syncStartTime = this.playerState.get('soloistStartTime');
-                  const soloistSynthConfig = this.playerState.get('soloistConfig');
-                  const localStartTime = this.sync.getLocalTime(syncStartTime);
-                  const params = soloistSynthConfig.presets['soloistSynth'];
+          //       if (buffer) {
+          //         const syncStartTime = this.playerState.get('soloistStartTime');
+          //         const soloistSynthConfig = this.playerState.get('soloistConfig');
+          //         const localStartTime = this.sync.getLocalTime(syncStartTime);
+          //         const params = soloistSynthConfig.presets['soloistSynth'];
 
-                  // use global fadeout duration if configured like that
-                  if (this.config.project.soloistGlobalFadeOutDuration) {
-                    params.fadeOutDuration = this.playerState.get('soloistGlobalFadeOutDuration');
-                  }
+          //         // use global fadeout duration if configured like that
+          //         if (this.config.project.soloistGlobalFadeOutDuration) {
+          //           params.fadeOutDuration = this.playerState.get('soloistGlobalFadeOutDuration');
+          //         }
 
-                  this.soloistSynth = new SoloistSynth(this.audioContext, buffer, localStartTime);
-                  this.soloistSynth.connect(this.soloistVolume);
-                  this.soloistSynth.updateParams(params);
-                  this.soloistSynth.start();
-                }
-              }
+          //         this.soloistSynth = new SoloistSynth(this.audioContext, buffer, localStartTime);
+          //         this.soloistSynth.connect(this.soloistVolume);
+          //         this.soloistSynth.updateParams(params);
+          //         this.soloistSynth.start();
+          //       }
+          //     }
 
-              if (this.soloistSynth) {
-                this.soloistSynth.updateDistance(distance);
-              }
-            } else {
-              if (this.soloistSynth !== null) {
-                this.soloistSynth.release();
-                this.soloistSynth = null;
-              }
-            }
-            break;
-          }
-          case 'soloistGlobalFadeOutDuration': {
-            if (this.soloistSynth && this.config.project.soloistGlobalFadeOutDuration) {
-              // use global fadeout duration if configured like that
-              this.soloistSynth.params.fadeOutDuration = updates[name];
-            }
-            break;
-          }
+          //     if (this.soloistSynth) {
+          //       this.soloistSynth.updateDistance(distance);
+          //     }
+          //   } else {
+          //     if (this.soloistSynth !== null) {
+          //       this.soloistSynth.release();
+          //       this.soloistSynth = null;
+          //     }
+          //   }
+          //   break;
+          // }
+          // case 'soloistGlobalFadeOutDuration': {
+          //   if (this.soloistSynth && this.config.project.soloistGlobalFadeOutDuration) {
+          //     // use global fadeout duration if configured like that
+          //     this.soloistSynth.params.fadeOutDuration = updates[name];
+          //   }
+          //   break;
+          // }
           // granular
           case 'granularFile': {
             this.loadFile('granular');

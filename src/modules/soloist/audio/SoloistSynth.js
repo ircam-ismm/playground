@@ -1,24 +1,29 @@
+import {
+  GainNode,
+  AudioBufferSourceNode
+} from 'isomorphic-web-audio-api';
 
-class SoloistSynth {
+export default class SoloistSynth {
   constructor(audioContext, buffer, startTime) {
     this.audioContext = audioContext;
     this.params = {};
 
     const now = audioContext.currentTime;
 
-    this.fade = audioContext.createGain();
-    this.fade.gain.value = 0;
-    this.fade.gain.setValueAtTime(0, now);
+    this.src = new AudioBufferSourceNode(this.audioContext, {
+      buffer,
+      loop: true,
+    });
 
-    this.env = audioContext.createGain();
-    this.env.connect(this.fade);
-    this.env.gain.value = 0;
+    this.env = new GainNode(this.audioContext, { gain: 0 });
     this.env.gain.setValueAtTime(0, now);
 
-    this.src = audioContext.createBufferSource();
-    this.src.connect(this.env);
-    this.src.buffer = buffer;
-    this.src.loop = true;
+    this.fade = new GainNode(audioContext, { gain: 0 });
+    this.fade.gain.setValueAtTime(0, now);
+
+    this.src
+      .connect(this.env)
+      .connect(this.fade);
 
     const offset = Math.max(0, (now - startTime) % buffer.duration);
 
@@ -27,10 +32,6 @@ class SoloistSynth {
 
   connect(destination) {
     this.fade.connect(destination);
-  }
-
-  updateParams(values) {
-    this.params = values;
   }
 
   updateDistance(value) {
@@ -58,13 +59,16 @@ class SoloistSynth {
     const now = this.audioContext.currentTime;
     const { fadeOutDuration } = this.params;
 
-    this.fade.gain.cancelScheduledValues(now);
+    if (this.fade.gain.cancelAndHoldAtTime) {
+      this.fade.gain.cancelAndHoldAtTime(now);
+    } else {
+      this.fade.gain.cancelScheduledValues(now);
+    }
+
     this.fade.gain.setValueAtTime(this.env.gain.value, now);
     this.fade.gain.exponentialRampToValueAtTime(0.0001, now + fadeOutDuration);
 
     this.src.stop(now + fadeOutDuration);
   }
 }
-
-export default SoloistSynth;
 

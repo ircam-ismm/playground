@@ -23,6 +23,7 @@ import soundfilesPresets from './lib/soundbank/soundfilesPresets.js'
 import getProjectConfig from './lib/utils/getProjectConfig.js';
 
 import AutoPlayServer from './modules/autoplay/AutoPlayServer.js';
+import SoloistServer from './modules/soloist/SoloistServer.js';
 
 const config = loadConfig(process.env.ENV, import.meta.url);
 const server = new Server(config);
@@ -132,14 +133,6 @@ filesystem.onUpdate(({ tree }) => {
   soundBankManager.updateFromFileTree(tree);
 }, true);
 
-// fileSystem.state.subscribe(updates => {
-//   for (let key in updates) {
-//     if (key === 'sounds') {
-//       soundBankManager.updateFromFileTree(updates[key]);
-//     }
-//   }
-// });
-
 const applicationContext = {
   soundBankManager,
   soundbankState,
@@ -148,6 +141,7 @@ const applicationContext = {
 
 // instantiate modules
 const autoPlayServer = new AutoPlayServer(host, 'autoplay', applicationContext);
+const soloistServer = new SoloistServer(host, 'soloist', applicationContext);
 
 await host.start();
 

@@ -16,6 +16,7 @@ import ModuleHost from '../lib/modules/ModuleHost.js';
 import AudioBus from '../lib/utils/AudioBus.js';
 
 import AutoPlayRenderer from '../modules/autoplay/AutoPlayRenderer.js';
+import SoloistRenderer from '../modules/soloist/SoloistRenderer.js';
 
 
 // - General documentation: https://soundworks.dev/
@@ -93,6 +94,7 @@ async function bootstrap() {
   };
 
   const autoPlayRenderer = new AutoPlayRenderer(host, 'autoplay', app);
+  const soloistRenderer = new SoloistRenderer(host, 'soloist', app);
 
   await host.start();
 

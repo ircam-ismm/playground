@@ -4,7 +4,7 @@ import { loadConfig, launcher } from '@soundworks/helpers/browser.js';
 import { html, render } from 'lit';
 
 import ModuleHost from '../lib/modules/ModuleHost.js';
-import AutoPlayController from '../modules/autoplay/AutoPlayController.js';
+import SoloistController from '../modules/soloist/SoloistController.js';
 
 // - General documentation: https://soundworks.dev/
 // - API documentation:     https://soundworks.dev/api
@@ -28,7 +28,7 @@ async function main($container) {
     soundbank: await host.stateManager.attach('soundbank'),
   };
 
-  const controller = new AutoPlayController(host, 'autoplay', app);
+  const controller = new SoloistController(host, 'soloist', app);
 
   await host.start();
 
@@ -40,9 +40,9 @@ async function main($container) {
           <sw-audit .client="${client}"></sw-audit>
         </header>
         <section>
-          <al-autoplay-controller
+          <al-soloist-controller
             .module=${controller}
-          ></al-autoplay-controller>
+          ></al-soloist-controller>
         </section>
       </div>
     `, $container);

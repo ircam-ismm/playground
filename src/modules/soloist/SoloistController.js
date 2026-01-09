@@ -1,6 +1,6 @@
 import Module from '../../lib/modules/Module.js';
 
-import './gui/al-autoplay-controller.js';
+import './gui/al-soloist-controller.js';
 
 export default class AutoPlayController extends Module {
   constructor(host, name, {
@@ -18,6 +18,7 @@ export default class AutoPlayController extends Module {
       'clientColor',
       'filename',
       'loading',
+      'position',
     ]);
   }
 }

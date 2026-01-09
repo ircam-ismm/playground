@@ -4,12 +4,12 @@ import {
 
 import Module from '../../lib/modules/Module.js';
 
-import globalDescription from './descriptions/autoplay-global.js';
-import rendererDescription from './descriptions/autoplay-renderer.js';
+import globalDescription from './descriptions/soloist-global.js';
+import rendererDescription from './descriptions/soloist-renderer.js';
 
 import assignSoundBank from '../../lib/utils/assignSoundBank.js';
 
-const PRESET_KEY = 'autoPlaySynth';
+const PRESET_KEY = 'soloistSynth';
 
 export default class AutoPlayServer extends Module {
   constructor(host, name, {
@@ -22,20 +22,10 @@ export default class AutoPlayServer extends Module {
     this.globalState = globalState;
     this.soundBankManager = soundBankManager;
     this.soundbankState = soundbankState;
+    this.startTime = null;
 
     this.host.stateManager.defineClass(`${this.name}:global`, globalDescription);
     this.host.stateManager.defineClass(`${this.name}:renderer`, rendererDescription);
-
-    this.host.stateManager.registerUpdateHook(`${this.name}:global`, updates => {
-      if ('currentSoundBank' in updates) {
-        if (updates.currentSoundBank === null) {
-          return {
-            enabled: false,
-            ...updates,
-          }
-        }
-      }
-    });
   }
 
   async start() {
@@ -112,16 +102,63 @@ export default class AutoPlayServer extends Module {
     // end share
     // ------------------------------------------------------
 
-    await delay(50);
-    const activeSoundbanks = this.global.get('activeSoundbanks');
-    console.log('> set currentSoundbank to', activeSoundbanks, activeSoundbanks[0]);
-    this.global.set('currentSoundBank', activeSoundbanks[0]);
-    // this.global.set('enabled', true);
+    // soloist specific config
 
-    // await delay(50);
+    this.sync = await this.host.pluginManager.get('sync');
+
+    const { soloistGlobalFadeOutDuration } = this.globalState.get('projectConfig');
+    this.global.set('globalFadeOutDurationActive', soloistGlobalFadeOutDuration);
+
+    this.global.onUpdate(updates => {
+      for (let [key, value] of Object.entries(updates)) {
+        switch (key) {
+          case 'triggers': {
+            this.#computeDistanceAndPropagate();
+            break;
+          }
+          case 'radius': {
+            this.#computeDistanceAndPropagate();
+            break;
+          }
+        }
+      }
+    });
   }
 
-  // async stop() {
-  //   console.log(this.name, 'stop');
-  // }
+  #computeDistanceAndPropagate = () => {
+    const triggers = this.global.get('triggers');
+
+    if (triggers.length === 0) {
+      this.startTime = null;
+
+      this.renderers.set('distance', 1);
+    } else {
+      if (this.startTime === null) {
+        this.startTime = this.sync.getSyncTime();
+      }
+
+      const radius = this.global.get('radius');
+
+      this.renderers.forEach(renderer => {
+        const position = renderer.get('position');
+        const currentDistance = renderer.get('distance');
+        let normDistance = 1;
+
+        triggers.forEach(trigger => {
+          const dx = position.x - trigger.x;
+          const dy = position.y - trigger.y;
+          const distance = Math.sqrt(dx * dx + dy * dy);
+          const norm = Math.min(1, distance / radius);
+          normDistance = Math.min(normDistance, norm);
+        });
+
+        // propagate startTime to trigger synthesis
+        if (normDistance < 1 && currentDistance === 1) {
+          renderer.set('startTime', this.startTime);
+        }
+
+        renderer.set('distance', normDistance);
+      });
+    }
+  }
 }

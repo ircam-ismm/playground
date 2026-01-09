@@ -9,3 +9,5 @@ clients:
     runtime: node
   autoplay-controller:
     runtime: browser
+  soloist-controller:
+    runtime: browser

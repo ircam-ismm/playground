@@ -1,4 +1,9 @@
 export default {
+  // key of the preset as hardcoded in
+  presetKey: {
+    type: 'string',
+    required: true,
+  },
   activeSoundbanks: {
     type: 'any',
     default: [],
@@ -23,9 +28,4 @@ export default {
     max: 6,
     default: 0,
   },
-  // key of the preset as hardcoded in
-  presetKey: {
-    type: 'string',
-    required: true,
-  },
-}
+};
