@@ -40,7 +40,7 @@ export default class SoloistSynth {
     const { decayExponent } = this.params;
     const gain = Math.pow(1 - value, decayExponent);
 
-    this.env.gain.cancelScheduledValues(now);
+    // this.env.gain.cancelScheduledValues(now);
     this.env.gain.setTargetAtTime(gain, now, 0.01);
   }
 
@@ -57,7 +57,8 @@ export default class SoloistSynth {
 
   release() {
     const now = this.audioContext.currentTime;
-    const { fadeOutDuration } = this.params;
+    let { fadeOutDuration } = this.params;
+    fadeOutDuration = Math.max(fadeOutDuration, 0.01);
 
     if (this.fade.gain.cancelAndHoldAtTime) {
       this.fade.gain.cancelAndHoldAtTime(now);
@@ -65,7 +66,7 @@ export default class SoloistSynth {
       this.fade.gain.cancelScheduledValues(now);
     }
 
-    this.fade.gain.setValueAtTime(this.env.gain.value, now);
+    this.fade.gain.setValueAtTime(this.fade.gain.value, now);
     this.fade.gain.exponentialRampToValueAtTime(0.0001, now + fadeOutDuration);
 
     this.src.stop(now + fadeOutDuration);

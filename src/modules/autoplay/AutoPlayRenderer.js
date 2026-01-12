@@ -109,22 +109,21 @@ export default class AutoPlayRenderer extends Module {
   async loadFile(callback = () => {}) {
     this.buffer = null;
 
-    const key = isBrowser() ? 'url' : 'path';
     const fileConfig = this.state.get('fileConfig');
 
     if (fileConfig !== null) {
       this.state.set('loading', true);
 
-      const urlOrPath = fileConfig[key];
-      const buffer = await this.audioBufferLoader.load(urlOrPath);
+      const url = fileConfig.url;
+      const buffer = await this.audioBufferLoader.load(url);
       // @note
       // check that the required file is still the same one
       // after loading, to avoid concurrency issues, e.g.:
       // - selection is         "long file"   ->  "short file"
       // - order of arrival is   "short file"  ->  "long file"
-      const currentUrlOrPath = this.state.get('fileConfig')[key];
+      const currentUrl = this.state.get('fileConfig').url;
       // then if a file arrives too late, just ignore it
-      if (urlOrPath === currentUrlOrPath) {
+      if (url === currentUrl) {
         this.buffer = buffer;
         // !!! this is specific
         const enabled = this.global.get('enabled');

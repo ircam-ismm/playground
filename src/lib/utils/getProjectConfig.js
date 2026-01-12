@@ -3,17 +3,26 @@ import path from 'node:path';
 
 import JSON5 from 'json5';
 
-function getProjectConfig(projectName) {
+function getProjectConfig(projectPathname) {
   let projectConfig = null;
+
+  projectPathname = path.normalize(projectPathname);
+
+  if (!fs.existsSync(projectPathname) || !fs.statSync(projectPathname).isDirectory()) {
+    throw new Error(`Cannot get project configuration: project pathname "${projectPathname}" is not a directory`);
+  }
+
+  const configPathname = path.join(projectPathname, `config.json`)
 
   // parse env config
   try {
-    const projectConfigPath = path.join('projects', projectName, `config.json`);
-    projectConfig = JSON5.parse(fs.readFileSync(projectConfigPath, 'utf-8'));
+    projectConfig = JSON5.parse(fs.readFileSync(configPathname, 'utf-8'));
   } catch(err) {
-    console.log(`Invalid "${projectName}" project config file`);
+    console.log(`> Invalid "${projectName}" project config file`);
     process.exit(0);
   }
+
+  projectConfig.pathname = projectPathname;
 
   return projectConfig;
 }

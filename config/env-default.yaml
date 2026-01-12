@@ -10,3 +10,4 @@ auth:
   login: ""
   password: ""
 baseUrl: ""
+project: ../playground-projects/demo

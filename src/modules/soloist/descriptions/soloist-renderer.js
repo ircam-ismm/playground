@@ -27,6 +27,10 @@ export default {
     type: 'any',
     required: true,
   },
+  positionInverse: {
+    type: 'any',
+    required: true,
+  },
   distance: {
     type: 'float',
     default: 1,

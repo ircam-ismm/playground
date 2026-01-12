@@ -34,6 +34,10 @@ export default {
     max: 1,
     default: 0.3,
   },
+  rotateMap: {
+    type: 'boolean',
+    default: true,
+  },
   // override fadeout time define per file
   // cf. https://github.com/ircam-ismm/playground/issues/4
   globalFadeOutDuration: {
@@ -45,12 +49,5 @@ export default {
   globalFadeOutDurationActive: {
     type: 'boolean',
     default: false,
-  },
-
-  // local to controllers
-  rotateMap: {
-    type: 'boolean',
-    default: true,
-    local: true,
   },
 };

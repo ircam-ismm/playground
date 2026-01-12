@@ -59,8 +59,9 @@ async function bootstrap() {
   const clientColor = projectConfig.colors[clientIndex % projectConfig.colors.length];
 
   // audio stuff
+  const serverAddress = `${config.env.useHttps ? 'https' : 'http'}://${config.env.serverAddress ? config.env.serverAddress : '127.0.0.1'}:${config.env.port}`
+  const audioBufferLoader = new AudioBufferLoader(audioContext, serverAddress);
   const scheduler = new Scheduler(() => audioContext.currentTime);
-  const audioBufferLoader = new AudioBufferLoader(audioContext);
   const masterBus = new AudioBus(audioContext);
   masterBus.output.connect(audioContext.destination);
 

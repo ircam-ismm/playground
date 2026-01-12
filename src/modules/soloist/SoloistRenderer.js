@@ -34,7 +34,7 @@ export default class AutoPlayRenderer extends Module {
   }
 
   async start() {
-    const position = await this.host.pluginManager.get('position');
+    const positionPlugin = await this.host.pluginManager.get('position');
     const sync = await this.host.pluginManager.get('sync');
 
     this.global = await this.host.stateManager.attach(`${this.name}:global`, [
@@ -44,10 +44,14 @@ export default class AutoPlayRenderer extends Module {
       'globalFadeOutDuration',
     ]);
 
+    const position = positionPlugin.getPosition();
+    const positionInverse = { x: 1 - position.x, y: 1 - position.y };
+
     this.state = await this.host.stateManager.create(`${this.name}:renderer`, {
       clientIndex: this.clientIndex,
       clientColor: this.clientColor,
-      position: position.getPosition(),
+      position,
+      positionInverse,
     });
 
     this.volume = new GainNode(this.audioContext, {
@@ -158,22 +162,21 @@ export default class AutoPlayRenderer extends Module {
   async loadFile() {
     this.buffer = null;
 
-    const key = isBrowser() ? 'url' : 'path';
     const fileConfig = this.state.get('fileConfig');
 
     if (fileConfig !== null) {
       this.state.set('loading', true);
 
-      const urlOrPath = fileConfig[key];
-      const buffer = await this.audioBufferLoader.load(urlOrPath);
+      const url = fileConfig.url;
+      const buffer = await this.audioBufferLoader.load(url);
       // @note
       // check that the required file is still the same one
       // after loading, to avoid concurrency issues, e.g.:
       // - selection is         "long file"   ->  "short file"
       // - order of arrival is   "short file"  ->  "long file"
-      const currentUrlOrPath = this.state.get('fileConfig')[key];
+      const currentUrl = this.state.get('fileConfig').url;
       // then if a file arrives too late, just ignore it
-      if (urlOrPath === currentUrlOrPath) {
+      if (url === currentUrl) {
         this.buffer = buffer;
         // !!! not specific
         // callback();

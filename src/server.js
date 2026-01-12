@@ -26,42 +26,53 @@ import AutoPlayServer from './modules/autoplay/AutoPlayServer.js';
 import SoloistServer from './modules/soloist/SoloistServer.js';
 
 const config = loadConfig(process.env.ENV, import.meta.url);
+
+// override project from command line
+if (process.env.PROJECT) {
+  config.env.project = process.env.PROJECT;
+}
+
+if (!config.env.project) {
+  throw new Error('No project defined, either define the PROJECT environment variable, or set the the `project` entry in your env config file');
+}
+
+config.project = getProjectConfig(config.env.project);
+
+// override app config with project config
+config.app.name = config.project.name;
+config.app.author = config.project.author;
+
 const server = new Server(config);
 configureHttpRouter(server);
 
 const host = new ModuleHost(server);
 
-if (process.env.PROJECT) {
-  config.app.project = process.env.PROJECT;
-}
-
-config.project = getProjectConfig(config.app.project);
-
-// project specific routes
-// server.router.use('images', serveStatic(path.join('projects', config.app.project, 'images')));
-
 console.log(`
 --------------------------------------------------------
 - launching "${config.app.name}" in "${process.env.ENV || 'default'}" environment
 - [pid: ${process.pid}]
-- project (${config.app.project}) "${config.project.name} by ${config.project.author}"
+- project (${config.env.project}) "${config.project.name} by ${config.project.author}"
 --------------------------------------------------------
 `);
 
+import fs from 'fs';
+console.log(fs.existsSync(path.join(config.project.pathname, 'sounds')));
 host.pluginManager.register('platform-init', PluginPlatformInit);
 host.pluginManager.register('sync', PluginSync);
 host.pluginManager.register('checkin', PluginCheckin, {}, []);
 host.pluginManager.register('position', PluginPosition, {
   xRange: [0, 1],
   yRange: [0, 1],
-  // backgroundImage: config.project.positionBackgroundImage || '',
+  backgroundImage: config.project.positionBackgroundImage
+    ? path.join(config.project.pathname, config.project.positionBackgroundImage)
+    : null
 });
 host.pluginManager.register('filesystem', PluginFilesystem, {
-  dirname: path.join('projects', config.app.project, 'sounds'),
+  dirname: path.resolve(config.project.pathname, 'sounds'),
   publicPath: 'sounds',
 });
 host.pluginManager.register('scripting', PluginScripting, {
-  dirname: path.join('projects', config.app.project, 'scripts'),
+  dirname: path.resolve(config.project.pathname, 'scripts'),
 });
 
 // -------------------------------------------------------------------
@@ -77,7 +88,7 @@ await host.init();
 
 // init global state
 const globalState = await server.stateManager.create('global', {
-  projectId: config.app.project,
+  projectId: config.env.project,
   projectName: config.project.name,
   projectAuthor: config.project.author,
   projectConfig: config.project,
@@ -97,7 +108,6 @@ const soundbankState = await host.stateManager.create('soundbank', {
 });
 
 soundBankManager.subscribe((newValues, soundBankDefaultPresets, soundFileDefaultPresets) => {
-  // const { soundBankDefaultPresets, soundFileDefaultPresets } = soundBankManager;
   soundbankState.set({
     soundBanks: newValues,
     soundBankDefaultPresets,

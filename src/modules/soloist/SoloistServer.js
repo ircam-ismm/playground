@@ -137,10 +137,11 @@ export default class AutoPlayServer extends Module {
         this.startTime = this.sync.getSyncTime();
       }
 
+      const rotateMap = this.global.get('rotateMap');
       const radius = this.global.get('radius');
 
       this.renderers.forEach(renderer => {
-        const position = renderer.get('position');
+        const position = rotateMap ? renderer.get('positionInverse') : renderer.get('position');
         const currentDistance = renderer.get('distance');
         let normDistance = 1;
 

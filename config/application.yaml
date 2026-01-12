@@ -1,6 +1,5 @@
 name: playground
 author: ""
-project: demo
 clients:
   player:
     default: true

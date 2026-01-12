@@ -134,7 +134,9 @@ class AlAutoplayController extends LitElement {
             <sc-dots
               style="z-index: 0;"
               color="white"
-              .value=${this.module.renderers.getUnsafe('position')}
+              .value=${this.module.global.get('rotateMap')
+                ? this.module.renderers.getUnsafe('positionInverse')
+                : this.module.renderers.getUnsafe('position')}
             ></sc-dots>
             <!-- display pointer feedback (define if we keep it or not...) -->
             <!-- <sc-dots
@@ -143,11 +145,10 @@ class AlAutoplayController extends LitElement {
             ></sc-dots> -->
             <!-- pointer input -->
             <sc-dots
-              .value=${this.module.global.get('triggers')}
+              .value=${this.module.global.getUnsafe('triggers')}
               radius-relative=${this.module.global.get('radius')}
               capture-events
               @input=${e => {
-                console.log(e.detail.value);
                 this.module.global.set('triggers', e.detail.value)
               }}
             ></sc-dots>

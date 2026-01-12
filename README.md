@@ -15,13 +15,13 @@ git clone https://github.com/ircam-ismm/playground.git playground
 if not
   - download the source code at [https://github.com/ircam-ismm/playground](https://github.com/ircam-ismm/playground)
 
-![](./resources/download.png)
+![](./docs/download.png)
 
   - unszip the directory
   - open a Terminal and write `cd `(with a space at the end) then drop the application directory into the terminal
   - you should see something like `cd /User/youname/whatever/path/to/playground`
   - press Enter
-  
+
 3. Install the application and launch
 
 In the terminal, type the following command (press `Enter` after each line)
@@ -41,7 +41,7 @@ You can now access the application through your favorite browser (which should n
 
 press `Ctrl + c` into the Terminal which runs the server
 
-5. Restart the application 
+5. Restart the application
 
 to restart the application only the following commands are needed
 
@@ -80,9 +80,9 @@ To launch the controller, in ANOTHER brower windows type `http://127.0.0.1:8000/
 
 4. Choose a controller
 
-From the controller you can now access different synths (trigger-controller, soloist-controller, etc.). 
+From the controller you can now access different synths (trigger-controller, soloist-controller, etc.).
 
-5. Trigger it! 
+5. Trigger it!
 
 From trigger-controller, just press the soundbank you want (crickets, floating, footsteps) and press trigger all.
 

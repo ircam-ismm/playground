@@ -19,6 +19,7 @@ export default class AutoPlayController extends Module {
       'filename',
       'loading',
       'position',
+      'positionInverse',
     ]);
   }
 }
