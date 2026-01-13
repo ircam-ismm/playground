@@ -12,3 +12,5 @@ clients:
     runtime: browser
   trigger-controller:
     runtime: browser
+  granular-controller:
+    runtime: browser

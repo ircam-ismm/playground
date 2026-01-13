@@ -6,9 +6,9 @@ import {
 } from '@ircam/sc-utils';
 
 import Module from '../../lib/modules/Module.js';
-import AutoPlaySynth from './audio/AutoPlaySynth.js';
+import GranularSynth from './audio/GranularSynth.js';
 
-export default class AutoPlayRenderer extends Module {
+export default class GranularRenderer extends Module {
   constructor(host, name, {
     globalState,
     audioContext,
@@ -34,7 +34,9 @@ export default class AutoPlayRenderer extends Module {
 
   async start() {
     this.global = await this.host.stateManager.attach(`${this.name}:global`, [
-      'enabled', 'volume', 'presetKey',
+      'volume',
+      'presetKey',
+      'startedSynths',
     ]);
 
     this.state = await this.host.stateManager.create(`${this.name}:renderer`, {
@@ -56,15 +58,13 @@ export default class AutoPlayRenderer extends Module {
             this.volume.gain.setTargetAtTime(gain, now, 0.01);
             break;
           }
-          case 'enabled': {
-            this.toggleSynth(value);
-            break;
+          case 'startedSynths': {
+            this.#toggleSynth();
           }
         }
       }
     }, true);
 
-    // this is shared
     this.state.onUpdate(async updates => {
       for (let [key, value] of Object.entries(updates)) {
         switch (key) {
@@ -85,27 +85,8 @@ export default class AutoPlayRenderer extends Module {
     });
   }
 
-  async toggleSynth(enabled) {
-    if (this.synth !== null) {
-      this.synth.stop();
-      this.synth = null;
-    }
-
-    if (enabled && this.buffer) {
-      const fileConfig = this.state.get('fileConfig');
-      const presetKey = this.global.get('presetKey');
-      const params = fileConfig.presets[presetKey];
-
-      this.synth = new AutoPlaySynth(this.audioContext, this.scheduler);
-      this.synth.buffer = this.buffer;
-      this.synth.params = params;
-      this.synth.connect(this.volume);
-      this.synth.start();
-    }
-  }
-
-  // this is generic
-  async loadFile(callback = () => {}) {
+  // @fixme - this is almost generic!!!
+  async loadFile() {
     this.buffer = null;
 
     const fileConfig = this.state.get('fileConfig');
@@ -124,14 +105,34 @@ export default class AutoPlayRenderer extends Module {
       // then if a file arrives too late, just ignore it
       if (url === currentUrl) {
         this.buffer = buffer;
-        // !!! this is specific
-        const enabled = this.global.get('enabled');
-        this.toggleSynth(enabled);
+        // !!! not specific
+        this.#toggleSynth();
       }
 
       this.state.set('loading', false);
     } else {
       this.state.set('loading', false);
+    }
+  }
+
+  #toggleSynth() {
+    const startedSynths = this.global.get('startedSynths');
+    const filename = this.state.get('filename');
+
+    if (startedSynths.includes(filename) && !this.synth) {
+      if (this.buffer) {
+        const presetKey = this.global.get('presetKey');
+        const config = this.state.get('fileConfig');
+        const params = config.presets[presetKey];
+
+        this.synth = new GranularSynth(this.audioContext, this.scheduler, this.buffer);
+        this.synth.params = params;
+        this.synth.connect(this.volume);
+        this.synth.start();
+      }
+    } else if (this.synth && !startedSynths.includes(filename)) {
+      this.synth.stop();
+      this.synth = null;
     }
   }
 }

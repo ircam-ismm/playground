@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "@ircam/parameters": "^1.2.2",
-    "@ircam/sc-components": "^3.5.1",
+    "@ircam/sc-components": "^3.6.0",
     "@ircam/sc-loader": "^1.1.0",
     "@ircam/sc-scheduling": "^1.0.0",
     "@ircam/sc-utils": "^1.11.0",

@@ -18,7 +18,7 @@ import AudioBus from '../lib/utils/AudioBus.js';
 import AutoPlayRenderer from '../modules/autoplay/AutoPlayRenderer.js';
 import SoloistRenderer from '../modules/soloist/SoloistRenderer.js';
 import TriggerRenderer from '../modules/trigger/TriggerRenderer.js';
-
+import GranularRenderer from '../modules/granular/GranularRenderer.js';
 
 // - General documentation: https://soundworks.dev/
 // - API documentation:     https://soundworks.dev/api
@@ -93,6 +93,7 @@ async function bootstrap() {
   const autoPlayRenderer = new AutoPlayRenderer(host, 'autoplay', app);
   const soloistRenderer = new SoloistRenderer(host, 'soloist', app);
   const triggerRenderer = new TriggerRenderer(host, 'trigger', app);
+  const granularRenderer = new GranularRenderer(host, 'granular', app);
 
   await host.start();
 

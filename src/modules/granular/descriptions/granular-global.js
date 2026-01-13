@@ -24,10 +24,13 @@ export default {
     max: 6,
     default: 0,
   },
-  padSize: {
-    type: 'integer',
-    min: 20,
-    max: 100,
-    default: 60,
+  startedSynths: {
+    type: 'any',
+    default: [],
+  },
+  toggleSynthEvent: {
+    type: 'any',
+    event: true,
+    acknowledge: false,
   },
 };

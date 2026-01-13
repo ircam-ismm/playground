@@ -25,6 +25,7 @@ import getProjectConfig from './lib/utils/getProjectConfig.js';
 import AutoPlayServer from './modules/autoplay/AutoPlayServer.js';
 import SoloistServer from './modules/soloist/SoloistServer.js';
 import TriggerServer from './modules/trigger/TriggerServer.js';
+import GranularServer from './modules/granular/GranularServer.js';
 
 const config = loadConfig(process.env.ENV, import.meta.url);
 
@@ -152,6 +153,7 @@ const applicationContext = {
 const autoPlayServer = new AutoPlayServer(host, 'autoplay', applicationContext);
 const soloistServer = new SoloistServer(host, 'soloist', applicationContext);
 const triggerServer = new TriggerServer(host, 'trigger', applicationContext);
+const granularServer = new GranularServer(host, 'granular', applicationContext);
 
 await host.start();
 

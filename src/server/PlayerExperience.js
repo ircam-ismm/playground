@@ -179,36 +179,36 @@ class PlayerExperience extends AbstractExperience {
     // ------------------------------------------------------------
     // granular controller state
     // ------------------------------------------------------------
-    this.controllerStates['granular'].subscribe(updates => {
-      // assign sound file
-      for (let name in updates) {
-        switch (name) {
-          case 'currentSoundBank': {
-            for (let [id, playerState] of this.players.entries()) {
-              playerState.set({ granularState: 'stop' });
-            }
+    // this.controllerStates['granular'].subscribe(updates => {
+    //   // assign sound file
+    //   for (let name in updates) {
+    //     switch (name) {
+    //       case 'currentSoundBank': {
+    //         for (let [id, playerState] of this.players.entries()) {
+    //           playerState.set({ granularState: 'stop' });
+    //         }
 
-            this.assignSoundBank('granular', updates['currentSoundBank']);
-            break;
-          }
-          case 'toggleSynthEvent': {
-            updates[name].forEach(event => {
-              const { action, filename } = event;
+    //         this.assignSoundBank('granular', updates['currentSoundBank']);
+    //         break;
+    //       }
+    //       case 'toggleSynthEvent': {
+    //         updates[name].forEach(event => {
+    //           const { action, filename } = event;
 
-              for (let [id, playerState] of this.players.entries()) {
-                const playerFile = playerState.get('granularFile');
+    //           for (let [id, playerState] of this.players.entries()) {
+    //             const playerFile = playerState.get('granularFile');
 
-                if (playerFile === filename) {
-                  playerState.set({ granularState: action });
-                }
-              }
-            });
+    //             if (playerFile === filename) {
+    //               playerState.set({ granularState: action });
+    //             }
+    //           }
+    //         });
 
-            break;
-          }
-        }
-      }
-    });
+    //         break;
+    //       }
+    //     }
+    //   }
+    // });
 
     // ------------------------------------------------------------
     // soloist controller state

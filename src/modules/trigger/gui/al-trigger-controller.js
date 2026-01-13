@@ -71,7 +71,6 @@ class AlTriggerController extends LitElement {
     super();
 
     this.module = null;
-
     this.unsubscribeGlobal = null;
     this.unsubscribeRenderers = null;
   }
