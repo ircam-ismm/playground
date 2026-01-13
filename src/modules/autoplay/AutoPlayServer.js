@@ -112,16 +112,5 @@ export default class AutoPlayServer extends Module {
     // end share
     // ------------------------------------------------------
 
-    await delay(50);
-    const activeSoundbanks = this.global.get('activeSoundbanks');
-    console.log('> set currentSoundbank to', activeSoundbanks, activeSoundbanks[0]);
-    this.global.set('currentSoundBank', activeSoundbanks[0]);
-    // this.global.set('enabled', true);
-
-    // await delay(50);
   }
-
-  // async stop() {
-  //   console.log(this.name, 'stop');
-  // }
 }

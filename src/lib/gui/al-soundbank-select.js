@@ -1,8 +1,7 @@
 import { LitElement, html, css } from 'lit';
 import { classMap } from 'lit-html/directives/class-map.js';
-import { btn, btnActive } from './defaultStyles.js';
 
-class PlaygroundHeader extends LitElement {
+class AlSoundBankSelect extends LitElement {
   static get properties() {
     return {
       list: {
@@ -18,22 +17,43 @@ class PlaygroundHeader extends LitElement {
   static get styles() {
     return css`
       :host {
-        font-family: Consolas, monaco, monospace;
-        display: block;
+        font-family: var(--sc-font-family);
+        display: flex;
         box-sizing: border-box;
+        background-color: #181818;
+        padding: 16px 10px;
+      }
+
+      sc-button {
+        height: 36px;
+        font-size: 1.3rem;
         background-color: #121212;
-        padding: 20px 10px;
+        display: flex;
+        width: auto;
+        flex-grow: 1;
       }
 
       button {
-        ${btn}
+        font-family: var(--sc-font-family);
+        color: white;
+        font-size: 1.3rem;
+        width: 100%;
+        border: 1px solid #676767;
+        border-radius: 2px;
+        background-color: #121212;
+        height: 36px;
+        line-height: 36px;
+        padding: 0;
+        outline: none;
+        user-select: none;
         width: 150px;
         font-size: 15px;
-        margin: 4px 0;
+        margin: 0px 4px;
       }
 
       button.active {
-        ${btnActive}
+        background-color: #dc3545;
+        border-color: #dc3545;
       }
     `;
   }
@@ -50,22 +70,17 @@ class PlaygroundHeader extends LitElement {
     const currentSoundBank = this.controller.get('currentSoundBank');
 
     return html`
-      <button
-        @touchstart="${e => this.#updateSoundbank(e, null)}"
-        @mousedown="${e => this.#updateSoundbank(e, null)}"
-        class="${!currentSoundBank ? 'active' : ''}"
-      >none</button>
+      <sc-button
+        @input="${e => this.#updateSoundbank(e, null)}"
+        ?selected="${currentSoundBank === null}"
+      >none</sc-button>
 
       ${activeSoundbanks.map(value => {
-        const classes = { active: currentSoundBank === value };
-
         return html`
-          <button
-            @touchstart="${e => this.#updateSoundbank(e, value)}"
-            @mousedown="${e => this.#updateSoundbank(e, value)}"
-            value="${value}"
-            class="${classMap(classes)}"
-          >${value}</button>
+          <sc-button
+            @input="${e => this.#updateSoundbank(e, value)}"
+            ?selected=${currentSoundBank === value}
+          >${value}</sc-button>
         `;
       })}
     `;
@@ -92,6 +107,6 @@ class PlaygroundHeader extends LitElement {
   }
 }
 
-if (!customElements.get('playground-header')) {
-  customElements.define('playground-header', PlaygroundHeader);
+if (!customElements.get('al-soundbank-select')) {
+  customElements.define('al-soundbank-select', AlSoundBankSelect);
 }

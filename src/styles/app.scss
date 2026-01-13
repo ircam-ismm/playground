@@ -50,9 +50,12 @@ body.loading {
 
 // default styles for controller layout
 .controller-layout {
-  display: block;
+  display: flex;
+  flex-direction: column;
   flex-grow: 1;
   position: relative;
+  user-select: none;
+  webkit-user-select: none;
 
   & > header {
     display: block;
@@ -78,6 +81,7 @@ body.loading {
   }
 
   & > section {
-    // padding: 20px;
+    display: flex;
+    flex: 1;
   }
 }

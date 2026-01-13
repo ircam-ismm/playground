@@ -3,8 +3,9 @@ import { LitElement, html, css } from 'lit';
 import '@ircam/sc-components/sc-text.js';
 import '@ircam/sc-components/sc-toggle.js';
 import '@ircam/sc-components/sc-slider.js';
+import '@ircam/sc-components/sc-icon.js';
 
-class PlaygroundPreset extends LitElement {
+class AlPreset extends LitElement {
   static get properties() {
     return {
       width: {
@@ -33,25 +34,32 @@ class PlaygroundPreset extends LitElement {
       :host {
         display: block;
         box-sizing: border-box;
-        width: 450px;
+        width: auto;
+        /* width: 450px; */
       }
 
       sc-text {
         width: 140px;
       }
 
-      button {
-        color: #ffffff;
-        font-family: Consolas, monaco, monospace;
-        background-color: #454545;
-        border: none;
-        height: 30px;
-        min-width: 100px;
-        font-size: 12px;
+      sc-icon {
+        position: absolute;
+        top: 0;
+        right: 0;
+        z-index: 2;
       }
 
-      button:active {
-        outline: 1px solid #ababab;
+      .open-button {
+        position: absolute;
+        top: 0;
+        right: 0;
+        z-index: 2;
+        display: flex;
+        cursor: pointer;
+      }
+
+      .open-button sc-icon {
+        position: relative;
       }
 
       .overlay {
@@ -74,13 +82,6 @@ class PlaygroundPreset extends LitElement {
         text-indent: 10px;
         font-style: italic;
       }
-
-      .overlay button {
-        position: absolute;
-        top: 0;
-        right: 0;
-        z-index: 2;
-      }
     `;
   }
 
@@ -100,7 +101,10 @@ class PlaygroundPreset extends LitElement {
 
       return html`
         <div class="overlay">
-          <button @click=${e => this.toggle()}>close</button>
+          <sc-icon
+            type="close"
+            @click=${e => this.toggle()}
+          ></sc-icon>
           ${this.label ? html`<p>${this.label}</p>` : ''}
 
           <div>
@@ -141,9 +145,15 @@ class PlaygroundPreset extends LitElement {
       `;
     } else {
       return html`
-        <button @click=${e => this.toggle()}>
-          ${this.label ? html`${this.label}` : 'open'}
-        </button>
+        <div class="open-button"
+          @click=${e => this.toggle()}
+        >
+          <sc-text>${this.label}</sc-text>
+          <sc-icon
+            type="gear"
+          ></sc-icon>
+        </div>
+
       `;
     }
   }
@@ -168,12 +178,11 @@ class PlaygroundPreset extends LitElement {
   }
 
   toggle() {
-    console.log('hooo');
     this.expanded = !this.expanded;
     this.requestUpdate();
   }
 }
 
-if (!customElements.get('playground-preset')) {
-  customElements.define('playground-preset', PlaygroundPreset);
+if (!customElements.get('al-preset')) {
+  customElements.define('al-preset', AlPreset);
 }

@@ -1,11 +1,11 @@
 import Module from '../../lib/modules/Module.js';
 
-import globalDescription from './descriptions/soloist-global.js';
-import rendererDescription from './descriptions/soloist-renderer.js';
+import globalDescription from './descriptions/trigger-global.js';
+import rendererDescription from './descriptions/trigger-renderer.js';
 
 import assignSoundBank from '../../lib/utils/assignSoundBank.js';
 
-const PRESET_KEY = 'soloistSynth';
+const PRESET_KEY = 'triggerSynth';
 
 export default class AutoPlayServer extends Module {
   constructor(host, name, {
@@ -98,64 +98,6 @@ export default class AutoPlayServer extends Module {
     // end share
     // ------------------------------------------------------
 
-    // soloist specific config
-
-    this.sync = await this.host.pluginManager.get('sync');
-
-    const { soloistGlobalFadeOutDuration } = this.globalState.get('projectConfig');
-    this.global.set('globalFadeOutDurationActive', soloistGlobalFadeOutDuration);
-
-    this.global.onUpdate(updates => {
-      for (let [key, value] of Object.entries(updates)) {
-        switch (key) {
-          case 'triggers': {
-            this.#computeDistanceAndPropagate();
-            break;
-          }
-          case 'radius': {
-            this.#computeDistanceAndPropagate();
-            break;
-          }
-        }
-      }
-    });
-  }
-
-  #computeDistanceAndPropagate = () => {
-    const triggers = this.global.get('triggers');
-
-    if (triggers.length === 0) {
-      this.startTime = null;
-
-      this.renderers.set('distance', 1);
-    } else {
-      if (this.startTime === null) {
-        this.startTime = this.sync.getSyncTime();
-      }
-
-      const rotateMap = this.global.get('rotateMap');
-      const radius = this.global.get('radius');
-
-      this.renderers.forEach(renderer => {
-        const position = rotateMap ? renderer.get('positionInverse') : renderer.get('position');
-        const currentDistance = renderer.get('distance');
-        let normDistance = 1;
-
-        triggers.forEach(trigger => {
-          const dx = position.x - trigger.x;
-          const dy = position.y - trigger.y;
-          const distance = Math.sqrt(dx * dx + dy * dy);
-          const norm = Math.min(1, distance / radius);
-          normDistance = Math.min(normDistance, norm);
-        });
-
-        // propagate startTime to trigger synthesis
-        if (normDistance < 1 && currentDistance === 1) {
-          renderer.set('startTime', this.startTime);
-        }
-
-        renderer.set('distance', normDistance);
-      });
-    }
+    // trigger specific
   }
 }

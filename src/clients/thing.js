@@ -17,6 +17,7 @@ import AudioBus from '../lib/utils/AudioBus.js';
 
 import AutoPlayRenderer from '../modules/autoplay/AutoPlayRenderer.js';
 import SoloistRenderer from '../modules/soloist/SoloistRenderer.js';
+import TriggerRenderer from '../modules/trigger/TriggerRenderer.js';
 
 
 // - General documentation: https://soundworks.dev/
@@ -31,7 +32,6 @@ async function bootstrap() {
 
   const audioContext = new AudioContext();
 
-  // Eventually register plugins
   client.pluginManager.register('platform-init', PluginPlatformInit, {
     audioContext,
   });
@@ -42,10 +42,6 @@ async function bootstrap() {
   client.pluginManager.register('sync', PluginSync, {
     getTimeFunction: () => audioContext.currentTime,
   }, ['platform-init']);
-
-
-  // Eventually register plugins
-  // client.pluginManager.register('my-plugin', plugin);
 
   // https://soundworks.dev/tools/helpers.html#nodelauncher
   launcher.register(client);
@@ -96,6 +92,7 @@ async function bootstrap() {
 
   const autoPlayRenderer = new AutoPlayRenderer(host, 'autoplay', app);
   const soloistRenderer = new SoloistRenderer(host, 'soloist', app);
+  const triggerRenderer = new TriggerRenderer(host, 'trigger', app);
 
   await host.start();
 

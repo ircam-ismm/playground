@@ -10,3 +10,5 @@ clients:
     runtime: browser
   soloist-controller:
     runtime: browser
+  trigger-controller:
+    runtime: browser

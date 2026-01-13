@@ -1,7 +1,7 @@
 import { LitElement, html, css } from 'lit-element';
 import { repeat } from 'lit-html/directives/repeat.js';
 
-class PlaygroundLoadingPlayers extends LitElement {
+class AlLoading extends LitElement {
   static get properties() {
     return {
       list: {
@@ -16,24 +16,25 @@ class PlaygroundLoadingPlayers extends LitElement {
   static get styles() {
     return css`
       :host {
-        display: block;
+        display: flex;
+        flex-direction: column;
         box-sizing: border-box;
         background-color: #181818;
         padding: 4px;
         width: 120px;
-        height: calc(100vh - 75px); // dirty...
+        /* height: calc(100vh - 75px); // dirty... */
+      }
+
+      p {
+        margin: 6px 0;
       }
 
       div {
         width: 100%;
         height: 15px;
-        margin-top: 4px;
+        margin-top: 1px;
         line-height: 15px;
         text-align: center;
-      }
-
-      p {
-        margin: 0 0 4px 0;
       }
     `;
   }
@@ -71,6 +72,6 @@ class PlaygroundLoadingPlayers extends LitElement {
   }
 }
 
-if (!customElements.get('playground-loading-players')) {
-  customElements.define('playground-loading-players', PlaygroundLoadingPlayers);
+if (!customElements.get('al-loading')) {
+  customElements.define('al-loading', AlLoading);
 }

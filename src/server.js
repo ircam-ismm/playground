@@ -24,6 +24,7 @@ import getProjectConfig from './lib/utils/getProjectConfig.js';
 
 import AutoPlayServer from './modules/autoplay/AutoPlayServer.js';
 import SoloistServer from './modules/soloist/SoloistServer.js';
+import TriggerServer from './modules/trigger/TriggerServer.js';
 
 const config = loadConfig(process.env.ENV, import.meta.url);
 
@@ -51,12 +52,10 @@ console.log(`
 --------------------------------------------------------
 - launching "${config.app.name}" in "${process.env.ENV || 'default'}" environment
 - [pid: ${process.pid}]
-- project (${config.env.project}) "${config.project.name} by ${config.project.author}"
+- project (${config.env.project}) "${config.project.name} ${config.project.author ? `by ${config.project.author}` : ''}"
 --------------------------------------------------------
 `);
 
-import fs from 'fs';
-console.log(fs.existsSync(path.join(config.project.pathname, 'sounds')));
 host.pluginManager.register('platform-init', PluginPlatformInit);
 host.pluginManager.register('sync', PluginSync);
 host.pluginManager.register('checkin', PluginCheckin, {}, []);
@@ -152,6 +151,7 @@ const applicationContext = {
 // instantiate modules
 const autoPlayServer = new AutoPlayServer(host, 'autoplay', applicationContext);
 const soloistServer = new SoloistServer(host, 'soloist', applicationContext);
+const triggerServer = new TriggerServer(host, 'trigger', applicationContext);
 
 await host.start();
 

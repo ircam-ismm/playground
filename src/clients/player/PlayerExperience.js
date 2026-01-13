@@ -141,13 +141,13 @@ class PlayerExperience extends AbstractExperience {
           //   this.render();
           //   break;
           // }
-          case 'triggerVolume': {
-            const now = this.audioContext.currentTime;
-            const gain = decibelToLinear(value);
-            this.triggerVolume.gain.setTargetAtTime(gain, now, 0.01);
-            this.render();
-            break;
-          }
+          // case 'triggerVolume': {
+          //   const now = this.audioContext.currentTime;
+          //   const gain = decibelToLinear(value);
+          //   this.triggerVolume.gain.setTargetAtTime(gain, now, 0.01);
+          //   this.render();
+          //   break;
+          // }
           case 'granularVolume': {
             const now = this.audioContext.currentTime;
             const gain = decibelToLinear(value);
@@ -167,35 +167,35 @@ class PlayerExperience extends AbstractExperience {
     const updateFromPlayerState = async updates => {
       for (let name in updates) {
         switch (name) {
-          case 'triggerFile': {
-            this.loadFile('trigger');
-            break;
-          }
-          case 'triggerConfig': {
-            const config = updates[name];
-            break;
-          }
-          case 'triggerEvent': {
-            const buffer = this.bufferCache.get('trigger');
+          // case 'triggerFile': {
+          //   this.loadFile('trigger');
+          //   break;
+          // }
+          // case 'triggerConfig': {
+          //   const config = updates[name];
+          //   break;
+          // }
+          // case 'triggerEvent': {
+          //   const buffer = this.bufferCache.get('trigger');
 
-            if (buffer) {
-              const triggerSynthConfig = this.playerState.get('triggerConfig');
-              const config = triggerSynthConfig.presets['triggerSynth'];
-              const synth = new TriggerSynth(this.audioContext, buffer, config);
+          //   if (buffer) {
+          //     const triggerSynthConfig = this.playerState.get('triggerConfig');
+          //     const config = triggerSynthConfig.presets['triggerSynth'];
+          //     const synth = new TriggerSynth(this.audioContext, buffer, config);
 
-              synth.connect(this.triggerVolume);
-              synth.trigger();
-              // flash the screen
-              this.flashScreen = true;
-              this.render();
+          //     synth.connect(this.triggerVolume);
+          //     synth.trigger();
+          //     // flash the screen
+          //     this.flashScreen = true;
+          //     this.render();
 
-              setTimeout(() => {
-                this.flashScreen = false;
-                this.render();
-              }, 100);
-            }
-            break;
-          }
+          //     setTimeout(() => {
+          //       this.flashScreen = false;
+          //       this.render();
+          //     }, 100);
+          //   }
+          //   break;
+          // }
 
           // soloist
           // case 'soloistFile': {

@@ -5,40 +5,38 @@ import '@ircam/sc-components/sc-text.js';
 import '@ircam/sc-components/sc-toggle.js';
 import '@ircam/sc-components/sc-dots.js';
 
-import '../../../lib/views/playground-header.js';
-import '../../../lib/views/playground-loading-players.js';
-import '../../../lib/views/playground-preset.js';
-import { btn, btnActive } from '../../../lib/views/defaultStyles.js';
+import '../../../lib/gui/al-controller.js';
 
 class AlAutoplayController extends LitElement {
   static styles = css`
-    .wrapper {
-      width: 100vw;
-      height: calc(100wh - 100px);
+    :host {
+      display: flex;
+      flex-direction: row;
+      flex-grow: 1;
+    }
+
+    div[slot="controls"] {
+      display: flex;
+      flex-direction: column;
+    }
+
+    div[slot="controls"] > div {
       display: flex;
       flex-direction: row;
     }
 
-    .wrapper section {
-      position: relative;
+    div[slot="controls"] sc-text {
+      width: 120px;
+    }
+
+    div[slot="main"] {
+      display: flex;
+      flex-direction: column;
       flex-grow: 1;
-      box-sizing: border-box;
-      padding: 0 0 10px 10px;
-    }
-
-    .controls {
-      position: absolute;
-      top: 6px;
-      right: 10px;
-      z-index: 10;
-    }
-
-    .map {
       position: relative;
-      height: 100%;
     }
 
-    .map sc-dots {
+    div[slot="main"] sc-dots {
       position: absolute;
       top: 0;
       left: 0;
@@ -46,24 +44,18 @@ class AlAutoplayController extends LitElement {
       width: 100%;
     }
 
-    .map sc-dots:nth-child(1) {
+    div[slot="main"] sc-dots.dots {
       z-index: 1;
       background: none;
+      --sc-dots-area-background-color: #121212;
     }
 
-    .map sc-dots:nth-child(2) {
+    div[slot="main"] sc-dots.pointers {
       z-index: 2;
       background: none;
       --sc-dots-color: #AA3456;
-      --sc-dots-opacity: 0.2;
+      --sc-dots-opacity: 0.3;
     }
-
-    /* .map sc-dots:nth-child(3) {
-      z-index: 3;
-      background: none;
-      --sc-dots-color: #AA3456;
-      --sc-dots-opacity: 0.2;
-    } */
   `;
 
   constructor() {
@@ -77,87 +69,81 @@ class AlAutoplayController extends LitElement {
 
   render() {
     return html`
-      <playground-header .controller=${this.module.global}></playground-header>
-      <div class="wrapper">
-        <section>
-          <!-- controls -->
-          <div class="controls">
-            <div>
-              <sc-text>volume</sc-text>
-              <sc-slider
-                number-box
-                value="${this.module.global.get('volume')}"
-                min=${this.module.global.getDescription('volume').min}
-                max=${this.module.global.getDescription('volume').max}
-                @input=${e => this.module.global.set('volume', e.detail.value )}
-              ></sc-slider>
-            </div>
-            <div style="margin-top: 4px">
-              <sc-text>radius</sc-text>
-              <sc-slider
-                number-box
-                value="${this.module.global.get('radius')}"
-                min=${this.module.global.getDescription('radius').min}
-                max=${this.module.global.getDescription('radius').max}
-                @input=${e => this.module.global.set('radius', e.detail.value )}
-              ></sc-slider>
-            </div>
-            <div style="margin-top: 4px">
-              <sc-text>fadeout time</sc-text>
-              <sc-slider
-                number-box
-                value="${this.module.global.get('globalFadeOutDuration')}"
-                min=${this.module.global.getDescription('globalFadeOutDuration').min}
-                max=${this.module.global.getDescription('globalFadeOutDuration').max}
-                @input=${e => this.module.global.set('globalFadeOutDuration', e.detail.value )}
-              ></sc-slider>
-              <sc-toggle
-                ?active=${this.module.global.get('globalFadeOutDurationActive')}
-                @change=${e => this.module.global.set('globalFadeOutDurationActive', e.detail.value)}
-              ></sc-toggle>
-            </div>
-            <div style="margin-top: 4px">
-              <sc-text
-                value="rotate map"
-                width="100"
-                readonly
-              ></sc-text>
-              <sc-toggle
-                ?active=${this.module.global.get('rotateMap')}
-                @change=${e => this.module.global.set('rotateMap', e.detail.value)}
-              ></sc-toggle>
-            </div>
+      <al-controller .module=${this.module}>
+        <div slot="controls">
+          <div>
+            <sc-text>volume</sc-text>
+            <sc-slider
+              number-box
+              value="${this.module.global.get('volume')}"
+              min=${this.module.global.getDescription('volume').min}
+              max=${this.module.global.getDescription('volume').max}
+              @input=${e => this.module.global.set('volume', e.detail.value )}
+            ></sc-slider>
           </div>
-
-          <div class="map">
-            <!-- display map of players -->
-            <sc-dots
-              style="z-index: 0;"
-              color="white"
-              .value=${this.module.global.get('rotateMap')
-                ? this.module.renderers.getUnsafe('positionInverse')
-                : this.module.renderers.getUnsafe('position')}
-            ></sc-dots>
-            <!-- display pointer feedback (define if we keep it or not...) -->
-            <!-- <sc-dots
-              .value=${this.module.global.get('triggers')}
-              radius-relative=${this.module.global.get('radius')}
-            ></sc-dots> -->
-            <!-- pointer input -->
-            <sc-dots
-              .value=${this.module.global.getUnsafe('triggers')}
-              radius-relative=${this.module.global.get('radius')}
-              capture-events
-              @input=${e => {
-                this.module.global.set('triggers', e.detail.value)
-              }}
-            ></sc-dots>
+          <div style="margin-top: 4px">
+            <sc-text>radius</sc-text>
+            <sc-slider
+              number-box
+              value="${this.module.global.get('radius')}"
+              min=${this.module.global.getDescription('radius').min}
+              max=${this.module.global.getDescription('radius').max}
+              @input=${e => this.module.global.set('radius', e.detail.value )}
+            ></sc-slider>
           </div>
-
-        </section>
-        <playground-loading-players .renderers=${this.module.renderers}></playground-loading-players>
-      </div>
-
+          <div style="margin-top: 4px">
+            <sc-text>fadeout time</sc-text>
+            <sc-slider
+              number-box
+              value="${this.module.global.get('globalFadeOutDuration')}"
+              min=${this.module.global.getDescription('globalFadeOutDuration').min}
+              max=${this.module.global.getDescription('globalFadeOutDuration').max}
+              @input=${e => this.module.global.set('globalFadeOutDuration', e.detail.value )}
+            ></sc-slider>
+            <sc-toggle
+              ?active=${this.module.global.get('globalFadeOutDurationActive')}
+              @change=${e => this.module.global.set('globalFadeOutDurationActive', e.detail.value)}
+            ></sc-toggle>
+          </div>
+          <div style="margin-top: 4px">
+            <sc-text
+              value="rotate map"
+              width="100"
+              readonly
+            ></sc-text>
+            <sc-toggle
+              ?active=${this.module.global.get('rotateMap')}
+              @change=${e => this.module.global.set('rotateMap', e.detail.value)}
+            ></sc-toggle>
+          </div>
+        </div>
+        <div slot="main">
+          <!-- display map of players -->
+          <sc-dots
+            class="dots"
+            style="z-index: 0;"
+            color="white"
+            .value=${this.module.global.get('rotateMap')
+              ? this.module.renderers.getUnsafe('positionInverse')
+              : this.module.renderers.getUnsafe('position')}
+          ></sc-dots>
+          <!-- display pointer feedback (define if we keep it or not...) -->
+          <!-- <sc-dots
+            .value=${this.module.global.get('triggers')}
+            radius-relative=${this.module.global.get('radius')}
+          ></sc-dots> -->
+          <!-- pointer input -->
+          <sc-dots
+            class="pointers"
+            .value=${this.module.global.getUnsafe('triggers')}
+            radius-relative=${this.module.global.get('radius')}
+            capture-events
+            @input=${e => {
+              this.module.global.set('triggers', e.detail.value)
+            }}
+          ></sc-dots>
+        </div>
+      </al-controller>
     `;
   }
 
@@ -173,12 +159,6 @@ class AlAutoplayController extends LitElement {
     this.unsubscribeRenderers();
 
     super.disconnectedCallback();
-  }
-
-  #toggleSynth = (e) => {
-    e.preventDefault();
-    const enabled = !this.module.global.get('enabled');
-    this.module.global.set('enabled', enabled);
   }
 }
 
