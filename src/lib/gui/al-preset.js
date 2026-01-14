@@ -26,33 +26,32 @@ class AlPreset extends LitElement {
       expanded: {
         type: Boolean,
       },
+      alignOverlay: {
+        attribute: 'align-overlay',
+        type: String,
+      },
+      targetType: {
+        attribute: 'target-type',
+        type: String,
+      },
     }
   }
 
   static get styles() {
     return css`
       :host {
-        display: block;
+        display: inline-block;
         box-sizing: border-box;
-        width: auto;
-        /* width: 450px; */
+        position: relative;
+        /* min-width: 100px; */
+        min-height: 30px;
       }
 
       sc-text {
         width: 140px;
       }
 
-      sc-icon {
-        position: absolute;
-        top: 0;
-        right: 0;
-        z-index: 2;
-      }
-
       .open-button {
-        position: absolute;
-        top: 0;
-        right: 0;
         z-index: 2;
         display: flex;
         cursor: pointer;
@@ -63,24 +62,26 @@ class AlPreset extends LitElement {
       }
 
       .overlay {
-        position: relative;
+        position: absolute;
+        top: 30px;
         z-index: 10;
         padding: 4px;
         background-color: #161616;
         border-radius: 1px;
         border: 1px solid #454545;
-        padding-top: 40px;
       }
 
-      .overlay p {
-        position: absolute;
-        top: 0;
+      .overlay.right {
+        right: 0;
+      }
+
+      .overlay.left {
         left: 0;
-        height: 30px;
-        line-height: 30px;
-        margin: 0;
-        text-indent: 10px;
-        font-style: italic;
+      }
+
+      .overlay > div {
+        display: flex;
+        flex-direction: row;
       }
     `;
   }
@@ -91,69 +92,74 @@ class AlPreset extends LitElement {
     this.label = '';
     this.expanded = false;
     this.unsubscribeSoundbank = null;
+    this.alignOverlay = 'right'; // 'left'
+    this.targetType = 'file'; // '
   }
 
   render() {
+    const header = html`
+      <div class="open-button" @input=${() => this.toggle()}>
+        ${this.label ? html`<sc-text>${this.label}</sc-text>` : nothing}
+        <sc-icon type="${this.expanded ? 'close' : 'gear'}"></sc-icon>
+      </div>
+    `;
+
+    let content = nothing;
+
     if (this.expanded) {
-      const file = this.state.getUnsafe('soundBanks')[this.soundbank].files[this.filename];
-      const definitions = this.state.getUnsafe('soundFileDefaultPresets')[this.presetKey];
-      const values = file.presets[this.presetKey];
+      const soundbank = this.state.getUnsafe('soundBanks')[this.soundbank];
+      console.log(soundbank);
+      let definitions;
+      let values;
 
-      return html`
-        <div class="overlay">
-          <sc-icon
-            type="close"
-            @input=${() => this.toggle()}
-          ></sc-icon>
-          ${this.label ? html`<p>${this.label}</p>` : nothing}
+      if (this.targetType === 'file') {
+        const file = soundbank.files[this.filename];
+        definitions = this.state.getUnsafe('soundFileDefaultPresets')[this.presetKey];
+        values = file.presets[this.presetKey];
+      } else if (this.targetType === 'soundbank') {
+        definitions = this.state.getUnsafe('soundBankDefaultPresets')[this.presetKey]
+        values = soundbank.presets[this.presetKey];
+      }
 
-          <div>
-            ${Object.keys(definitions).map(name => {
-              const def = definitions[name];
-              const value = values[name];
+      content = html`
+        <div class="overlay ${this.alignOverlay}">
+          ${Object.keys(definitions).map(name => {
+            const def = definitions[name];
+            const value = values[name];
 
-              if (def.type === 'integer' || def.type === 'float') {
-                return html`
-                  <div style="margin-bottom: 4px">
-                    <sc-text>${name}</sc-text>
-                    <sc-slider
-                      number-box
-                      min=${def.min}
-                      max=${def.max}
-                      step=${def.step}
-                      .value=${value}
-                      @change=${e => this.updatePreset(name, e.detail.value)}
-                    ></sc-slider>
-                  </div>
-                `;
-              } else if (def.type === 'boolean') {
-                return html`
-                  <div style="margin-bottom: 4px">
-                    <sc-text>${name}</sc-text>
-                    <sc-toggle
-                      ?active=${value}
-                      @change=${e => this.updatePreset(name, e.detail.value)}
-                    ></sc-toggle>
-                  </div>
-                `;
-              } else {
-                console.error(`playground-preset: ${def.type} not implemented`);
-              }
-            })}
-          </div>
+            if (def.type === 'integer' || def.type === 'float') {
+              return html`
+                <div style="margin-bottom: 4px">
+                  <sc-text>${name}</sc-text>
+                  <sc-slider
+                    number-box
+                    min=${def.min}
+                    max=${def.max}
+                    step=${def.step}
+                    .value=${value}
+                    @change=${e => this.updatePreset(name, e.detail.value)}
+                  ></sc-slider>
+                </div>
+              `;
+            } else if (def.type === 'boolean') {
+              return html`
+                <div style="margin-bottom: 4px">
+                  <sc-text>${name}</sc-text>
+                  <sc-toggle
+                    ?active=${value}
+                    @change=${e => this.updatePreset(name, e.detail.value)}
+                  ></sc-toggle>
+                </div>
+              `;
+            } else {
+              console.error(`playground-preset: ${def.type} not implemented`);
+            }
+          })}
         </div>
-      `;
-    } else {
-      return html`
-        <div class="open-button"
-          @input=${() => this.toggle()}
-        >
-          ${this.label ? html`<sc-text>${this.label}</sc-text>` : nothing}
-          <sc-icon type="gear"></sc-icon>
-        </div>
-
-      `;
+      `
     }
+
+    return [header, content]
   }
 
   connectedCallback() {
@@ -167,12 +173,20 @@ class AlPreset extends LitElement {
   }
 
   updatePreset(name, value) {
-    this.state.set('updateSoundFilePreset', {
-      soundbank: this.soundbank,
-      filename: this.filename,
-      presetKey: this.presetKey,
-      updates: { [name]: value },
-    });
+    if (this.targetType === 'file') {
+      this.state.set('updateSoundFilePreset', {
+        soundbank: this.soundbank,
+        filename: this.filename,
+        presetKey: this.presetKey,
+        updates: { [name]: value },
+      });
+    } else {
+      this.state.set('updateSoundBankPreset', {
+        soundbank: this.soundbank,
+        presetKey: this.presetKey,
+        updates: { [name]: value },
+      });
+    }
   }
 
   toggle() {

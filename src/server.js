@@ -135,6 +135,21 @@ soundbankState.onUpdate(updates => {
         })
         break;
       }
+      case 'updateSoundBankPreset': {
+        const {
+          soundbank,
+          presetKey,
+          updates
+        } = value;
+
+        soundBankManager.updateSoundBankPreset(soundbank, presetKey, updates);
+        // re-propagate so that modules can notify their clients
+        soundbankState.set('updateSoundBankPresetNotification', {
+          soundbank,
+          presetKey,
+        })
+        break;
+      }
     }
   }
 });
