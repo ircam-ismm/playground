@@ -135,7 +135,6 @@ class AlGranularController extends LitElement {
                     ${filename} - #players: ${numPlayers} -------- ${started ? 'STOP' : 'START'}
                   </sc-button>
                   <al-preset
-                    label="edit file params"
                     width="500"
                     .state=${this.module.soundbank}
                     soundbank=${currentSoundBank}

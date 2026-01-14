@@ -14,3 +14,5 @@ clients:
     runtime: browser
   granular-controller:
     runtime: browser
+  soundbank-manager:
+    runtime: browser

@@ -93,7 +93,6 @@ class AlAutoplayController extends LitElement {
                       </h2>
                       <al-preset
                         style="position: absolute; top: 0; right: 0"
-                        label="edit file params"
                         width="500"
                         .state=${this.module.soundbank}
                         soundbank=${currentSoundBank}

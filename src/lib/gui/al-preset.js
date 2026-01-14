@@ -1,4 +1,4 @@
-import { LitElement, html, css } from 'lit';
+import { LitElement, html, css, nothing } from 'lit';
 
 import '@ircam/sc-components/sc-text.js';
 import '@ircam/sc-components/sc-toggle.js';
@@ -103,9 +103,9 @@ class AlPreset extends LitElement {
         <div class="overlay">
           <sc-icon
             type="close"
-            @click=${e => this.toggle()}
+            @input=${() => this.toggle()}
           ></sc-icon>
-          ${this.label ? html`<p>${this.label}</p>` : ''}
+          ${this.label ? html`<p>${this.label}</p>` : nothing}
 
           <div>
             ${Object.keys(definitions).map(name => {
@@ -146,12 +146,10 @@ class AlPreset extends LitElement {
     } else {
       return html`
         <div class="open-button"
-          @click=${e => this.toggle()}
+          @input=${() => this.toggle()}
         >
-          <sc-text>${this.label}</sc-text>
-          <sc-icon
-            type="gear"
-          ></sc-icon>
+          ${this.label ? html`<sc-text>${this.label}</sc-text>` : nothing}
+          <sc-icon type="gear"></sc-icon>
         </div>
 
       `;

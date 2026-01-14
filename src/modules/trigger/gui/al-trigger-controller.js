@@ -120,7 +120,6 @@ class AlTriggerController extends LitElement {
                         > ${filename}
                       </h2>
                       <al-preset
-                        label="edit file params"
                         width="500"
                         .state=${this.module.soundbank}
                         soundbank=${currentSoundBank}
