@@ -1,7 +1,7 @@
 import '@soundworks/helpers/polyfills.js';
 import { Client } from '@soundworks/core/client.js';
 import { loadConfig, launcher } from '@soundworks/helpers/browser.js';
-import { html, render } from 'lit';
+import { LitElement, html, render, css, nothing } from 'lit';
 
 import PluginPlatformInit from '@soundworks/plugin-platform-init/client.js';
 import PluginSync from '@soundworks/plugin-sync/client.js';
@@ -26,6 +26,111 @@ import GranularRenderer from '../modules/granular/GranularRenderer.js';
 // - Issue Tracker:         https://github.com/collective-soundworks/soundworks/issues
 // - Wizard & Tools:        `npx soundworks`
 
+class AlPlayer extends LitElement {
+  static styles = css`
+    :host {
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+      color: #040404;
+    }
+
+    .text {
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+      padding: 20px;
+      position: relative;
+    }
+
+    .overlay {
+      background-color: white;
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 1;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      transition: opacity 50ms;
+    }
+  `;
+
+  constructor() {
+    super();
+
+    this.opacity = 0;
+    this.$overlay = 0;
+
+    this.unsubscribeAutoPlayRenderer = null;
+    this.unsubscribeSoloistRenderer = null;
+    this.unsubscribeTriggerRenderer = null;
+    this.unsubscribeGranularRenderer = null;
+  }
+
+  render() {
+    const distance = this.soloistRenderer.state.get('distance');
+    const trigger = this.triggerRenderer.state.get('trigger');
+
+    if (distance < 1) {
+      this.opacity = 1 - distance;
+    }
+
+    if (trigger) {
+      this.opacity = 1;
+    }
+
+    return html`
+      <div class="overlay"></div>
+      <div class="text" style="background-color: ${this.clientColor}">
+        <p>autoplay: ${this.autoPlayRenderer.state.get('filename') || 'undefined'}</p>
+        <p>soloist: ${this.soloistRenderer.state.get('filename') || 'undefined'}</p>
+        <p>trigger: ${this.triggerRenderer.state.get('filename') || 'undefined'}</p>
+        <p>granular: ${this.granularRenderer.state.get('filename') || 'undefined'}</p>
+      </div>
+    `;
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+
+    this.unsubscribeAutoPlayRenderer = this.autoPlayRenderer.state.onUpdate(() => this.requestUpdate());
+    this.unsubscribeSoloistRenderer = this.soloistRenderer.state.onUpdate(() => this.requestUpdate());
+    this.unsubscribeTriggerRenderer = this.triggerRenderer.state.onUpdate(() => this.requestUpdate());
+    this.unsubscribeGranularRenderer = this.granularRenderer.state.onUpdate(() => this.requestUpdate());
+    //
+    this.#updateOpacity();
+  }
+
+  disconnectedCallback() {
+    this.unsubscribeAutoPlayRenderer();
+    this.unsubscribeSoloistRenderer();
+    this.unsubscribeTriggerRenderer();
+    this.unsubscribeGranularRenderer();
+
+    super.disconnectedCallback();
+  }
+
+  #updateOpacity = () => {
+    const distance = this.soloistRenderer.state.get('distance');
+    if (distance === 1) {
+      this.opacity = Math.max(this.opacity - 0.1, 0);
+    }
+
+    if (!this.$overlay) {
+      this.$overlay = this.shadowRoot.querySelector('.overlay');
+    }
+
+    if (this.$overlay) {
+      this.$overlay.style.opacity = this.opacity;
+    }
+
+    this.rafId = window.requestAnimationFrame(this.#updateOpacity);
+  }
+}
+
+customElements.define('al-player', AlPlayer);
+
 const audioContext = new AudioContext();
 
 async function main($container) {
@@ -38,7 +143,7 @@ async function main($container) {
   });
   client.pluginManager.register('checkin', PluginCheckin);
   client.pluginManager.register('position', PluginPosition, {
-    randomize: !!config.project.randomizePosition,
+    randomize: !!config.project.randomlyAssignPosition,
   });
   client.pluginManager.register('sync', PluginSync, {
     getTimeFunction: () => audioContext.currentTime,
@@ -100,8 +205,13 @@ async function main($container) {
   function renderApp() {
     render(html`
       <div class="simple-layout">
-        <p>Hello ${client.config.app.name}!</p>
-
+        <al-player
+          .clientColor=${clientColor}
+          .autoPlayRenderer=${autoPlayRenderer}
+          .soloistRenderer=${soloistRenderer}
+          .triggerRenderer=${triggerRenderer}
+          .granularRenderer=${granularRenderer}
+        ></al-player>
         <sw-credits .infos="${client.config.app}"></sw-credits>
       </div>
     `, $container);

@@ -42,9 +42,8 @@ body.loading {
 }
 
 .simple-layout {
-  display: block;
+  display: flex;
   flex-grow: 1;
-  padding: 20px;
   position: relative;
 }
 

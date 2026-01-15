@@ -18,3 +18,5 @@ clients:
     runtime: browser
   controller:
     runtime: browser
+  instructions-viewer:
+    runtime: browser
