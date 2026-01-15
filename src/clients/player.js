@@ -32,7 +32,7 @@ class AlPlayer extends LitElement {
       display: flex;
       flex-direction: column;
       flex-grow: 1;
-      color: #040404;
+      /* color: #040404; */
     }
 
     .text {
@@ -41,6 +41,13 @@ class AlPlayer extends LitElement {
       flex-grow: 1;
       padding: 20px;
       position: relative;
+    }
+
+    .text.intro {
+      justify-content: center;
+      text-align: center;
+      font-size: 1.6rem;
+      font-style: italic;
     }
 
     .overlay {
@@ -69,6 +76,8 @@ class AlPlayer extends LitElement {
   }
 
   render() {
+    const state = this.global.get('state');
+    const config = this.global.getUnsafe('projectConfig');
     const distance = this.soloistRenderer.state.get('distance');
     const trigger = this.triggerRenderer.state.get('trigger');
 
@@ -80,20 +89,41 @@ class AlPlayer extends LitElement {
       this.opacity = 1;
     }
 
-    return html`
-      <div class="overlay"></div>
-      <div class="text" style="background-color: ${this.clientColor}">
-        <p>autoplay: ${this.autoPlayRenderer.state.get('filename') || 'undefined'}</p>
-        <p>soloist: ${this.soloistRenderer.state.get('filename') || 'undefined'}</p>
-        <p>trigger: ${this.triggerRenderer.state.get('filename') || 'undefined'}</p>
-        <p>granular: ${this.granularRenderer.state.get('filename') || 'undefined'}</p>
-      </div>
-    `;
+    switch (state) {
+      case 'welcome':
+      case 'instructions': {
+        return html`
+          <div class="text intro" style="background-color: ${this.clientColor}">
+            <p>${config.connectionMessage}</p>
+          </div>
+        `;
+      }
+      case 'start': {
+        return html`
+          <div class="overlay"></div>
+          <div class="text" style="background-color: ${this.clientColor}">
+            <p>client index: ${this.clientIndex}</p>
+            <p>autoplay: ${this.autoPlayRenderer.state.get('filename') || 'undefined'}</p>
+            <p>soloist: ${this.soloistRenderer.state.get('filename') || 'undefined'}</p>
+            <p>trigger: ${this.triggerRenderer.state.get('filename') || 'undefined'}</p>
+            <p>granular: ${this.granularRenderer.state.get('filename') || 'undefined'}</p>
+          </div>
+        `;
+      }
+      case 'end': {
+        return html`
+          <div class="text intro" style="background-color: ${this.clientColor}">
+            <p>${config.thanksMessage}</p>
+          </div>
+        `;
+      }
+    }
   }
 
   connectedCallback() {
     super.connectedCallback();
 
+    this.unsubscribeGlobal = this.global.onUpdate(() => this.requestUpdate());
     this.unsubscribeAutoPlayRenderer = this.autoPlayRenderer.state.onUpdate(() => this.requestUpdate());
     this.unsubscribeSoloistRenderer = this.soloistRenderer.state.onUpdate(() => this.requestUpdate());
     this.unsubscribeTriggerRenderer = this.triggerRenderer.state.onUpdate(() => this.requestUpdate());
@@ -103,6 +133,7 @@ class AlPlayer extends LitElement {
   }
 
   disconnectedCallback() {
+    this.unsubscribeGlobal();
     this.unsubscribeAutoPlayRenderer();
     this.unsubscribeSoloistRenderer();
     this.unsubscribeTriggerRenderer();
@@ -166,6 +197,8 @@ async function main($container) {
   const masterBus = new AudioBus(audioContext);
   masterBus.output.connect(audioContext.destination);
 
+  let endTimeoutId;
+
   globalState.onUpdate(updates => {
     for (let [key, value] of Object.entries(updates)) {
       switch (key) {
@@ -179,6 +212,20 @@ async function main($container) {
         }
         case 'cutoffFrequency': {
           masterBus.cutoffFrequency = value;
+          break;
+        }
+        case 'state': {
+          const fadeOutDuration = projectConfig.thanksFadeOutDuration || projectConfig.endFadeOutDuration || 10;
+          const fadeOutSpread = projectConfig.thanksFadeOutSpread || projectConfig.endFadeOutSpread || 5;
+
+          if (value === 'end') {
+            endTimeoutId = setTimeout(() => {
+              masterBus.fadeTo(-80, fadeOutDuration);
+            }, Math.random() * fadeOutSpread * 1000);
+          } else {
+            clearTimeout(endTimeoutId);
+            masterBus.fadeTo(0, 0);
+          }
           break;
         }
       }
@@ -207,6 +254,8 @@ async function main($container) {
       <div class="simple-layout">
         <al-player
           .clientColor=${clientColor}
+          .clientIndex=${clientIndex}
+          .global=${globalState}
           .autoPlayRenderer=${autoPlayRenderer}
           .soloistRenderer=${soloistRenderer}
           .triggerRenderer=${triggerRenderer}

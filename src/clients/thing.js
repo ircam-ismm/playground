@@ -61,6 +61,8 @@ async function bootstrap() {
   const masterBus = new AudioBus(audioContext);
   masterBus.output.connect(audioContext.destination);
 
+  let endTimeoutId;
+
   globalState.onUpdate(updates => {
     for (let [key, value] of Object.entries(updates)) {
       switch (key) {
@@ -74,6 +76,20 @@ async function bootstrap() {
         }
         case 'cutoffFrequency': {
           masterBus.cutoffFrequency = value;
+          break;
+        }
+        case 'state': {
+          const fadeOutDuration = projectConfig.thanksFadeOutDuration || projectConfig.endFadeOutDuration || 10;
+          const fadeOutSpread = projectConfig.thanksFadeOutSpread || projectConfig.endFadeOutSpread || 5;
+
+          if (value === 'end') {
+            endTimeoutId = setTimeout(() => {
+              masterBus.fadeTo(-80, fadeOutDuration);
+            }, Math.random() * fadeOutSpread * 1000);
+          } else {
+            clearTimeout(endTimeoutId);
+            masterBus.fadeTo(0, 0);
+          }
           break;
         }
       }

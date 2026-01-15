@@ -1,5 +1,5 @@
 import {
-  decibelToLinear
+  decibelToLinear,
 } from '@ircam/sc-utils';
 import {
   GainNode,
@@ -31,15 +31,17 @@ class AudioBus {
     this.output = this.#mute;
   }
 
-  fadeTo(value, duration = 0) {
+  fadeTo(db, duration = 0) {
     const now = this.audioContext.currentTime;
+    const gain = decibelToLinear(db);
 
     this.#fade.gain.cancelScheduledValues(now);
 
     if (duration === 0) {
-      this.#fade.gain.setTargetAtTime(value, now, 0.01);
+      this.#fade.gain.setTargetAtTime(gain, now, 0.01);
     } else {
-      this.#fade.gain.linearRampToValueAtTime(value, now + duration);
+      this.#fade.gain.setValueAtTime(this.#fade.gain.value, now);
+      this.#fade.gain.linearRampToValueAtTime(gain, now + duration);
     }
   }
 

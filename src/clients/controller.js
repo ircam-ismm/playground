@@ -73,11 +73,11 @@ class AlController extends LitElement {
 
       <section>
         <sc-text>> select application state:</sc-text>
-        ${this.global.getDescription('instructionsState').list.map(value => {
+        ${this.global.getDescription('state').list.map(value => {
           return html`
             <sc-button
-              ?selected=${this.global.get('instructionsState') === value}
-              @click=${e => this.global.set('instructionsState', value)}
+              ?selected=${this.global.get('state') === value}
+              @release=${e => this.global.set('state', value)}
             >${value}</sc-button>
           `;
         })}

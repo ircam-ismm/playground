@@ -17,6 +17,12 @@ export default {
     default: null,
   },
 
+  state: {
+    type: 'enum',
+    list: ['welcome', 'instructions', 'start', 'end'],
+    default: 'welcome',
+  },
+
   master: {
     type: 'float',
     min: -80,
@@ -32,12 +38,6 @@ export default {
     min: 50,
     max: 20000,
     default: 16000,
-  },
-
-  instructionsState: {
-    type: 'enum',
-    list: ['welcome', 'instructions', 'none', 'thanks'],
-    default: 'welcome',
   },
 
   // not implemented
