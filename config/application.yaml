@@ -16,3 +16,5 @@ clients:
     runtime: browser
   soundbank-manager:
     runtime: browser
+  controller:
+    runtime: browser
