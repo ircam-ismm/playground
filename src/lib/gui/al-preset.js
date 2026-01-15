@@ -45,6 +45,7 @@ class AlPreset extends LitElement {
         position: relative;
         /* min-width: 100px; */
         min-height: 30px;
+        margin-bottom: 200px;
       }
 
       sc-text {
@@ -94,6 +95,8 @@ class AlPreset extends LitElement {
     this.unsubscribeSoundbank = null;
     this.alignOverlay = 'right'; // 'left'
     this.targetType = 'file'; // '
+
+    this.$paddingDiv = null;
   }
 
   render() {
@@ -108,7 +111,6 @@ class AlPreset extends LitElement {
 
     if (this.expanded) {
       const soundbank = this.state.getUnsafe('soundBanks')[this.soundbank];
-      console.log(soundbank);
       let definitions;
       let values;
 
@@ -160,6 +162,24 @@ class AlPreset extends LitElement {
     }
 
     return [header, content]
+  }
+
+  updated() {
+    // make sure the overlay is not cut by the end of the screen
+    if (this.expanded && !this.$paddingDiv) {
+      const $overlay = this.shadowRoot.querySelector('.overlay');
+      const { top, height } = this.getBoundingClientRect();
+      const { height: overlayHeight } = $overlay.getBoundingClientRect();
+      const innerHeight = window.innerHeight;
+
+      if (top + height + overlayHeight > innerHeight) {
+        this.$paddingDiv = document.createElement('div');
+        const padHeight = (top + height + overlayHeight) - innerHeight;
+        this.$paddingDiv.style.height = `${padHeight + 10}px`;
+        // This is arbitrary to work with trigger controller
+        this.parentElement.parentElement.appendChild(this.$paddingDiv);
+      }
+    }
   }
 
   connectedCallback() {
