@@ -18,7 +18,7 @@ export default {
   },
 
   master: {
-    type: 'integer',
+    type: 'float',
     min: -80,
     max: 6,
     default: 0,
@@ -28,54 +28,39 @@ export default {
     default: false,
   },
   cutoffFrequency: {
-    type: 'integer',
+    type: 'float',
     min: 50,
     max: 20000,
     default: 16000,
   },
-  // soloistVolume: {
-  //   type: 'integer',
-  //   min: -80,
-  //   max: 6,
-  //   default: 0,
-  // },
-  triggerVolume: {
-    type: 'integer',
-    min: -80,
-    max: 6,
-    default: 0,
-  },
-  granularVolume: {
-    type: 'integer',
-    min: -80,
-    max: 6,
-    default: 0,
-  },
 
   instructionsState: {
-    type: 'string',
+    type: 'enum',
+    list: ['welcome', 'instructions', 'none', 'thanks'],
     default: 'welcome',
   },
-  processingArchive: {
-    type: 'boolean',
-    default: false,
-  },
 
-  archiveProject: {
-    type: 'string',
-    default: null,
-    nullable: true,
-    event: true,
-  },
-  restoreProject: {
-    type: 'string',
-    default: null,
-    nullable: true,
-    event: true,
-  },
-  // list of archives of the project
-  archivedProjects: {
-    type: 'any',
-    default: [],
-  },
+  // not implemented
+  // processingArchive: {
+  //   type: 'boolean',
+  //   default: false,
+  // },
+
+  // archiveProject: {
+  //   type: 'string',
+  //   default: null,
+  //   nullable: true,
+  //   event: true,
+  // },
+  // restoreProject: {
+  //   type: 'string',
+  //   default: null,
+  //   nullable: true,
+  //   event: true,
+  // },
+  // // list of archives of the project
+  // archivedProjects: {
+  //   type: 'any',
+  //   default: [],
+  // },
 }

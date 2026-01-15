@@ -42,7 +42,7 @@
   },
   "devDependencies": {
     "@ircam/eslint-config": "^2.0.1",
-    "@soundworks/build": "^5.0.0",
+    "@soundworks/build": "^5.2.5",
     "@soundworks/create": "^5.0.9",
     "@types/node": "^22.10.10",
     "@types/web": "^0.0.199",
