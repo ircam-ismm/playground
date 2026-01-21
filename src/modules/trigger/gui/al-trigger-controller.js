@@ -125,9 +125,16 @@ class AlTriggerController extends LitElement {
               <sc-button
                 class="trigger-all"
                 @release=${e => {
+                  this.module.renderers.sort((a, b) => a.get('clientIndex') < b.get('clientIndex') ? -1 : 1);
                   const triggerAllFilterThreshold = this.module.global.get('triggerAllFilterThreshold');
-                  const filteredRenderers = this.module.renderers.filter(r => Math.random() <= triggerAllFilterThreshold);
-                  filteredRenderers.forEach(renderer => renderer.set('trigger', true));
+                  const size = this.module.renderers.size;
+                  const numTrigger = Math.max(1, size * triggerAllFilterThreshold);
+
+                  this.module.renderers.forEach((renderer, index) => {
+                    if (index < numTrigger) {
+                      renderer.set('trigger', true);
+                    }
+                  });
                 }}
               >trigger all</sc-button>
 
