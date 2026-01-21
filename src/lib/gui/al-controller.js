@@ -26,6 +26,7 @@ class AlController extends LitElement {
       display: flex;
       flex-direction: row;
       justify-content: space-between;
+      z-index: 100;
     }
 
     header al-soundbank-select {

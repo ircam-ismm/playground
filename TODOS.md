@@ -1,9 +1,9 @@
-
+- [x] trigger controller overflow
 - [x] filter out roles in header
-- [ ] soudbank go to new line
 - [ ] trigger all button stays on top
+- [ ] soudbank go to new line
+- [?] controls z-index
 - [ ] threshold for trigger all
-- [ ] controls z-index
 
 # Notes upgrade
 
