@@ -24,6 +24,12 @@ export default {
     max: 6,
     default: 0,
   },
+  triggerAllFilterThreshold: {
+    type: 'float',
+    min: 0,
+    max: 1,
+    default: 1,
+  },
   padSize: {
     type: 'integer',
     min: 20,

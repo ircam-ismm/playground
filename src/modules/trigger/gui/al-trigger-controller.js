@@ -45,6 +45,9 @@ class AlTriggerController extends LitElement {
       display: block;
       width: auto;
       font-size: 1.6rem;
+      position: sticky;
+      top: 0;
+      z-index: 2;
       --sc-button-background-color: rgb(220, 53, 69);
     }
 
@@ -95,6 +98,16 @@ class AlTriggerController extends LitElement {
             ></sc-slider>
           </div>
           <div>
+            <sc-text>threshold</sc-text>
+            <sc-slider
+              number-box
+              min=${this.module.global.getDescription('triggerAllFilterThreshold').min}
+              max=${this.module.global.getDescription('triggerAllFilterThreshold').max}
+              value="${this.module.global.get('triggerAllFilterThreshold')}"
+              @input="${e => this.module.global.set('triggerAllFilterThreshold', e.detail.value)}"
+            ></sc-slider>
+          </div>
+          <div>
             <sc-text>pad size</sc-text>
             <sc-slider
               number-box
@@ -111,7 +124,11 @@ class AlTriggerController extends LitElement {
             html`
               <sc-button
                 class="trigger-all"
-                @release=${e => this.module.renderers.set('trigger', true)}
+                @release=${e => {
+                  const triggerAllFilterThreshold = this.module.global.get('triggerAllFilterThreshold');
+                  const filteredRenderers = this.module.renderers.filter(r => Math.random() <= triggerAllFilterThreshold);
+                  filteredRenderers.forEach(renderer => renderer.set('trigger', true));
+                }}
               >trigger all</sc-button>
 
               ${Object.keys(this.module.soundbank.getUnsafe('soundBanks')[currentSoundBank].files).map(filename => {

@@ -19,6 +19,7 @@ class AlSoundBankSelect extends LitElement {
       :host {
         font-family: var(--sc-font-family);
         display: flex;
+        flex-wrap: wrap;
         box-sizing: border-box;
         background-color: #181818;
         padding: 16px 10px;
@@ -31,29 +32,6 @@ class AlSoundBankSelect extends LitElement {
         display: flex;
         width: auto;
         flex-grow: 1;
-      }
-
-      button {
-        font-family: var(--sc-font-family);
-        color: white;
-        font-size: 1.3rem;
-        width: 100%;
-        border: 1px solid #676767;
-        border-radius: 2px;
-        background-color: #121212;
-        height: 36px;
-        line-height: 36px;
-        padding: 0;
-        outline: none;
-        user-select: none;
-        width: 150px;
-        font-size: 15px;
-        margin: 0px 4px;
-      }
-
-      button.active {
-        background-color: #dc3545;
-        border-color: #dc3545;
       }
     `;
   }

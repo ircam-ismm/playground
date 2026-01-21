@@ -1,9 +1,10 @@
+- [?] controls z-index
+
 - [x] trigger controller overflow
 - [x] filter out roles in header
-- [ ] trigger all button stays on top
-- [ ] soudbank go to new line
-- [?] controls z-index
-- [ ] threshold for trigger all
+- [x] sticky trigger all button stays - _only on fullscreen (???)_
+- [x] soudbank go to new line
+- [x] threshold for trigger all
 
 # Notes upgrade
 
