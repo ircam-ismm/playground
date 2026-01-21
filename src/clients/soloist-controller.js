@@ -37,7 +37,7 @@ async function main($container) {
       <div class="controller-layout">
         <header>
           <h1>${client.config.app.name} | ${client.role}</h1>
-          <sw-audit .client="${client}"></sw-audit>
+          <sw-audit .client="${client}" .filter=${['player', 'thing']}></sw-audit>
         </header>
         <section>
           <al-soloist-controller
