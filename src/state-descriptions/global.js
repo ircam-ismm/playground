@@ -45,7 +45,6 @@ export default {
   //   type: 'boolean',
   //   default: false,
   // },
-
   // archiveProject: {
   //   type: 'string',
   //   default: null,

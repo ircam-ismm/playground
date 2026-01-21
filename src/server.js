@@ -13,6 +13,8 @@ import PluginFilesystem from '@soundworks/plugin-filesystem/server.js';
 import PluginPosition from '@soundworks/plugin-position/server.js';
 import PluginScripting from '@soundworks/plugin-scripting/server.js';
 
+// import { midiInit, midiBind } from '@soundworks/midi-bind';
+
 import globalDescription from './state-descriptions/global.js';
 import soundbankDescription from './state-descriptions/soundbank.js';
 
@@ -172,45 +174,7 @@ const granularServer = new GranularServer(host, 'granular', applicationContext);
 
 await host.start();
 
-
-// console.log(soundBanks, soundBankDefaultPresets, soundFileDefaultPresets);
-
-
-// soundBankManager.subscribe((oldValues, newValues) => {
-//   const soundbanks = Object.values(newValues);
-
-//   const autoPlaySoundbanks = soundbanks
-//     .filter(s => s.presets.activated.autoPlaySynth)
-//     .map(s => s.name)
-//     .sort();
-//   autoPlayControllerState.set({ activeSoundbanks: autoPlaySoundbanks });
-
-//   const granularSoundbanks = soundbanks
-//     .filter(s => s.presets.activated.granularSynth)
-//     .map(s => s.name)
-//     .sort();
-//   granularControllerState.set({ activeSoundbanks: granularSoundbanks });
-
-//   const soloistSoundbanks = soundbanks
-//     .filter(s => s.presets.activated.soloistSynth)
-//     .map(s => s.name)
-//     .sort();
-//   soloistControllerState.set({ activeSoundbanks: soloistSoundbanks });
-
-//   const triggerSoundbanks = soundbanks
-//     .filter(s => s.presets.activated.triggerSynth)
-//     .map(s => s.name)
-//     .sort();
-//   triggerControllerState.set({ activeSoundbanks: triggerSoundbanks });
-// });
-
-// // initialize the StateManagerOsc component
-// const oscConfig = { // these are the defaults
-//   localAddress: '0.0.0.0',
-//   localPort: 57121,
-//   remoteAddress: '127.0.0.1',
-//   remotePort: 57122,
-// };
-
-// const oscStateManager = new StateManagerOsc(server.stateManager, oscConfig);
-// await oscStateManager.init();
+// // init midi access
+// await midiInit(server);
+// // bind given state / collection
+// await midiBind(globalState);
