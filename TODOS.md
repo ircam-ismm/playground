@@ -1,4 +1,10 @@
 
+- [x] filter out roles in header
+- [ ] soudbank go to new line
+- [ ] trigger all button stays on top
+- [ ] threshold for trigger all
+- [ ] controls z-index
+
 # Notes upgrade
 
 - [ ] release @soundworks/helpers

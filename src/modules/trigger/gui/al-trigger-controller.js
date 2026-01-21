@@ -35,10 +35,12 @@ class AlTriggerController extends LitElement {
       flex-grow: 1;
       padding: 10px;
       box-sizing: border-box;
+      overflow: auto;
     }
 
     div[slot="main"] .trigger-all {
       height: 64px;
+      min-height: 64px;
       margin-top: 4px;
       display: block;
       width: auto;
