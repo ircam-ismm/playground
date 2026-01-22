@@ -99,5 +99,24 @@ export default class AutoPlayServer extends Module {
     // ------------------------------------------------------
 
     // trigger specific
+    this.global.onUpdate(updates => {
+      for (let [key, value] of Object.entries(updates)) {
+        switch (key) {
+          case 'triggerAll': {
+            this.renderers.sort((a, b) => a.get('clientIndex') < b.get('clientIndex') ? -1 : 1);
+            const triggerAllFilterThreshold = this.global.get('triggerAllFilterThreshold');
+            const size = this.renderers.size;
+            const numTrigger = Math.max(1, size * triggerAllFilterThreshold);
+
+            this.renderers.forEach((renderer, index) => {
+              if (index < numTrigger) {
+                renderer.set('trigger', true);
+              }
+            });
+            break;
+          }
+        }
+      }
+    });
   }
 }

@@ -124,18 +124,7 @@ class AlTriggerController extends LitElement {
             html`
               <sc-button
                 class="trigger-all"
-                @release=${e => {
-                  this.module.renderers.sort((a, b) => a.get('clientIndex') < b.get('clientIndex') ? -1 : 1);
-                  const triggerAllFilterThreshold = this.module.global.get('triggerAllFilterThreshold');
-                  const size = this.module.renderers.size;
-                  const numTrigger = Math.max(1, size * triggerAllFilterThreshold);
-
-                  this.module.renderers.forEach((renderer, index) => {
-                    if (index < numTrigger) {
-                      renderer.set('trigger', true);
-                    }
-                  });
-                }}
+                @release=${e => this.module.global.set('triggerAll', true)}
               >trigger all</sc-button>
 
               ${Object.keys(this.module.soundbank.getUnsafe('soundBanks')[currentSoundBank].files).map(filename => {

@@ -24,6 +24,10 @@ export default {
     max: 6,
     default: 0,
   },
+  triggerAll: {
+    type: 'boolean',
+    event: true,
+  },
   triggerAllFilterThreshold: {
     type: 'float',
     min: 0,
