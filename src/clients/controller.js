@@ -92,6 +92,7 @@ class AlController extends LitElement {
           'autoplay-controller',
           'soundbank-manager',
           'instructions-viewer',
+          'midi-learn',
         ].map(name => {
           return html`
             <sc-button

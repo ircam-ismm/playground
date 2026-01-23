@@ -20,3 +20,5 @@ clients:
     runtime: browser
   instructions-viewer:
     runtime: browser
+  midi-learn:
+    runtime: browser

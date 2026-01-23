@@ -1,0 +1,20 @@
+- className: soloist:global
+  id: 11
+  attributeName: radius
+  portName: nanoKONTROL2 SLIDER/KNOB
+  channel: 1
+- className: soloist:global
+  id: 11
+  attributeName: volume
+  portName: nanoKONTROL2 SLIDER/KNOB
+  channel: 0
+- className: global
+  id: 6
+  attributeName: master
+  portName: Grid
+  channel: 1
+- className: global
+  id: 6
+  attributeName: state
+  portName: Grid
+  channel: 1

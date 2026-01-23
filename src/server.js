@@ -13,6 +13,8 @@ import PluginFilesystem from '@soundworks/plugin-filesystem/server.js';
 import PluginPosition from '@soundworks/plugin-position/server.js';
 import PluginScripting from '@soundworks/plugin-scripting/server.js';
 
+import Midi from '@soundworks/midi';
+
 // import { midiInit, midiBind } from '@soundworks/midi-bind';
 
 import globalDescription from './state-descriptions/global.js';
@@ -160,10 +162,24 @@ filesystem.onUpdate(({ tree }) => {
   soundBankManager.updateFromFileTree(tree);
 }, true);
 
+
+const midi = await new Midi(server);
+await midi.init();
+
+midi.bind(globalState, {
+  // state: midiValue => {
+  //   const list = globalDescription.state.list;
+  //   const range = 127 / list.length;
+  //   const index = Math.floor(midiValue / range);
+  //   return list[index];
+  // }
+});
+
 const applicationContext = {
   soundBankManager,
   soundbankState,
   globalState,
+  midi,
 };
 
 // instantiate modules

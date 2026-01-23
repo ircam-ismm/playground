@@ -12,13 +12,14 @@ export default class GranularServer extends Module {
     globalState,
     soundBankManager,
     soundbankState,
+    midi,
   } = {}) {
     super(host, name);
 
     this.globalState = globalState;
     this.soundBankManager = soundBankManager;
     this.soundbankState = soundbankState;
-    this.startTime = null;
+    this.midi = midi;
 
     this.host.stateManager.defineClass(`${this.name}:global`, globalDescription);
     this.host.stateManager.defineClass(`${this.name}:renderer`, rendererDescription);
@@ -41,6 +42,8 @@ export default class GranularServer extends Module {
       presetKey: PRESET_KEY,
     });
     this.renderers = await this.host.stateManager.getCollection(`${this.name}:renderer`);
+
+    this.midi.bind(this.global);
 
     // assign selected soundbank to newly connected renderer, if any
     this.renderers.onAttach(state => {
