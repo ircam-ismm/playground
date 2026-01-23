@@ -121,7 +121,7 @@ export default class AutoPlayRenderer extends Module {
 
             if (distance < 1) {
               if (this.synth === null) {
-                if (!this.buffer) {
+                if (!this.buffer && !this.state.get('loading')) {
                   await this.loadFile();
                 }
 
